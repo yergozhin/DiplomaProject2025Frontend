@@ -10,6 +10,10 @@ export const fightService = {
     return apiClient.get<AcceptedFight[]>('/fights/accepted');
   },
 
+  async getAcceptedFightsForFighter(): Promise<AcceptedFight[]> {
+    return apiClient.get<AcceptedFight[]>('/fights/accepted/my');
+  },
+
   async getScheduledFights(): Promise<ScheduledFight[]> {
     return apiClient.get<ScheduledFight[]>('/fights/scheduled');
   },

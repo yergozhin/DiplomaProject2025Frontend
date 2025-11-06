@@ -32,15 +32,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-import { useAuthStore } from '@/stores/auth.store';
 import { fightService } from '@/services/fight.service';
 import type { AcceptedFight } from '@/types';
 
 const router = useRouter();
-const authStore = useAuthStore();
-const user = computed(() => authStore.user);
 const fights = ref<AcceptedFight[]>([]);
 const loading = ref(false);
 const error = ref<string | null>(null);
@@ -49,10 +46,7 @@ async function loadFights() {
   loading.value = true;
   error.value = null;
   try {
-    const allFights = await fightService.getAcceptedFights();
-    fights.value = allFights.filter(fight => 
-      fight.fighterAId === user.value?.id || fight.fighterBId === user.value?.id
-    );
+    fights.value = await fightService.getAcceptedFightsForFighter();
   } catch (err: any) {
     error.value = err.error || 'Failed to load fights';
   } finally {
