@@ -24,6 +24,21 @@ export interface FightRequest {
   senderWeightClass: string | null;
 }
 
+export interface AcceptedFight {
+  id: string;
+  status: string;
+  fighterAId: string;
+  fighterBId: string;
+  fighterAUserId: string;
+  fighterAEmail: string;
+  fighterAName: string | null;
+  fighterAWeightClass: string | null;
+  fighterBUserId: string;
+  fighterBEmail: string;
+  fighterBName: string | null;
+  fighterBWeightClass: string | null;
+}
+
 export interface RegisterRequest {
   email: string;
   password: string;
