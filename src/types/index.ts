@@ -54,6 +54,26 @@ export interface ScheduledFight {
   fighterBWeightClass: string | null;
 }
 
+export interface Offer {
+  id: string;
+  fightId: string;
+  eventId: string;
+  eventSlotId: string;
+  fighterId: string;
+  ploId: string;
+  amount: number;
+  currency: string;
+  status: 'pending' | 'accepted' | 'rejected';
+  createdAt: string;
+  eventName?: string;
+  slotStartTime?: string;
+  ploEmail?: string;
+  fighterAId?: string;
+  fighterBId?: string;
+  fighterAStatus?: string;
+  fighterBStatus?: string;
+}
+
 export interface RegisterRequest {
   email: string;
   password: string;

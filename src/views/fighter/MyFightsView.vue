@@ -25,6 +25,7 @@
             <div>{{ fight.fighterBEmail }}</div>
           </div>
         </div>
+        <button @click="handleViewOffers(fight.id)" class="view-offers-btn">View Offers</button>
       </li>
     </ul>
   </div>
@@ -35,6 +36,10 @@ import { ref, computed, onMounted } from 'vue';
 import { useAuthStore } from '@/stores/auth.store';
 import { fightService } from '@/services/fight.service';
 import type { AcceptedFight } from '@/types';
+
+const props = defineProps<{
+  onViewOffers?: (fightId: string) => void;
+}>();
 
 const authStore = useAuthStore();
 const user = computed(() => authStore.user);
@@ -54,6 +59,12 @@ async function loadFights() {
     error.value = err.error || 'Failed to load fights';
   } finally {
     loading.value = false;
+  }
+}
+
+function handleViewOffers(fightId: string) {
+  if (props.onViewOffers) {
+    props.onViewOffers(fightId);
   }
 }
 
@@ -88,6 +99,7 @@ onMounted(() => {
   display: flex;
   align-items: center;
   gap: 20px;
+  margin-bottom: 15px;
 }
 
 .fighter {
@@ -103,5 +115,18 @@ onMounted(() => {
 .fighter strong {
   display: block;
   margin-bottom: 5px;
+}
+
+.view-offers-btn {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.view-offers-btn:hover {
+  background-color: #0056b3;
 }
 </style>

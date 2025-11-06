@@ -17,7 +17,15 @@
       <DashboardView v-if="currentView === 'dashboard'" />
       <PossibleOpponentsView v-else-if="currentView === 'opponents'" />
       <RequestedFightsView v-else-if="currentView === 'requested-fights'" />
-      <MyFightsView v-else-if="currentView === 'fights'" />
+      <MyFightsView 
+        v-else-if="currentView === 'fights'" 
+        :onViewOffers="handleViewOffers"
+      />
+      <FightOffersView 
+        v-else-if="currentView === 'fight-offers'"
+        :fightId="selectedFightId"
+        @back="currentView = 'fights'"
+      />
       <ScheduledFightsView v-else-if="currentView === 'scheduled-fights'" />
       <ProfileView v-else-if="currentView === 'profile'" />
     </div>
@@ -32,12 +40,19 @@ import DashboardView from './DashboardView.vue';
 import PossibleOpponentsView from './PossibleOpponentsView.vue';
 import RequestedFightsView from './RequestedFightsView.vue';
 import MyFightsView from './MyFightsView.vue';
+import FightOffersView from './FightOffersView.vue';
 import ScheduledFightsView from './ScheduledFightsView.vue';
 import ProfileView from './ProfileView.vue';
 
 const router = useRouter();
 const authStore = useAuthStore();
 const currentView = ref('dashboard');
+const selectedFightId = ref('');
+
+function handleViewOffers(fightId: string) {
+  selectedFightId.value = fightId;
+  currentView.value = 'fight-offers';
+}
 
 function handleLogout() {
   authStore.logout();
