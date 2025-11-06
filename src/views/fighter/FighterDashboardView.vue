@@ -1,60 +1,104 @@
 <template>
-  <div class="dashboard">
-    <h1>Fighter Dashboard</h1>
-    <p>Welcome, {{ user?.email }}!</p>
-    <button @click="handleLogout">Logout</button>
-
-    <div class="opponents-section">
-      <h2>Possible Opponents</h2>
-      <div v-if="loading">Loading...</div>
-      <div v-else-if="error">{{ error }}</div>
-      <div v-else-if="opponents.length === 0">No opponents available</div>
-      <ul v-else>
-        <li v-for="opponent in opponents" :key="opponent.id">
-          <div>
-            <strong>{{ opponent.name || opponent.email }}</strong>
-            <span v-if="opponent.weightClass"> - {{ opponent.weightClass }}</span>
-          </div>
-          <div>{{ opponent.email }}</div>
-        </li>
+  <div class="dashboard-container">
+    <div class="sidebar">
+      <h2>Menu</h2>
+      <ul>
+        <li><a href="#" @click.prevent="currentView = 'dashboard'">Dashboard</a></li>
+        <li><a href="#" @click.prevent="currentView = 'fights'">My Fights</a></li>
+        <li><a href="#" @click.prevent="currentView = 'offers'">Offers</a></li>
+        <li><a href="#" @click.prevent="currentView = 'profile'">Profile</a></li>
       </ul>
+      <button @click="handleLogout" class="logout-btn">Logout</button>
+    </div>
+
+    <div class="main-content">
+      <DashboardView v-if="currentView === 'dashboard'" />
+      <MyFightsView v-else-if="currentView === 'fights'" />
+      <OffersView v-else-if="currentView === 'offers'" />
+      <ProfileView v-else-if="currentView === 'profile'" />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue';
+import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '@/stores/auth.store';
-import { fighterService } from '@/services/fighter.service';
-import type { Fighter } from '@/types';
+import DashboardView from './DashboardView.vue';
+import MyFightsView from './MyFightsView.vue';
+import OffersView from './OffersView.vue';
+import ProfileView from './ProfileView.vue';
 
 const router = useRouter();
 const authStore = useAuthStore();
-
-const user = computed(() => authStore.user);
-const opponents = ref<Fighter[]>([]);
-const loading = ref(false);
-const error = ref<string | null>(null);
-
-async function loadOpponents() {
-  loading.value = true;
-  error.value = null;
-  try {
-    opponents.value = await fighterService.getPossibleOpponents();
-  } catch (err: any) {
-    error.value = err.error || 'Failed to load opponents';
-  } finally {
-    loading.value = false;
-  }
-}
+const currentView = ref('dashboard');
 
 function handleLogout() {
   authStore.logout();
   router.push('/login');
 }
-
-onMounted(() => {
-  loadOpponents();
-});
 </script>
+
+<style scoped>
+.dashboard-container {
+  display: flex;
+  min-height: 100vh;
+  align-items: flex-start;
+}
+
+.sidebar {
+  width: 200px;
+  background-color: #f4f4f4;
+  padding: 20px;
+  border-right: 1px solid #ddd;
+  text-align: left;
+}
+
+.sidebar h2 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  font-size: 18px;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 20px 0;
+}
+
+.sidebar ul li {
+  margin-bottom: 10px;
+}
+
+.sidebar ul li a {
+  display: block;
+  padding: 8px 12px;
+  text-decoration: none;
+  color: #333;
+  border-radius: 4px;
+}
+
+.sidebar ul li a:hover {
+  background-color: #e0e0e0;
+}
+
+.logout-btn {
+  width: 100%;
+  padding: 10px;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.logout-btn:hover {
+  background-color: #c82333;
+}
+
+.main-content {
+  flex: 1;
+  padding: 20px;
+  text-align: left;
+}
+</style>
