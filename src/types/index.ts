@@ -1,4 +1,3 @@
-// User and Role types
 export type UserRole = 'fighter' | 'plo';
 
 export interface User {
@@ -7,7 +6,13 @@ export interface User {
   role: UserRole;
 }
 
-// Auth request/response types
+export interface Fighter {
+  id: string;
+  email: string;
+  name: string | null;
+  weightClass: string | null;
+}
+
 export interface RegisterRequest {
   email: string;
   password: string;
@@ -31,8 +36,6 @@ export interface LoginResponse {
   token: string;
 }
 
-// API Error response
 export interface ApiError {
   error: string;
 }
-
