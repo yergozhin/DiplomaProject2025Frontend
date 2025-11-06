@@ -4,6 +4,7 @@
       <h2>Menu</h2>
       <ul>
         <li><a href="#" @click.prevent="currentView = 'dashboard'">Dashboard</a></li>
+        <li><a href="#" @click.prevent="currentView = 'opponents'">Possible Opponents</a></li>
         <li><a href="#" @click.prevent="currentView = 'fights'">My Fights</a></li>
         <li><a href="#" @click.prevent="currentView = 'offers'">Offers</a></li>
         <li><a href="#" @click.prevent="currentView = 'profile'">Profile</a></li>
@@ -13,6 +14,7 @@
 
     <div class="main-content">
       <DashboardView v-if="currentView === 'dashboard'" />
+      <PossibleOpponentsView v-else-if="currentView === 'opponents'" />
       <MyFightsView v-else-if="currentView === 'fights'" />
       <OffersView v-else-if="currentView === 'offers'" />
       <ProfileView v-else-if="currentView === 'profile'" />
@@ -25,6 +27,7 @@ import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '@/stores/auth.store';
 import DashboardView from './DashboardView.vue';
+import PossibleOpponentsView from './PossibleOpponentsView.vue';
 import MyFightsView from './MyFightsView.vue';
 import OffersView from './OffersView.vue';
 import ProfileView from './ProfileView.vue';
