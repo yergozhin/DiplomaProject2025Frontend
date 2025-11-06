@@ -7,6 +7,7 @@
         <li><a href="#" @click.prevent="currentView = 'opponents'">Possible Opponents</a></li>
         <li><a href="#" @click.prevent="currentView = 'requested-fights'">Requested Fights</a></li>
         <li><a href="#" @click.prevent="currentView = 'fights'">My Fights</a></li>
+        <li><a href="#" @click.prevent="currentView = 'scheduled-fights'">Scheduled Fights</a></li>
         <li><a href="#" @click.prevent="currentView = 'offers'">Offers</a></li>
         <li><a href="#" @click.prevent="currentView = 'profile'">Profile</a></li>
       </ul>
@@ -18,6 +19,7 @@
       <PossibleOpponentsView v-else-if="currentView === 'opponents'" />
       <RequestedFightsView v-else-if="currentView === 'requested-fights'" />
       <MyFightsView v-else-if="currentView === 'fights'" />
+      <ScheduledFightsView v-else-if="currentView === 'scheduled-fights'" />
       <OffersView v-else-if="currentView === 'offers'" />
       <ProfileView v-else-if="currentView === 'profile'" />
     </div>
@@ -32,6 +34,7 @@ import DashboardView from './DashboardView.vue';
 import PossibleOpponentsView from './PossibleOpponentsView.vue';
 import RequestedFightsView from './RequestedFightsView.vue';
 import MyFightsView from './MyFightsView.vue';
+import ScheduledFightsView from './ScheduledFightsView.vue';
 import OffersView from './OffersView.vue';
 import ProfileView from './ProfileView.vue';
 

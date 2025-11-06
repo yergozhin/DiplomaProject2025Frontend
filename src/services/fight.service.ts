@@ -1,5 +1,5 @@
 import { apiClient } from './api';
-import type { FightRequest, AcceptedFight } from '@/types';
+import type { FightRequest, AcceptedFight, ScheduledFight } from '@/types';
 
 export const fightService = {
   async getRequestedFights(): Promise<FightRequest[]> {
@@ -8,5 +8,9 @@ export const fightService = {
 
   async getAcceptedFights(): Promise<AcceptedFight[]> {
     return apiClient.get<AcceptedFight[]>('/fights/accepted');
+  },
+
+  async getScheduledFights(): Promise<ScheduledFight[]> {
+    return apiClient.get<ScheduledFight[]>('/fights/scheduled');
   },
 };
