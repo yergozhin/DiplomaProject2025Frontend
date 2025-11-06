@@ -21,6 +21,14 @@
           <div>Fighter A Status: {{ offer.fighterAStatus }}</div>
           <div>Fighter B Status: {{ offer.fighterBStatus }}</div>
         </div>
+        <div v-if="offer.status === 'pending'" class="offer-actions">
+          <button @click="handleAcceptOffer(offer.id)" class="accept-btn" :disabled="updating">
+            Accept
+          </button>
+          <button @click="handleRejectOffer(offer.id)" class="reject-btn" :disabled="updating">
+            Reject
+          </button>
+        </div>
       </li>
     </ul>
   </div>
@@ -40,6 +48,7 @@ const fightId = route.params.fightId as string;
 const offers = ref<Offer[]>([]);
 const loading = ref(false);
 const error = ref<string | null>(null);
+const updating = ref(false);
 
 function handleBack() {
   router.push(ROUTES.FIGHTER_FIGHTS);
@@ -59,6 +68,32 @@ async function loadOffers() {
     error.value = err.error || 'Failed to load offers';
   } finally {
     loading.value = false;
+  }
+}
+
+async function handleAcceptOffer(offerId: string) {
+  updating.value = true;
+  error.value = null;
+  try {
+    await offerService.updateOfferStatus({ offerId, status: 'accepted' });
+    await loadOffers();
+  } catch (err: any) {
+    error.value = err.error || 'Failed to accept offer';
+  } finally {
+    updating.value = false;
+  }
+}
+
+async function handleRejectOffer(offerId: string) {
+  updating.value = true;
+  error.value = null;
+  try {
+    await offerService.updateOfferStatus({ offerId, status: 'rejected' });
+    await loadOffers();
+  } catch (err: any) {
+    error.value = err.error || 'Failed to reject offer';
+  } finally {
+    updating.value = false;
   }
 }
 
@@ -113,6 +148,48 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  margin-bottom: 15px;
+}
+
+.offer-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+  padding-top: 15px;
+  border-top: 1px solid #ddd;
+}
+
+.accept-btn,
+.reject-btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.accept-btn {
+  background-color: #28a745;
+  color: white;
+}
+
+.accept-btn:hover:not(:disabled) {
+  background-color: #218838;
+}
+
+.reject-btn {
+  background-color: #dc3545;
+  color: white;
+}
+
+.reject-btn:hover:not(:disabled) {
+  background-color: #c82333;
+}
+
+.accept-btn:disabled,
+.reject-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 </style>
 

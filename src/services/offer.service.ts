@@ -11,6 +11,11 @@ export interface SendOfferRequest {
   fighterBCurrency: string;
 }
 
+export interface UpdateOfferStatusRequest {
+  offerId: string;
+  status: 'accepted' | 'rejected';
+}
+
 export const offerService = {
   async getAvailableOffersForFight(fightId: string): Promise<Offer[]> {
     return apiClient.get<Offer[]>(`/offers/available-offers/fight/${fightId}`);
@@ -18,6 +23,10 @@ export const offerService = {
 
   async sendOffers(data: SendOfferRequest): Promise<Offer[]> {
     return apiClient.post<Offer[]>('/offers', data);
+  },
+
+  async updateOfferStatus(data: UpdateOfferStatusRequest): Promise<Offer> {
+    return apiClient.patch<Offer>('/offers/status', data);
   },
 };
 
