@@ -24,3 +24,5 @@ dist-ssr
 *.sw?
 
 NOTES_*.md
+
+.env*
