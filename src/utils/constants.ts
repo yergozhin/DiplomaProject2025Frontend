@@ -16,4 +16,7 @@ export const ROUTES = {
   FIGHTER_SCHEDULED_FIGHTS: '/fighter/scheduled-fights',
   FIGHTER_FIGHT_OFFERS: '/fighter/fights/:fightId/offers',
   PLO_DASHBOARD: '/plo/dashboard',
+  PLO_EVENTS: '/plo/events',
+  PLO_AVAILABLE_FIGHTS: '/plo/available-fights',
+  PLO_OFFERS: '/plo/offers',
 } as const;

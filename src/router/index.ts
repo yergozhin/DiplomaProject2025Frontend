@@ -75,12 +75,32 @@ const router = createRouter({
     },
     {
       path: '/plo',
+      component: () => import('@/views/plo/PLODashboardView.vue'),
       meta: { requiresAuth: true, requiredRole: 'plo' },
       children: [
         {
+          path: '',
+          redirect: 'dashboard',
+        },
+        {
           path: 'dashboard',
           name: 'PLODashboard',
-          component: () => import('@/views/plo/PLODashboardView.vue'),
+          component: () => import('@/views/plo/DashboardView.vue'),
+        },
+        {
+          path: 'events',
+          name: 'PLOEvents',
+          component: () => import('@/views/plo/EventsView.vue'),
+        },
+        {
+          path: 'available-fights',
+          name: 'PLOAvailableFights',
+          component: () => import('@/views/plo/AvailableFightsView.vue'),
+        },
+        {
+          path: 'offers',
+          name: 'PLOOffers',
+          component: () => import('@/views/plo/OffersView.vue'),
         },
       ],
     },
