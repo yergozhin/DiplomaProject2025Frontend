@@ -9,5 +9,11 @@ export const ROUTES = {
   LOGIN: '/login',
   REGISTER: '/register',
   FIGHTER_DASHBOARD: '/fighter/dashboard',
+  FIGHTER_PROFILE: '/fighter/profile',
+  FIGHTER_OPPONENTS: '/fighter/opponents',
+  FIGHTER_REQUESTS: '/fighter/requests',
+  FIGHTER_FIGHTS: '/fighter/fights',
+  FIGHTER_SCHEDULED_FIGHTS: '/fighter/scheduled-fights',
+  FIGHTER_FIGHT_OFFERS: '/fighter/fights/:fightId/offers',
   PLO_DASHBOARD: '/plo/dashboard',
 } as const;

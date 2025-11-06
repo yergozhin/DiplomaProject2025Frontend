@@ -33,14 +33,12 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
 import { useAuthStore } from '@/stores/auth.store';
 import { fightService } from '@/services/fight.service';
 import type { AcceptedFight } from '@/types';
 
-const props = defineProps<{
-  onViewOffers?: (fightId: string) => void;
-}>();
-
+const router = useRouter();
 const authStore = useAuthStore();
 const user = computed(() => authStore.user);
 const fights = ref<AcceptedFight[]>([]);
@@ -63,9 +61,7 @@ async function loadFights() {
 }
 
 function handleViewOffers(fightId: string) {
-  if (props.onViewOffers) {
-    props.onViewOffers(fightId);
-  }
+  router.push(`/fighter/fights/${fightId}/offers`);
 }
 
 onMounted(() => {

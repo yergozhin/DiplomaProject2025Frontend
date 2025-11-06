@@ -1,8 +1,8 @@
 <template>
   <div>
     <div class="header">
-      <button @click="$emit('back')" class="back-btn">← Back to Fights</button>
-      <h1>Available Offers for Fight #{{ props.fightId }}</h1>
+      <button @click="handleBack" class="back-btn">← Back to Fights</button>
+      <h1>Available Offers for Fight #{{ fightId }}</h1>
     </div>
     <div v-if="loading">Loading...</div>
     <div v-else-if="error">{{ error }}</div>
@@ -28,20 +28,22 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 import { offerService } from '@/services/offer.service';
+import { ROUTES } from '@/utils/constants';
 import type { Offer } from '@/types';
 
-const props = defineProps<{
-  fightId: string;
-}>();
-
-defineEmits<{
-  back: [];
-}>();
+const route = useRoute();
+const router = useRouter();
+const fightId = route.params.fightId as string;
 
 const offers = ref<Offer[]>([]);
 const loading = ref(false);
 const error = ref<string | null>(null);
+
+function handleBack() {
+  router.push(ROUTES.FIGHTER_FIGHTS);
+}
 
 function formatDate(dateString?: string): string {
   if (!dateString) return 'N/A';
@@ -52,7 +54,7 @@ async function loadOffers() {
   loading.value = true;
   error.value = null;
   try {
-    offers.value = await offerService.getAvailableOffersForFight(props.fightId);
+    offers.value = await offerService.getAvailableOffersForFight(fightId);
   } catch (err: any) {
     error.value = err.error || 'Failed to load offers';
   } finally {

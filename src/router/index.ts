@@ -29,12 +29,47 @@ const router = createRouter({
     },
     {
       path: '/fighter',
+      component: () => import('@/views/fighter/FighterDashboardView.vue'),
       meta: { requiresAuth: true, requiredRole: 'fighter' },
       children: [
         {
+          path: '',
+          redirect: 'dashboard',
+        },
+        {
           path: 'dashboard',
           name: 'FighterDashboard',
-          component: () => import('@/views/fighter/FighterDashboardView.vue'),
+          component: () => import('@/views/fighter/DashboardView.vue'),
+        },
+        {
+          path: 'profile',
+          name: 'FighterProfile',
+          component: () => import('@/views/fighter/ProfileView.vue'),
+        },
+        {
+          path: 'opponents',
+          name: 'FighterOpponents',
+          component: () => import('@/views/fighter/PossibleOpponentsView.vue'),
+        },
+        {
+          path: 'requests',
+          name: 'FighterRequests',
+          component: () => import('@/views/fighter/RequestedFightsView.vue'),
+        },
+        {
+          path: 'fights',
+          name: 'FighterFights',
+          component: () => import('@/views/fighter/MyFightsView.vue'),
+        },
+        {
+          path: 'scheduled-fights',
+          name: 'FighterScheduledFights',
+          component: () => import('@/views/fighter/ScheduledFightsView.vue'),
+        },
+        {
+          path: 'fights/:fightId/offers',
+          name: 'FighterFightOffers',
+          component: () => import('@/views/fighter/FightOffersView.vue'),
         },
       ],
     },
