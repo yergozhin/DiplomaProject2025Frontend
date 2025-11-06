@@ -3,13 +3,12 @@
     <div class="sidebar">
       <h2>Menu</h2>
       <ul>
-        <li><a href="#" @click.prevent="currentView = 'dashboard'">Dashboard</a></li>
-        <li><a href="#" @click.prevent="currentView = 'opponents'">Possible Opponents</a></li>
-        <li><a href="#" @click.prevent="currentView = 'requested-fights'">Requested Fights</a></li>
-        <li><a href="#" @click.prevent="currentView = 'fights'">My Fights</a></li>
-        <li><a href="#" @click.prevent="currentView = 'scheduled-fights'">Scheduled Fights</a></li>
-        <li><a href="#" @click.prevent="currentView = 'offers'">Offers</a></li>
         <li><a href="#" @click.prevent="currentView = 'profile'">Profile</a></li>
+        <li><a href="#" @click.prevent="currentView = 'dashboard'">Dashboard</a></li>
+        <li><a href="#" @click.prevent="currentView = 'opponents'">Possible opponents</a></li>
+        <li><a href="#" @click.prevent="currentView = 'requested-fights'">Opponent requests</a></li>
+        <li><a href="#" @click.prevent="currentView = 'fights'">Accepted fights</a></li>
+        <li><a href="#" @click.prevent="currentView = 'scheduled-fights'">Scheduled Fights</a></li>
       </ul>
       <button @click="handleLogout" class="logout-btn">Logout</button>
     </div>
@@ -20,7 +19,6 @@
       <RequestedFightsView v-else-if="currentView === 'requested-fights'" />
       <MyFightsView v-else-if="currentView === 'fights'" />
       <ScheduledFightsView v-else-if="currentView === 'scheduled-fights'" />
-      <OffersView v-else-if="currentView === 'offers'" />
       <ProfileView v-else-if="currentView === 'profile'" />
     </div>
   </div>
@@ -35,7 +33,6 @@ import PossibleOpponentsView from './PossibleOpponentsView.vue';
 import RequestedFightsView from './RequestedFightsView.vue';
 import MyFightsView from './MyFightsView.vue';
 import ScheduledFightsView from './ScheduledFightsView.vue';
-import OffersView from './OffersView.vue';
 import ProfileView from './ProfileView.vue';
 
 const router = useRouter();
