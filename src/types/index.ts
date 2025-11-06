@@ -97,6 +97,21 @@ export interface LoginResponse {
   token: string;
 }
 
+export interface EventSlot {
+  id: string;
+  eventId: string;
+  startTime: string;
+  fightId: string | null;
+}
+
+export interface Event {
+  id: string;
+  name: string;
+  ploId: string;
+  createdAt: string;
+  slots: EventSlot[];
+}
+
 export interface ApiError {
   error: string;
 }
