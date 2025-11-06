@@ -13,6 +13,17 @@ export interface Fighter {
   weightClass: string | null;
 }
 
+export interface FightRequest {
+  id: string;
+  status: string;
+  fighterAId: string;
+  fighterBId: string;
+  senderId: string;
+  senderEmail: string;
+  senderName: string | null;
+  senderWeightClass: string | null;
+}
+
 export interface RegisterRequest {
   email: string;
   password: string;
