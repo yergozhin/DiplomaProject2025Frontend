@@ -13,4 +13,8 @@ export const fightService = {
   async getScheduledFights(): Promise<ScheduledFight[]> {
     return apiClient.get<ScheduledFight[]>('/fights/scheduled');
   },
+
+  async sendFightRequest(fighterId: string): Promise<FightRequest> {
+    return apiClient.post<FightRequest>('/fights/request', { fighterId });
+  },
 };
