@@ -18,6 +18,10 @@ export const fightService = {
     return apiClient.get<ScheduledFight[]>('/fights/scheduled');
   },
 
+  async getAvailableFightsForPlo(): Promise<AcceptedFight[]> {
+    return apiClient.get<AcceptedFight[]>('/fights/available-for-plo');
+  },
+
   async sendFightRequest(fighterId: string): Promise<FightRequest> {
     return apiClient.post<FightRequest>('/fights/request', { fighterId });
   },

@@ -48,7 +48,7 @@ async function loadFights() {
   loading.value = true;
   error.value = null;
   try {
-    fights.value = await fightService.getAcceptedFights();
+    fights.value = await fightService.getAvailableFightsForPlo();
   } catch (err: any) {
     error.value = err.error || 'Failed to load fights';
   } finally {
