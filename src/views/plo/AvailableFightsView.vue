@@ -25,6 +25,9 @@
             <div>{{ fight.fighterBEmail }}</div>
           </div>
         </div>
+        <button @click="handleSendOffers(fight.id)" class="send-offers-btn">
+          Send Offers
+        </button>
       </li>
     </ul>
   </div>
@@ -32,9 +35,11 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
 import { fightService } from '@/services/fight.service';
 import type { AcceptedFight } from '@/types';
 
+const router = useRouter();
 const fights = ref<AcceptedFight[]>([]);
 const loading = ref(false);
 const error = ref<string | null>(null);
@@ -49,6 +54,10 @@ async function loadFights() {
   } finally {
     loading.value = false;
   }
+}
+
+function handleSendOffers(fightId: string) {
+  router.push(`/plo/send-offer?fightId=${fightId}`);
 }
 
 onMounted(() => {
@@ -97,6 +106,20 @@ onMounted(() => {
 .fighter strong {
   display: block;
   margin-bottom: 5px;
+}
+
+.send-offers-btn {
+  margin-top: 15px;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.send-offers-btn:hover {
+  background-color: #0056b3;
 }
 </style>
 

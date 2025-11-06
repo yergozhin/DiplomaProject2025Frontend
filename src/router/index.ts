@@ -102,6 +102,11 @@ const router = createRouter({
           name: 'PLOOffers',
           component: () => import('@/views/plo/OffersView.vue'),
         },
+        {
+          path: 'send-offer',
+          name: 'PLOSendOffer',
+          component: () => import('@/views/plo/SendOfferView.vue'),
+        },
       ],
     },
   ],
