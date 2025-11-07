@@ -28,6 +28,12 @@ const router = createRouter({
       meta: { requiresAuth: false },
     },
     {
+      path: ROUTES.ADMIN_DASHBOARD,
+      name: 'AdminDashboard',
+      component: () => import('@/views/admin/AdminDashboardView.vue'),
+      meta: { requiresAuth: true, requiredRole: 'admin' },
+    },
+    {
       path: '/fighter',
       component: () => import('@/views/fighter/FighterDashboardView.vue'),
       meta: { requiresAuth: true, requiredRole: 'fighter' },

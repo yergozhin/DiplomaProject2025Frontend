@@ -85,9 +85,10 @@ export const useAuthStore = defineStore('auth', () => {
 
   function getDashboardRoute(): string {
     if (!userRole.value) return ROUTES.LOGIN;
-    return userRole.value === 'fighter'
-      ? ROUTES.FIGHTER_DASHBOARD
-      : ROUTES.PLO_DASHBOARD;
+    if (userRole.value === 'fighter') return ROUTES.FIGHTER_DASHBOARD;
+    if (userRole.value === 'plo') return ROUTES.PLO_DASHBOARD;
+    if (userRole.value === 'admin') return ROUTES.ADMIN_DASHBOARD;
+    return ROUTES.LOGIN;
   }
 
   initAuth();
