@@ -15,12 +15,87 @@
         <span class="value">{{ profile.email }}</span>
       </div>
       <div class="profile-row">
-        <span class="label">Name:</span>
-        <span class="value">{{ profile.name || 'Not set' }}</span>
+        <span class="label">First Name:</span>
+        <span class="value">{{ profile.firstName || 'Not set' }}</span>
       </div>
       <div class="profile-row">
-        <span class="label">Weight Class:</span>
-        <span class="value">{{ profile.weightClass || 'Not set' }}</span>
+        <span class="label">Last Name:</span>
+        <span class="value">{{ profile.lastName || 'Not set' }}</span>
+      </div>
+      <div class="profile-row" v-if="profile.nickname">
+        <span class="label">Nickname:</span>
+        <span class="value">{{ profile.nickname }}</span>
+      </div>
+      <div class="profile-row">
+        <span class="label">Current Weight Class:</span>
+        <span class="value">{{ profile.currentWeightClass || profile.weightClass || 'Not set' }}</span>
+      </div>
+      <div class="profile-row">
+        <span class="label">Phone Number:</span>
+        <span class="value">{{ profile.phoneNumber || 'Not set' }}</span>
+      </div>
+      <div class="profile-row">
+        <span class="label">Date of Birth:</span>
+        <span class="value">{{ formatDate(profile.dateOfBirth) }}</span>
+      </div>
+      <div class="profile-row">
+        <span class="label">Gender:</span>
+        <span class="value">{{ profile.gender || 'Not set' }}</span>
+      </div>
+      <div class="profile-row">
+        <span class="label">Height:</span>
+        <span class="value">{{ formatNumber(profile.height, 'cm') }}</span>
+      </div>
+      <div class="profile-row">
+        <span class="label">Reach:</span>
+        <span class="value">{{ formatNumber(profile.reach, 'cm') }}</span>
+      </div>
+      <div class="profile-row">
+        <span class="label">Country:</span>
+        <span class="value">{{ profile.country || 'Not set' }}</span>
+      </div>
+      <div class="profile-row">
+        <span class="label">City:</span>
+        <span class="value">{{ profile.city || 'Not set' }}</span>
+      </div>
+      <div class="profile-row">
+        <span class="label">Status:</span>
+        <span class="value">{{ profile.status || 'Not set' }}</span>
+      </div>
+      <div class="profile-row" v-if="profile.profilePicture">
+        <span class="label">Profile Picture:</span>
+        <span class="value">
+          <a :href="profile.profilePicture" target="_blank" rel="noopener">Open picture</a>
+        </span>
+      </div>
+      <div class="profile-row">
+        <span class="label">Bio:</span>
+        <span class="value">{{ profile.bio || 'Not set' }}</span>
+      </div>
+      <div class="profile-row" v-if="profile.profileCreatedAt">
+        <span class="label">Profile Created:</span>
+        <span class="value">{{ formatDateTime(profile.profileCreatedAt) }}</span>
+      </div>
+      <div class="profile-row" v-if="profile.profileUpdatedAt">
+        <span class="label">Last Updated:</span>
+        <span class="value">{{ formatDateTime(profile.profileUpdatedAt) }}</span>
+      </div>
+
+      <div class="profile-row" v-if="hasRecordData">
+        <span class="label">Record:</span>
+        <span class="value">{{ formatRecord(profile.wins, profile.losses, profile.draws) }}</span>
+      </div>
+      <div class="profile-row" v-if="profile.totalFights !== null">
+        <span class="label">Total Fights:</span>
+        <span class="value">{{ profile.totalFights }}</span>
+      </div>
+      <div class="profile-row" v-if="profile.awards">
+        <span class="label">Awards:</span>
+        <span class="value">{{ profile.awards }}</span>
+      </div>
+      <div class="profile-row" v-if="profile.recordConfirmed">
+        <span class="label">Record Confirmed:</span>
+        <span class="value">Yes</span>
       </div>
 
       <button type="button" class="edit-btn" @click="startEdit" v-if="!editing">
@@ -28,13 +103,99 @@
       </button>
 
       <form v-if="editing" class="edit-form" @submit.prevent="handleSubmit">
-        <div class="form-group">
-          <label for="name">Name *</label>
-          <input id="name" v-model="form.name" type="text" :disabled="submitting" required />
+        <div class="form-row">
+          <div class="form-group">
+            <label for="firstName">First Name *</label>
+            <input id="firstName" v-model="form.firstName" type="text" :disabled="submitting" required />
+          </div>
+          <div class="form-group">
+            <label for="lastName">Last Name *</label>
+            <input id="lastName" v-model="form.lastName" type="text" :disabled="submitting" required />
+          </div>
         </div>
+
         <div class="form-group">
-          <label for="weightClass">Weight Class *</label>
-          <input id="weightClass" v-model="form.weightClass" type="text" :disabled="submitting" required />
+          <label for="nickname">Nickname</label>
+          <input id="nickname" v-model="form.nickname" type="text" :disabled="submitting" />
+        </div>
+
+        <div class="form-group">
+          <label for="currentWeightClass">Current Weight Class *</label>
+          <input
+            id="currentWeightClass"
+            v-model="form.currentWeightClass"
+            type="text"
+            :disabled="submitting"
+            required
+          />
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="phoneNumber">Phone Number</label>
+            <input id="phoneNumber" v-model="form.phoneNumber" type="text" :disabled="submitting" />
+          </div>
+          <div class="form-group">
+            <label for="gender">Gender</label>
+            <input id="gender" v-model="form.gender" type="text" :disabled="submitting" />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="dateOfBirth">Date of Birth</label>
+            <input id="dateOfBirth" v-model="form.dateOfBirth" type="date" :disabled="submitting" />
+          </div>
+          <div class="form-group">
+            <label for="status">Status</label>
+            <input id="status" v-model="form.status" type="text" :disabled="submitting" />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="height">Height (cm)</label>
+            <input id="height" v-model.number="form.height" type="number" min="0" :disabled="submitting" />
+          </div>
+          <div class="form-group">
+            <label for="reach">Reach (cm)</label>
+            <input id="reach" v-model.number="form.reach" type="number" min="0" :disabled="submitting" />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="country">Country</label>
+            <input id="country" v-model="form.country" type="text" :disabled="submitting" />
+          </div>
+          <div class="form-group">
+            <label for="city">City</label>
+            <input id="city" v-model="form.city" type="text" :disabled="submitting" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="profilePicture">Profile Picture URL</label>
+          <input id="profilePicture" v-model="form.profilePicture" type="url" :disabled="submitting" />
+        </div>
+
+        <div class="form-group">
+          <label for="bio">Bio</label>
+          <textarea id="bio" v-model="form.bio" :disabled="submitting"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="verificationLinks">Verification Links (visible to admin)</label>
+          <textarea id="verificationLinks" v-model="form.verificationLinks" :disabled="submitting"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="verificationContacts">Verification Contacts (visible to admin)</label>
+          <textarea
+            id="verificationContacts"
+            v-model="form.verificationContacts"
+            :disabled="submitting"
+          ></textarea>
         </div>
 
         <div v-if="submitError" class="error-message">{{ submitError }}</div>
@@ -53,7 +214,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { fighterService } from '@/services/fighter.service';
 import type { Fighter } from '@/types';
 
@@ -63,10 +224,32 @@ const submitting = ref(false);
 const editing = ref(false);
 const error = ref<string | null>(null);
 const submitError = ref<string | null>(null);
+const hasRecordData = computed(() => {
+  if (!profile.value) return false;
+  return (
+    profile.value.wins !== null ||
+    profile.value.losses !== null ||
+    profile.value.draws !== null
+  );
+});
 
 const form = ref({
-  name: '',
-  weightClass: '',
+  firstName: '',
+  lastName: '',
+  nickname: '',
+  phoneNumber: '',
+  dateOfBirth: '',
+  gender: '',
+  currentWeightClass: '',
+  height: null as number | null,
+  reach: null as number | null,
+  country: '',
+  city: '',
+  status: '',
+  profilePicture: '',
+  bio: '',
+  verificationLinks: '',
+  verificationContacts: '',
 });
 
 async function loadProfile() {
@@ -86,9 +269,45 @@ function startEdit() {
   editing.value = true;
   submitError.value = null;
   form.value = {
-    name: profile.value.name || '',
-    weightClass: profile.value.weightClass || '',
+    firstName: profile.value.firstName || '',
+    lastName: profile.value.lastName || '',
+    nickname: profile.value.nickname || '',
+    phoneNumber: profile.value.phoneNumber || '',
+    dateOfBirth: profile.value.dateOfBirth || '',
+    gender: profile.value.gender || '',
+    currentWeightClass: profile.value.currentWeightClass || profile.value.weightClass || '',
+    height: profile.value.height ?? null,
+    reach: profile.value.reach ?? null,
+    country: profile.value.country || '',
+    city: profile.value.city || '',
+    status: profile.value.status || '',
+    profilePicture: profile.value.profilePicture || '',
+    bio: profile.value.bio || '',
+    verificationLinks: profile.value.verificationLinks || '',
+    verificationContacts: profile.value.verificationContacts || '',
   };
+}
+
+function formatDate(value: string | null): string {
+  if (!value) return 'Not set';
+  return new Date(value).toLocaleDateString();
+}
+
+function formatDateTime(value: string | null): string {
+  if (!value) return 'Not set';
+  return new Date(value).toLocaleString();
+}
+
+function formatNumber(value: number | null, suffix: string): string {
+  if (value === null || value === undefined) return 'Not set';
+  return `${value} ${suffix}`;
+}
+
+function formatRecord(wins: number | null, losses: number | null, draws: number | null): string {
+  const w = wins ?? 0;
+  const l = losses ?? 0;
+  const d = draws ?? 0;
+  return `${w}-${l}-${d}`;
 }
 
 function cancelEdit() {
@@ -102,8 +321,22 @@ async function handleSubmit() {
   submitError.value = null;
   try {
     const updated = await fighterService.updateProfile({
-      name: form.value.name.trim(),
-      weightClass: form.value.weightClass.trim(),
+      firstName: form.value.firstName.trim(),
+      lastName: form.value.lastName.trim(),
+      nickname: form.value.nickname.trim() || null,
+      phoneNumber: form.value.phoneNumber.trim() || null,
+      dateOfBirth: form.value.dateOfBirth || null,
+      gender: form.value.gender.trim() || null,
+      currentWeightClass: form.value.currentWeightClass.trim(),
+      height: form.value.height === null ? null : Number(form.value.height),
+      reach: form.value.reach === null ? null : Number(form.value.reach),
+      country: form.value.country.trim() || null,
+      city: form.value.city.trim() || null,
+      status: form.value.status.trim() || null,
+      profilePicture: form.value.profilePicture.trim() || null,
+      bio: form.value.bio.trim() || null,
+      verificationLinks: form.value.verificationLinks.trim() || null,
+      verificationContacts: form.value.verificationContacts.trim() || null,
     });
     profile.value = updated;
     editing.value = false;
