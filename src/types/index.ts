@@ -13,6 +13,11 @@ export interface Fighter {
   weightClass: string | null;
 }
 
+export interface UpdateFighterProfileRequest {
+  name: string;
+  weightClass: string;
+}
+
 export interface FightRequest {
   id: string;
   status: string;
