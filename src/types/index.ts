@@ -112,6 +112,11 @@ export interface Event {
   slots: EventSlot[];
 }
 
+export interface CreateEventRequest {
+  name: string;
+  slots: string[];
+}
+
 export interface ApiError {
   error: string;
 }
