@@ -1,9 +1,12 @@
 export type UserRole = 'fighter' | 'plo' | 'admin';
 
+export type PloStatus = 'unverified' | 'verified';
+
 export interface User {
   id: string;
   email: string;
   role: UserRole;
+  ploStatus?: PloStatus | null;
 }
 
 export interface Fighter {
@@ -170,6 +173,7 @@ export interface RegisterResponse {
   id: string;
   email: string;
   role: UserRole;
+  ploStatus?: PloStatus | null;
 }
 
 export interface LoginResponse {
