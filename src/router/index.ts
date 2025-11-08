@@ -29,9 +29,20 @@ const router = createRouter({
     },
     {
       path: ROUTES.ADMIN_DASHBOARD,
-      name: 'AdminDashboard',
       component: () => import('@/views/admin/AdminDashboardView.vue'),
       meta: { requiresAuth: true, requiredRole: 'admin' },
+      children: [
+        {
+          path: '',
+          name: 'AdminDashboard',
+          component: () => import('@/views/admin/AdminHomeView.vue'),
+        },
+        {
+          path: 'pending-verifications',
+          name: 'AdminPendingVerifications',
+          component: () => import('@/views/admin/PendingVerificationsView.vue'),
+        },
+      ],
     },
     {
       path: '/fighter',

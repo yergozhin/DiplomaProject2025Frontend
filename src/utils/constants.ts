@@ -20,4 +20,5 @@ export const ROUTES = {
   PLO_AVAILABLE_FIGHTS: '/plo/available-fights',
   PLO_OFFERS: '/plo/offers',
   ADMIN_DASHBOARD: '/admin',
+  ADMIN_PENDING_VERIFICATIONS: '/admin/pending-verifications',
 } as const;

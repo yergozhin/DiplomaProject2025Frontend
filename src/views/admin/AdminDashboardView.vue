@@ -1,67 +1,85 @@
 <template>
-  <div class="admin-container">
-    <header class="admin-header">
-      <h1>Admin Dashboard</h1>
-      <button type="button" class="logout-btn" @click="handleLogout">Logout</button>
-    </header>
-
-    <section class="admin-content">
-      <p>Welcome, admin. Use backend tools to manage fighters, events, and offers.</p>
-    </section>
+  <div class="admin-layout">
+    <aside class="sidebar">
+      <h1>Admin</h1>
+      <nav>
+        <router-link :to="ROUTES.ADMIN_DASHBOARD" active-class="active">Home</router-link>
+        <router-link :to="ROUTES.ADMIN_PENDING_VERIFICATIONS" active-class="active">
+          Pending Verifications
+        </router-link>
+      </nav>
+      <button type="button" @click="handleLogout">Logout</button>
+    </aside>
+    <main class="content">
+      <router-view />
+    </main>
   </div>
 </template>
 
 <script setup lang="ts">
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '@/stores/auth.store';
+import { ROUTES } from '@/utils/constants';
 
 const router = useRouter();
 const authStore = useAuthStore();
 
 function handleLogout() {
   authStore.logout();
-  router.push('/login');
+  router.push(ROUTES.LOGIN);
 }
 </script>
 
 <style scoped>
-.admin-container {
-  max-width: 960px;
-  margin: 0 auto;
-  padding: 40px 20px;
-  text-align: left;
-}
-
-.admin-header {
+.admin-layout {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 30px;
+  min-height: 100vh;
 }
 
-.admin-header h1 {
+.sidebar {
+  width: 200px;
+  padding: 16px;
+  background-color: #f3f4f6;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sidebar h1 {
   margin: 0;
-  font-size: 28px;
+  font-size: 18px;
 }
 
-.logout-btn {
-  padding: 10px 18px;
-  background-color: #dc3545;
-  color: white;
-  border: none;
+.sidebar nav {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sidebar a {
+  color: #1f2937;
+  text-decoration: none;
+  padding: 6px 8px;
   border-radius: 4px;
+}
+
+.sidebar a.active {
+  background-color: #d1d5db;
+}
+
+.sidebar button {
+  margin-top: auto;
+  padding: 6px 8px;
+  border: 1px solid #1f2937;
+  border-radius: 4px;
+  background-color: #fff;
   cursor: pointer;
 }
 
-.logout-btn:hover {
-  background-color: #c82333;
-}
-
-.admin-content {
-  padding: 20px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  background-color: #f9f9f9;
+.content {
+  flex: 1;
+  padding: 16px;
+  background-color: #ffffff;
 }
 </style>
 
