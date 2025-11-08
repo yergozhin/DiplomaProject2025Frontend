@@ -4,6 +4,7 @@ import type {
   FighterVerification,
   PendingVerificationDetails,
   VerificationReviewResponse,
+  PromotionLeagueOwner,
 } from '@/types';
 
 export const adminService = {
@@ -15,6 +16,9 @@ export const adminService = {
   },
   async getPendingVerificationDetails(fighterId: string): Promise<PendingVerificationDetails> {
     return apiClient.get<PendingVerificationDetails>(`/fighters/pending-verifications/${fighterId}`);
+  },
+  async getPromotionLeagues(): Promise<PromotionLeagueOwner[]> {
+    return apiClient.get<PromotionLeagueOwner[]>('/admin/plos');
   },
   async reviewVerification(
     verificationId: string,

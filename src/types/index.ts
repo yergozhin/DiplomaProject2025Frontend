@@ -51,6 +51,13 @@ export interface VerificationReviewResponse {
   fighter: Fighter | null;
 }
 
+export interface PromotionLeagueOwner {
+  id: string;
+  email: string;
+  status: PloStatus;
+  name: string | null;
+}
+
 export interface UpdateFighterProfileRequest {
   firstName: string;
   lastName: string;

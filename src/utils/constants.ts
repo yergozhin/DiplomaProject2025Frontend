@@ -22,4 +22,5 @@ export const ROUTES = {
   ADMIN_DASHBOARD: '/admin',
   ADMIN_PENDING_VERIFICATIONS: '/admin/pending-verifications',
   ADMIN_PENDING_VERIFICATION_DETAILS: '/admin/pending-verifications/:fighterId',
+  ADMIN_PLOS: '/admin/promotion-leagues',
 } as const;

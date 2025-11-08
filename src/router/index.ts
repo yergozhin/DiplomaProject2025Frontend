@@ -47,6 +47,11 @@ const router = createRouter({
           name: 'AdminFighterVerificationDetails',
           component: () => import('@/views/admin/PendingVerificationDetailsView.vue'),
         },
+        {
+          path: 'promotion-leagues',
+          name: 'AdminPromotionLeagues',
+          component: () => import('@/views/admin/PromotionLeaguesView.vue'),
+        },
       ],
     },
     {

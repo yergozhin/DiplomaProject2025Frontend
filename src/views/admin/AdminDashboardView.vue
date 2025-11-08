@@ -7,6 +7,9 @@
         <router-link :to="ROUTES.ADMIN_PENDING_VERIFICATIONS" active-class="active">
           Pending Verifications
         </router-link>
+        <router-link :to="ROUTES.ADMIN_PLOS" active-class="active">
+          Promotion Leagues
+        </router-link>
       </nav>
       <button type="button" @click="handleLogout">Logout</button>
     </aside>
