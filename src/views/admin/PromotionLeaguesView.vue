@@ -11,6 +11,7 @@
           <th>Email</th>
           <th>Name</th>
           <th>Status</th>
+          <th>Actions</th>
         </tr>
       </thead>
       <tbody>
@@ -20,6 +21,28 @@
           <td>
             <span class="status-pill" :class="plo.status">{{ formatStatus(plo.status) }}</span>
           </td>
+          <td>
+            <div class="actions">
+              <button
+                v-if="plo.status === 'unverified'"
+                type="button"
+                class="action-button verify"
+                :disabled="isProcessing(plo.id)"
+                @click="changeStatus(plo.id, 'verified')"
+              >
+                Verify
+              </button>
+              <button
+                v-else
+                type="button"
+                class="action-button unverify"
+                :disabled="isProcessing(plo.id)"
+                @click="changeStatus(plo.id, 'unverified')"
+              >
+                Unverify
+              </button>
+            </div>
+          </td>
         </tr>
       </tbody>
     </table>
@@ -28,12 +51,13 @@
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
-import type { PromotionLeagueOwner } from '@/types';
+import type { PromotionLeagueOwner, PloStatus } from '@/types';
 import { adminService } from '@/services/admin.service';
 
 const plos = ref<PromotionLeagueOwner[]>([]);
 const loading = ref(false);
 const error = ref<string | null>(null);
+const processingId = ref<string | null>(null);
 
 function formatStatus(status: string) {
   return status.charAt(0).toUpperCase() + status.slice(1);
@@ -54,6 +78,32 @@ async function loadPlos() {
 onMounted(() => {
   loadPlos();
 });
+
+function isProcessing(id: string) {
+  return processingId.value === id;
+}
+
+async function changeStatus(ploId: string, status: PloStatus) {
+  if (processingId.value) return;
+  processingId.value = ploId;
+  error.value = null;
+  try {
+    const result = await adminService.updatePromotionLeagueStatus(ploId, status);
+    const index = plos.value.findIndex((item) => item.id === ploId);
+    if (index >= 0) {
+      const current = plos.value[index];
+      if (!current) return;
+      plos.value[index] = {
+        ...current,
+        status: result.ploStatus as PloStatus,
+      };
+    }
+  } catch (err: any) {
+    error.value = err.error || 'Failed to update status';
+  } finally {
+    processingId.value = null;
+  }
+}
 </script>
 
 <style scoped>
@@ -120,6 +170,35 @@ h2 {
 .status-pill.unverified {
   background-color: #fee2e2;
   color: #b91c1c;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+}
+
+.action-button {
+  padding: 6px 10px;
+  border-radius: 4px;
+  border: 1px solid transparent;
+  font-size: 13px;
+  cursor: pointer;
+  background-color: #ffffff;
+}
+
+.action-button.verify {
+  border-color: #15803d;
+  color: #15803d;
+}
+
+.action-button.unverify {
+  border-color: #b91c1c;
+  color: #b91c1c;
+}
+
+.action-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 </style>
 

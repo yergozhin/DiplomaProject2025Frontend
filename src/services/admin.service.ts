@@ -20,6 +20,12 @@ export const adminService = {
   async getPromotionLeagues(): Promise<PromotionLeagueOwner[]> {
     return apiClient.get<PromotionLeagueOwner[]>('/admin/plos');
   },
+  async updatePromotionLeagueStatus(ploId: string, status: 'verified' | 'unverified') {
+    return apiClient.patch<{ id: string; ploStatus: 'verified' | 'unverified' }>(
+      `/admin/plos/${ploId}/status`,
+      { status },
+    );
+  },
   async reviewVerification(
     verificationId: string,
     status: 'accepted' | 'rejected',
