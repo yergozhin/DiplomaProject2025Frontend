@@ -38,6 +38,11 @@ export interface Fighter {
   recordAdminNotes: string | null;
 }
 
+export interface PendingVerificationDetails {
+  fighter: Fighter;
+  verifications: FighterVerification[];
+}
+
 export interface UpdateFighterProfileRequest {
   firstName: string;
   lastName: string;

@@ -21,4 +21,5 @@ export const ROUTES = {
   PLO_OFFERS: '/plo/offers',
   ADMIN_DASHBOARD: '/admin',
   ADMIN_PENDING_VERIFICATIONS: '/admin/pending-verifications',
+  ADMIN_PENDING_VERIFICATION_DETAILS: '/admin/pending-verifications/:fighterId',
 } as const;

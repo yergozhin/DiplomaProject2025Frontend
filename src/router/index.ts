@@ -42,6 +42,11 @@ const router = createRouter({
           name: 'AdminPendingVerifications',
           component: () => import('@/views/admin/PendingVerificationsView.vue'),
         },
+        {
+          path: 'pending-verifications/:fighterId',
+          name: 'AdminFighterVerificationDetails',
+          component: () => import('@/views/admin/PendingVerificationDetailsView.vue'),
+        },
       ],
     },
     {

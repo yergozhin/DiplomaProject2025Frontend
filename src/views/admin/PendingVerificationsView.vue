@@ -15,6 +15,7 @@
           <th>Current Weight Class</th>
           <th>Country</th>
           <th>City</th>
+          <th>Action</th>
         </tr>
       </thead>
       <tbody>
@@ -29,6 +30,11 @@
           <td>{{ fighter.currentWeightClass || fighter.weightClass || 'Not set' }}</td>
           <td>{{ fighter.country || 'Not set' }}</td>
           <td>{{ fighter.city || 'Not set' }}</td>
+          <td>
+            <button type="button" class="details-button" @click="goToDetails(fighter.id)">
+              View details
+            </button>
+          </td>
         </tr>
       </tbody>
     </table>
@@ -37,18 +43,27 @@
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
+import { useRouter } from 'vue-router';
 import type { Fighter } from '@/types';
 import { adminService } from '@/services/admin.service';
 
 const fighters = ref<Fighter[]>([]);
 const loading = ref(false);
 const error = ref<string | null>(null);
+const router = useRouter();
 
 function formatName(fighter: Fighter): string {
   if (fighter.firstName || fighter.lastName) {
     return [fighter.firstName, fighter.lastName].filter(Boolean).join(' ');
   }
   return fighter.name || 'Unknown fighter';
+}
+
+function goToDetails(fighterId: string) {
+  router.push({
+    name: 'AdminFighterVerificationDetails',
+    params: { fighterId },
+  });
 }
 
 async function loadFighters() {
@@ -113,6 +128,15 @@ h2 {
 
 .fighter-nickname {
   color: #555;
+  font-size: 13px;
+}
+
+.details-button {
+  padding: 6px 10px;
+  border: 1px solid #1f2937;
+  border-radius: 4px;
+  background-color: #fff;
+  cursor: pointer;
   font-size: 13px;
 }
 </style>
