@@ -43,6 +43,11 @@ export interface PendingVerificationDetails {
   verifications: FighterVerification[];
 }
 
+export interface VerificationReviewResponse {
+  verification: FighterVerification | null;
+  fighter: Fighter | null;
+}
+
 export interface UpdateFighterProfileRequest {
   firstName: string;
   lastName: string;

@@ -53,6 +53,7 @@
               <th>Awards</th>
               <th>Status</th>
               <th>Submitted</th>
+              <th>Action</th>
             </tr>
           </thead>
           <tbody>
@@ -65,6 +66,27 @@
               <td>{{ verification.awards || '—' }}</td>
               <td class="capitalize">{{ formatStatus(verification.status) }}</td>
               <td>{{ formatDate(verification.createdAt) }}</td>
+              <td>
+                <div class="actions" v-if="verification.status === 'pending'">
+                  <button
+                    type="button"
+                    class="action-button accept"
+                    :disabled="isProcessing(verification.id)"
+                    @click="reviewVerification(verification.id, 'accepted')"
+                  >
+                    Accept
+                  </button>
+                  <button
+                    type="button"
+                    class="action-button reject"
+                    :disabled="isProcessing(verification.id)"
+                    @click="reviewVerification(verification.id, 'rejected')"
+                  >
+                    Reject
+                  </button>
+                </div>
+                <span v-else class="status-label">No action available</span>
+              </td>
             </tr>
           </tbody>
         </table>
@@ -86,6 +108,7 @@ const fighter = ref<Fighter | null>(null);
 const verifications = ref<FighterVerification[]>([]);
 const loading = ref(false);
 const error = ref<string | null>(null);
+const processingId = ref<string | null>(null);
 
 const fighterId = computed(() => {
   const value = route.params.fighterId;
@@ -130,6 +153,39 @@ function formatDate(value: string) {
 function formatStatus(value: string) {
   if (!value) return '';
   return value.charAt(0).toUpperCase() + value.slice(1);
+}
+
+function isProcessing(verificationId: string) {
+  return processingId.value === verificationId;
+}
+
+async function reviewVerification(verificationId: string, status: 'accepted' | 'rejected') {
+  if (processingId.value) return;
+  processingId.value = verificationId;
+  error.value = null;
+  try {
+    const response = await adminService.reviewVerification(verificationId, status);
+    if (response.verification) {
+      const index = verifications.value.findIndex((item) => item.id === verificationId);
+      if (index >= 0) {
+        verifications.value.splice(index, 1, response.verification);
+      } else {
+        verifications.value.unshift(response.verification);
+      }
+    } else {
+      const index = verifications.value.findIndex((item) => item.id === verificationId);
+      if (index >= 0) {
+        verifications.value.splice(index, 1);
+      }
+    }
+    if (response.fighter) {
+      fighter.value = response.fighter;
+    }
+  } catch (err: any) {
+    error.value = err.error || 'Failed to update verification status.';
+  } finally {
+    processingId.value = null;
+  }
 }
 
 async function loadData() {
@@ -273,6 +329,40 @@ onMounted(() => {
 .value-cell {
   max-width: 280px;
   word-break: break-word;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+}
+
+.action-button {
+  padding: 6px 10px;
+  border-radius: 4px;
+  border: 1px solid #1f2937;
+  background-color: #ffffff;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.action-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.action-button.accept {
+  border-color: #16a34a;
+  color: #166534;
+}
+
+.action-button.reject {
+  border-color: #dc2626;
+  color: #991b1b;
+}
+
+.status-label {
+  font-size: 12px;
+  color: #6b7280;
 }
 </style>
 

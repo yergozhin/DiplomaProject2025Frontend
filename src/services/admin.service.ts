@@ -1,5 +1,10 @@
 import { apiClient } from './api';
-import type { Fighter, FighterVerification, PendingVerificationDetails } from '@/types';
+import type {
+  Fighter,
+  FighterVerification,
+  PendingVerificationDetails,
+  VerificationReviewResponse,
+} from '@/types';
 
 export const adminService = {
   async getPendingVerificationFighters(): Promise<Fighter[]> {
@@ -10,6 +15,19 @@ export const adminService = {
   },
   async getPendingVerificationDetails(fighterId: string): Promise<PendingVerificationDetails> {
     return apiClient.get<PendingVerificationDetails>(`/fighters/pending-verifications/${fighterId}`);
+  },
+  async reviewVerification(
+    verificationId: string,
+    status: 'accepted' | 'rejected',
+    adminNote?: string | null,
+  ): Promise<VerificationReviewResponse> {
+    return apiClient.patch<VerificationReviewResponse>(
+      `/fighters/verifications/${verificationId}/status`,
+      {
+        status,
+        adminNote: adminNote ?? null,
+      },
+    );
   },
 };
 
