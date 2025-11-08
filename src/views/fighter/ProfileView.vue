@@ -184,20 +184,6 @@
           <textarea id="bio" v-model="form.bio" :disabled="submitting"></textarea>
         </div>
 
-        <div class="form-group">
-          <label for="verificationLinks">Verification Links (visible to admin)</label>
-          <textarea id="verificationLinks" v-model="form.verificationLinks" :disabled="submitting"></textarea>
-        </div>
-
-        <div class="form-group">
-          <label for="verificationContacts">Verification Contacts (visible to admin)</label>
-          <textarea
-            id="verificationContacts"
-            v-model="form.verificationContacts"
-            :disabled="submitting"
-          ></textarea>
-        </div>
-
         <div v-if="submitError" class="error-message">{{ submitError }}</div>
 
         <div class="form-actions">
@@ -209,6 +195,125 @@
           </button>
         </div>
       </form>
+
+      <div class="verification-section">
+        <h2>Verification Submissions</h2>
+        <div v-if="verificationsLoading" class="status">Loading verification submissions...</div>
+        <div v-else-if="verificationsError" class="error-message">{{ verificationsError }}</div>
+        <div v-else-if="verifications.length === 0" class="status">No verification submissions yet.</div>
+        <ul v-else class="verification-list">
+          <li v-for="verification in verifications" :key="verification.id" class="verification-item">
+            <div class="verification-header">
+              <span class="verification-type">{{ formatVerificationType(verification.type) }}</span>
+              <span class="status-tag" :class="`status-${verification.status}`">
+                {{ formatVerificationStatus(verification.status) }}
+              </span>
+            </div>
+            <div class="verification-value">
+              <strong>Value:</strong>
+              <span v-if="verification.type === 'image' || verification.type === 'link'">
+                <a :href="verification.value" target="_blank" rel="noopener">{{ verification.value }}</a>
+              </span>
+              <span v-else>{{ verification.value }}</span>
+            </div>
+            <div class="verification-record" v-if="verification.wins || verification.losses || verification.draws">
+              <strong>Proposed Record:</strong>
+              {{ formatRecord(verification.wins, verification.losses, verification.draws) }}
+            </div>
+            <div class="verification-awards" v-if="verification.awards">
+              <strong>Awards:</strong> {{ verification.awards }}
+            </div>
+            <div class="verification-dates">
+              <span>Submitted: {{ formatDateTime(verification.createdAt) }}</span>
+              <span v-if="verification.reviewedAt">Reviewed: {{ formatDateTime(verification.reviewedAt) }}</span>
+            </div>
+            <div class="verification-admin" v-if="verification.adminNote">
+              <strong>Admin note:</strong> {{ verification.adminNote }}
+            </div>
+          </li>
+        </ul>
+
+        <div class="verification-form-wrapper">
+          <h3>Submit New Verification</h3>
+          <form class="verification-form" @submit.prevent="handleVerificationSubmit">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="verificationType">Type *</label>
+                <select
+                  id="verificationType"
+                  v-model="verificationForm.type"
+                  :disabled="verificationSubmitting"
+                >
+                  <option value="link">Link</option>
+                  <option value="contact">Contact</option>
+                  <option value="image">Image</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="verificationValue">Value *</label>
+                <input
+                  id="verificationValue"
+                  v-model="verificationForm.value"
+                  type="text"
+                  :disabled="verificationSubmitting"
+                  required
+                />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="verificationWins">Wins</label>
+                <input
+                  id="verificationWins"
+                  v-model.number="verificationForm.wins"
+                  type="number"
+                  min="0"
+                  :disabled="verificationSubmitting"
+                />
+              </div>
+              <div class="form-group">
+                <label for="verificationLosses">Losses</label>
+                <input
+                  id="verificationLosses"
+                  v-model.number="verificationForm.losses"
+                  type="number"
+                  min="0"
+                  :disabled="verificationSubmitting"
+                />
+              </div>
+              <div class="form-group">
+                <label for="verificationDraws">Draws</label>
+                <input
+                  id="verificationDraws"
+                  v-model.number="verificationForm.draws"
+                  type="number"
+                  min="0"
+                  :disabled="verificationSubmitting"
+                />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="verificationAwards">Awards</label>
+              <textarea
+                id="verificationAwards"
+                v-model="verificationForm.awards"
+                :disabled="verificationSubmitting"
+              ></textarea>
+            </div>
+
+            <div v-if="verificationSubmitError" class="error-message">{{ verificationSubmitError }}</div>
+            <div v-if="verificationSubmitSuccess" class="success-message">{{ verificationSubmitSuccess }}</div>
+
+            <div class="form-actions">
+              <button type="submit" class="save-btn" :disabled="verificationSubmitting">
+                {{ verificationSubmitting ? 'Submitting...' : 'Submit Verification' }}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -216,7 +321,12 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue';
 import { fighterService } from '@/services/fighter.service';
-import type { Fighter } from '@/types';
+import type {
+  Fighter,
+  FighterVerification,
+  VerificationType,
+  CreateVerificationRequest,
+} from '@/types';
 
 const profile = ref<Fighter | null>(null);
 const loading = ref(false);
@@ -248,8 +358,21 @@ const form = ref({
   status: '',
   profilePicture: '',
   bio: '',
-  verificationLinks: '',
-  verificationContacts: '',
+});
+
+const verifications = ref<FighterVerification[]>([]);
+const verificationsLoading = ref(false);
+const verificationsError = ref<string | null>(null);
+const verificationSubmitting = ref(false);
+const verificationSubmitError = ref<string | null>(null);
+const verificationSubmitSuccess = ref<string | null>(null);
+const verificationForm = ref({
+  type: 'link' as VerificationType,
+  value: '',
+  wins: 0,
+  losses: 0,
+  draws: 0,
+  awards: '',
 });
 
 async function loadProfile() {
@@ -265,6 +388,24 @@ async function loadProfile() {
 }
 
 function startEdit() {
+  function toDateInput(value: string | null): string {
+    if (!value) return '';
+    const sanitized = value.replace(/[./]/g, '-');
+    const addOneDay = (year: number, month: number, day: number) => {
+      const date = new Date(Date.UTC(year, month - 1, day));
+      date.setUTCDate(date.getUTCDate() + 1);
+      return date.toISOString().slice(0, 10);
+    };
+    const match = sanitized.match(/^(\d{4})-(\d{2})-(\d{2})/);
+    if (match) {
+      return addOneDay(Number(match[1]), Number(match[2]), Number(match[3]));
+    }
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) return '';
+    date.setUTCDate(date.getUTCDate() + 1);
+    return date.toISOString().slice(0, 10);
+  }
+
   if (!profile.value) return;
   editing.value = true;
   submitError.value = null;
@@ -273,7 +414,7 @@ function startEdit() {
     lastName: profile.value.lastName || '',
     nickname: profile.value.nickname || '',
     phoneNumber: profile.value.phoneNumber || '',
-    dateOfBirth: profile.value.dateOfBirth || '',
+    dateOfBirth: toDateInput(profile.value.dateOfBirth),
     gender: profile.value.gender || '',
     currentWeightClass: profile.value.currentWeightClass || profile.value.weightClass || '',
     height: profile.value.height ?? null,
@@ -283,8 +424,6 @@ function startEdit() {
     status: profile.value.status || '',
     profilePicture: profile.value.profilePicture || '',
     bio: profile.value.bio || '',
-    verificationLinks: profile.value.verificationLinks || '',
-    verificationContacts: profile.value.verificationContacts || '',
   };
 }
 
@@ -335,8 +474,6 @@ async function handleSubmit() {
       status: form.value.status.trim() || null,
       profilePicture: form.value.profilePicture.trim() || null,
       bio: form.value.bio.trim() || null,
-      verificationLinks: form.value.verificationLinks.trim() || null,
-      verificationContacts: form.value.verificationContacts.trim() || null,
     });
     profile.value = updated;
     editing.value = false;
@@ -347,8 +484,87 @@ async function handleSubmit() {
   }
 }
 
+function resetVerificationForm() {
+  verificationForm.value = {
+    type: 'link',
+    value: '',
+    wins: 0,
+    losses: 0,
+    draws: 0,
+    awards: '',
+  };
+}
+
+async function loadVerifications() {
+  verificationsLoading.value = true;
+  verificationsError.value = null;
+  try {
+    verifications.value = await fighterService.getVerifications();
+  } catch (err: any) {
+    verificationsError.value = err.error || 'Failed to load verification submissions';
+  } finally {
+    verificationsLoading.value = false;
+  }
+}
+
+function sanitizeStat(value: number): number {
+  if (!Number.isFinite(value)) return 0;
+  if (value < 0) return 0;
+  return Math.round(value);
+}
+
+async function handleVerificationSubmit() {
+  verificationSubmitting.value = true;
+  verificationSubmitError.value = null;
+  verificationSubmitSuccess.value = null;
+
+  const trimmedValue = verificationForm.value.value.trim();
+  if (!trimmedValue) {
+    verificationSubmitError.value = 'Value is required';
+    verificationSubmitting.value = false;
+    return;
+  }
+
+  const wins = sanitizeStat(Number(verificationForm.value.wins));
+  const losses = sanitizeStat(Number(verificationForm.value.losses));
+  const draws = sanitizeStat(Number(verificationForm.value.draws));
+  const awards = verificationForm.value.awards.trim();
+
+  const payload: CreateVerificationRequest = {
+    type: verificationForm.value.type,
+    value: trimmedValue,
+    wins,
+    losses,
+    draws,
+  };
+
+  if (awards) {
+    payload.awards = awards;
+  }
+
+  try {
+    await fighterService.createVerification(payload);
+    verificationSubmitSuccess.value = 'Verification submitted for review';
+    resetVerificationForm();
+    await loadVerifications();
+  } catch (err: any) {
+    verificationSubmitError.value = err.error || 'Failed to submit verification';
+  } finally {
+    verificationSubmitting.value = false;
+  }
+}
+
+function formatVerificationType(type: VerificationType): string {
+  return type.charAt(0).toUpperCase() + type.slice(1);
+}
+
+function formatVerificationStatus(status: string): string {
+  return status.charAt(0).toUpperCase() + status.slice(1);
+}
+
 onMounted(() => {
   loadProfile();
+  loadVerifications();
 });
 </script>
 
@@ -468,6 +684,106 @@ onMounted(() => {
 .edit-btn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+}
+
+.verification-section {
+  margin-top: 40px;
+}
+
+.verification-section h2 {
+  margin-bottom: 20px;
+}
+
+.verification-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 30px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.verification-item {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 15px;
+  background-color: #fff;
+}
+
+.verification-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.verification-type {
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.status-tag {
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  text-transform: capitalize;
+  color: #fff;
+}
+
+.status-pending {
+  background-color: #ffc107;
+  color: #212529;
+}
+
+.status-accepted {
+  background-color: #28a745;
+}
+
+.status-rejected {
+  background-color: #dc3545;
+}
+
+.verification-value,
+.verification-record,
+.verification-awards,
+.verification-dates,
+.verification-admin {
+  margin-bottom: 8px;
+}
+
+.verification-value a {
+  color: #007bff;
+  word-break: break-all;
+}
+
+.verification-dates {
+  display: flex;
+  gap: 20px;
+  font-size: 13px;
+  color: #555;
+  flex-wrap: wrap;
+}
+
+.verification-form-wrapper h3 {
+  margin-bottom: 15px;
+}
+
+.verification-form .form-group textarea,
+.verification-form .form-group select,
+.verification-form .form-group input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.success-message {
+  margin-bottom: 15px;
+  padding: 10px;
+  border-radius: 4px;
+  background-color: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
 }
 </style>
 

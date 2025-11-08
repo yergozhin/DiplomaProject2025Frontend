@@ -27,8 +27,6 @@ export interface Fighter {
   bio: string | null;
   profileCreatedAt: string | null;
   profileUpdatedAt: string | null;
-  verificationLinks: string | null;
-  verificationContacts: string | null;
   totalFights: number | null;
   wins: number | null;
   losses: number | null;
@@ -55,8 +53,34 @@ export interface UpdateFighterProfileRequest {
   status?: string | null;
   profilePicture?: string | null;
   bio?: string | null;
-  verificationLinks?: string | null;
-  verificationContacts?: string | null;
+}
+
+export type VerificationType = 'link' | 'contact' | 'image';
+export type VerificationStatus = 'pending' | 'accepted' | 'rejected';
+
+export interface FighterVerification {
+  id: string;
+  fighterId: string;
+  type: VerificationType;
+  value: string;
+  wins: number;
+  losses: number;
+  draws: number;
+  awards: string | null;
+  status: VerificationStatus;
+  adminId: string | null;
+  adminNote: string | null;
+  reviewedAt: string | null;
+  createdAt: string;
+}
+
+export interface CreateVerificationRequest {
+  type: VerificationType;
+  value: string;
+  wins?: number;
+  losses?: number;
+  draws?: number;
+  awards?: string | null;
 }
 
 export interface FightRequest {
