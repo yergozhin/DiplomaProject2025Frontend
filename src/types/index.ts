@@ -72,6 +72,40 @@ export interface PromotionLeagueOwner {
   updatedAt: string | null;
 }
 
+export interface PloProfile {
+  id: string;
+  email: string;
+  leagueName: string | null;
+  ownerFirstName: string | null;
+  ownerLastName: string | null;
+  phoneNumber: string | null;
+  website: string | null;
+  country: string | null;
+  city: string | null;
+  address: string | null;
+  description: string | null;
+  logo: string | null;
+  foundedDate: string | null;
+  socialMediaLinks: string | null;
+  createdAt: string | null;
+  updatedAt: string | null;
+}
+
+export interface UpdatePloProfileRequest {
+  leagueName: string | null;
+  ownerFirstName: string | null;
+  ownerLastName: string | null;
+  phoneNumber: string | null;
+  website: string | null;
+  country: string | null;
+  city: string | null;
+  address: string | null;
+  description: string | null;
+  logo: string | null;
+  foundedDate: string | null;
+  socialMediaLinks: string | null;
+}
+
 export interface UpdateFighterProfileRequest {
   firstName: string;
   lastName: string;

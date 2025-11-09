@@ -23,6 +23,11 @@
             Offers
           </router-link>
         </li>
+        <li>
+          <router-link :to="ROUTES.PLO_PROFILE" active-class="active">
+            Profile
+          </router-link>
+        </li>
       </ul>
       <button @click="handleLogout" class="logout-btn">Logout</button>
     </div>
