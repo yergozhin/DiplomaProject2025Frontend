@@ -1,5 +1,5 @@
 import { apiClient } from './api';
-import type { CreateEventRequest, Event, EventSlot } from '@/types';
+import type { CreateEventRequest, Event, EventSlot, UpdateEventRequest } from '@/types';
 
 export const eventService = {
   async getOwnedEvents(): Promise<Event[]> {
@@ -12,6 +12,14 @@ export const eventService = {
 
   async createEvent(payload: CreateEventRequest): Promise<Event> {
     return apiClient.post<Event>('/events', payload);
+  },
+
+  async updateEvent(eventId: string, payload: UpdateEventRequest): Promise<Event> {
+    return apiClient.put<Event>(`/events/${eventId}`, payload);
+  },
+
+  async publishEvent(eventId: string): Promise<Event> {
+    return apiClient.patch<Event>(`/events/${eventId}/publish`);
   },
 };
 

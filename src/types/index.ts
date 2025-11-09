@@ -248,12 +248,35 @@ export interface Event {
   name: string;
   ploId: string;
   createdAt: string;
+  eventName: string | null;
+  eventDescription: string | null;
+  venueName: string | null;
+  venueAddress: string | null;
+  city: string | null;
+  country: string | null;
+  venueCapacity: number | null;
+  posterImage: string | null;
+  ticketLink: string | null;
+  status: string | null;
+  updatedAt: string | null;
   slots: EventSlot[];
 }
 
 export interface CreateEventRequest {
   name: string;
   slots: string[];
+}
+
+export interface UpdateEventRequest {
+  eventName?: string | null;
+  eventDescription?: string | null;
+  venueName?: string | null;
+  venueAddress?: string | null;
+  city?: string | null;
+  country?: string | null;
+  venueCapacity?: number | null;
+  posterImage?: string | null;
+  ticketLink?: string | null;
 }
 
 export interface ApiError {
