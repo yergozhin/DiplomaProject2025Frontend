@@ -143,9 +143,19 @@ const router = createRouter({
     },
     {
       path: ROUTES.SPECTATOR_HOME,
-      name: 'SpectatorHome',
-      component: () => import('@/views/spectator/SpectatorHomeView.vue'),
+      component: () => import('@/views/spectator/SpectatorDashboardView.vue'),
       meta: { requiresAuth: true, requiredRole: 'spectator' },
+      children: [
+        {
+          path: '',
+          redirect: 'events',
+        },
+        {
+          path: 'events',
+          name: 'SpectatorEvents',
+          component: () => import('@/views/spectator/SpectatorEventsView.vue'),
+        },
+      ],
     },
   ],
 });

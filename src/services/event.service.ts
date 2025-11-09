@@ -21,5 +21,9 @@ export const eventService = {
   async publishEvent(eventId: string): Promise<Event> {
     return apiClient.patch<Event>(`/events/${eventId}/publish`);
   },
+
+  async getPublishedEvents(): Promise<Event[]> {
+    return apiClient.get<Event[]>('/events/published');
+  },
 };
 
