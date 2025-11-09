@@ -87,6 +87,7 @@ export const useAuthStore = defineStore('auth', () => {
     if (!userRole.value) return ROUTES.LOGIN;
     if (userRole.value === 'fighter') return ROUTES.FIGHTER_DASHBOARD;
     if (userRole.value === 'plo') return ROUTES.PLO_DASHBOARD;
+    if (userRole.value === 'spectator') return ROUTES.SPECTATOR_HOME;
     if (userRole.value === 'admin') return ROUTES.ADMIN_DASHBOARD;
     return ROUTES.LOGIN;
   }

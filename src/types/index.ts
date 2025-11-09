@@ -1,4 +1,4 @@
-export type UserRole = 'fighter' | 'plo' | 'admin';
+export type UserRole = 'fighter' | 'plo' | 'spectator' | 'admin';
 
 export type PloStatus = 'unverified' | 'verified';
 

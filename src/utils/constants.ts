@@ -20,6 +20,7 @@ export const ROUTES = {
   PLO_AVAILABLE_FIGHTS: '/plo/available-fights',
   PLO_OFFERS: '/plo/offers',
   PLO_PROFILE: '/plo/profile',
+  SPECTATOR_HOME: '/spectator',
   ADMIN_DASHBOARD: '/admin',
   ADMIN_PENDING_VERIFICATIONS: '/admin/pending-verifications',
   ADMIN_PENDING_VERIFICATION_DETAILS: '/admin/pending-verifications/:fighterId',

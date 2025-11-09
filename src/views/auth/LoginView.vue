@@ -38,6 +38,7 @@
             <option value="">Select a role</option>
             <option value="fighter">Fighter</option>
             <option value="plo">Promotion League Owner</option>
+            <option value="spectator">Spectator</option>
           </select>
         </div>
 
