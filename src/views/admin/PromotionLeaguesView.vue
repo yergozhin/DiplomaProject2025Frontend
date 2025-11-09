@@ -9,7 +9,11 @@
       <thead>
         <tr>
           <th>Email</th>
-          <th>Name</th>
+          <th>League</th>
+          <th>Owner</th>
+          <th>Phone</th>
+          <th>Website</th>
+          <th>Location</th>
           <th>Status</th>
           <th>Actions</th>
         </tr>
@@ -17,7 +21,16 @@
       <tbody>
         <tr v-for="plo in plos" :key="plo.id">
           <td>{{ plo.email }}</td>
-          <td>{{ plo.name || 'Unknown' }}</td>
+          <td>{{ plo.leagueName || 'Unknown league' }}</td>
+          <td>{{ formatOwner(plo.ownerFirstName, plo.ownerLastName) }}</td>
+          <td>{{ plo.phoneNumber || 'Not set' }}</td>
+          <td>
+            <a v-if="plo.website" :href="plo.website" target="_blank" rel="noreferrer">
+              {{ plo.website }}
+            </a>
+            <span v-else>Not set</span>
+          </td>
+          <td>{{ formatLocation(plo.city, plo.country) }}</td>
           <td>
             <span class="status-pill" :class="plo.status">{{ formatStatus(plo.status) }}</span>
           </td>
@@ -61,6 +74,18 @@ const processingId = ref<string | null>(null);
 
 function formatStatus(status: string) {
   return status.charAt(0).toUpperCase() + status.slice(1);
+}
+
+function formatOwner(first: string | null, last: string | null) {
+  const parts = [first, last].filter(Boolean);
+  return parts.length > 0 ? parts.join(' ') : 'Not set';
+}
+
+function formatLocation(city: string | null, country: string | null) {
+  if (city && country) return `${city}, ${country}`;
+  if (city) return city;
+  if (country) return country;
+  return 'Not set';
 }
 
 async function loadPlos() {
@@ -147,6 +172,11 @@ h2 {
   text-align: left;
   font-size: 14px;
 }
+.plos-table td a {
+  color: #2563eb;
+  text-decoration: underline;
+}
+
 
 .plos-table thead {
   background-color: #f3f4f6;

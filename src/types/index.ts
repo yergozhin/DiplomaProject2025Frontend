@@ -56,6 +56,20 @@ export interface PromotionLeagueOwner {
   email: string;
   status: PloStatus;
   name: string | null;
+  leagueName: string | null;
+  ownerFirstName: string | null;
+  ownerLastName: string | null;
+  phoneNumber: string | null;
+  website: string | null;
+  country: string | null;
+  city: string | null;
+  address: string | null;
+  description: string | null;
+  logo: string | null;
+  foundedDate: string | null;
+  socialMediaLinks: string | null;
+  createdAt: string | null;
+  updatedAt: string | null;
 }
 
 export interface UpdateFighterProfileRequest {
