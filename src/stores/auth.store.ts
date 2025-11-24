@@ -76,6 +76,24 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
+  async function resendVerificationEmail(email: string, role: UserRole) {
+    loading.value = true;
+    error.value = null;
+
+    try {
+      const res = await authService.resendVerificationEmail({
+        email,
+        role,
+      });
+      return res;
+    } catch (err: any) {
+      error.value = err.error || 'Failed to resend verification email';
+      throw err;
+    } finally {
+      loading.value = false;
+    }
+  }
+
   function setAuth(userData: User, authToken: string) {
     user.value = userData;
     token.value = authToken;
@@ -107,5 +125,6 @@ export const useAuthStore = defineStore('auth', () => {
     clearAuth,
     initAuth,
     getDashboardRoute,
+    resendVerificationEmail,
   };
 });

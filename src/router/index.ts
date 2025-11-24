@@ -28,6 +28,12 @@ const router = createRouter({
       meta: { requiresAuth: false },
     },
     {
+      path: ROUTES.VERIFY_EMAIL,
+      name: 'VerifyEmail',
+      component: () => import('@/views/auth/VerifyEmailView.vue'),
+      meta: { requiresAuth: false },
+    },
+    {
       path: ROUTES.ADMIN_DASHBOARD,
       component: () => import('@/views/admin/AdminDashboardView.vue'),
       meta: { requiresAuth: true, requiredRole: 'admin' },

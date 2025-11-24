@@ -8,6 +8,7 @@ export const STORAGE_KEYS = {
 export const ROUTES = {
   LOGIN: '/login',
   REGISTER: '/register',
+  VERIFY_EMAIL: '/verify-email',
   FIGHTER_DASHBOARD: '/fighter/dashboard',
   FIGHTER_PROFILE: '/fighter/profile',
   FIGHTER_OPPONENTS: '/fighter/opponents',
