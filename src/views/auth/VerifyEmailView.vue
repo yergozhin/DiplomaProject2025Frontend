@@ -19,11 +19,10 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+import { useRoute } from 'vue-router';
 import { authService } from '@/services/auth.service';
 
 const route = useRoute();
-const router = useRouter();
 
 const loading = ref(true);
 const success = ref(false);

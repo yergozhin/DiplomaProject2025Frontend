@@ -55,11 +55,8 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import { useRouter } from 'vue-router';
 import { authService } from '@/services/auth.service';
 import type { UserRole } from '@/types';
-
-const router = useRouter();
 
 const forgotForm = ref({
   email: '',
