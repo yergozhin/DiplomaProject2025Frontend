@@ -34,6 +34,18 @@ const router = createRouter({
       meta: { requiresAuth: false },
     },
     {
+      path: ROUTES.FORGOT_PASSWORD,
+      name: 'ForgotPassword',
+      component: () => import('@/views/auth/ForgotPasswordView.vue'),
+      meta: { requiresAuth: false },
+    },
+    {
+      path: ROUTES.RESET_PASSWORD,
+      name: 'ResetPassword',
+      component: () => import('@/views/auth/ResetPasswordView.vue'),
+      meta: { requiresAuth: false },
+    },
+    {
       path: ROUTES.ADMIN_DASHBOARD,
       component: () => import('@/views/admin/AdminDashboardView.vue'),
       meta: { requiresAuth: true, requiredRole: 'admin' },

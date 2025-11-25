@@ -9,6 +9,8 @@ export const ROUTES = {
   LOGIN: '/login',
   REGISTER: '/register',
   VERIFY_EMAIL: '/verify-email',
+  FORGOT_PASSWORD: '/forgot-password',
+  RESET_PASSWORD: '/reset-password',
   FIGHTER_DASHBOARD: '/fighter/dashboard',
   FIGHTER_PROFILE: '/fighter/profile',
   FIGHTER_OPPONENTS: '/fighter/opponents',

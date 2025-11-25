@@ -68,6 +68,9 @@
 
       <div class="auth-footer">
         <p>
+          <router-link to="/forgot-password">Forgot password?</router-link>
+        </p>
+        <p>
           Don't have an account?
           <router-link to="/register">Register here</router-link>
         </p>

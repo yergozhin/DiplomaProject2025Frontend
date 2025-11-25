@@ -15,6 +15,24 @@ export interface ResendVerificationEmailResponse {
   message: string;
 }
 
+export interface RequestPasswordResetRequest {
+  email: string;
+  role: string;
+}
+
+export interface RequestPasswordResetResponse {
+  message: string;
+}
+
+export interface ResetPasswordRequest {
+  token: string;
+  password: string;
+}
+
+export interface ResetPasswordResponse {
+  message: string;
+}
+
 export const authService = {
   async register(data: RegisterRequest): Promise<RegisterResponse> {
     return apiClient.post<RegisterResponse>('/auth/register', data);
@@ -35,5 +53,20 @@ export const authService = {
       '/auth/resend-verification-email',
       data,
     );
+  },
+
+  async requestPasswordReset(
+    data: RequestPasswordResetRequest,
+  ): Promise<RequestPasswordResetResponse> {
+    return apiClient.post<RequestPasswordResetResponse>(
+      '/auth/request-password-reset',
+      data,
+    );
+  },
+
+  async resetPassword(
+    data: ResetPasswordRequest,
+  ): Promise<ResetPasswordResponse> {
+    return apiClient.post<ResetPasswordResponse>('/auth/reset-password', data);
   },
 };
