@@ -4,6 +4,9 @@
       <h2>Spectator</h2>
       <ul>
         <li>
+          <router-link to="/" class="nav-link-landing">Back to Landing Page</router-link>
+        </li>
+        <li>
           <router-link :to="ROUTES.SPECTATOR_EVENTS" active-class="active">
             Published Events
           </router-link>
@@ -77,6 +80,19 @@ function handleLogout() {
 .sidebar a.active {
   background-color: #007bff;
   color: #fff;
+}
+
+.nav-link-landing {
+  display: block;
+  padding: 8px 12px;
+  text-decoration: none;
+  color: #007bff;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+.nav-link-landing:hover {
+  background-color: #e5e5e5;
 }
 
 .logout-btn {

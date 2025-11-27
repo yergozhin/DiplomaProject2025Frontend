@@ -23,8 +23,15 @@
             :to="dashboardRoute"
             class="nav-link"
           >
-            Dashboard
+            {{ dashboardButtonText }}
           </router-link>
+          <button
+            v-if="isAuthenticated"
+            @click="handleLogout"
+            class="nav-link logout-btn"
+          >
+            Logout
+          </button>
         </div>
       </nav>
     </header>
@@ -33,8 +40,9 @@
       <section class="hero-section">
         <h1 class="hero-title">title</h1>
         <p class="hero-description">description</p>
-        <div v-if="!isAuthenticated" class="hero-actions">
-          <router-link to="/register" class="btn btn-primary">cta button</router-link>
+        <div class="hero-actions">
+          <router-link v-if="!isAuthenticated" to="/register" class="btn btn-primary">cta button</router-link>
+          <router-link v-if="isAuthenticated" :to="dashboardRoute" class="btn btn-primary">{{ dashboardButtonText }}</router-link>
         </div>
       </section>
 
@@ -76,11 +84,28 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
+import { useRouter } from 'vue-router';
 import { useAuthStore } from '@/stores/auth.store';
 
+const router = useRouter();
 const authStore = useAuthStore();
 const isAuthenticated = computed(() => authStore.isAuthenticated);
 const dashboardRoute = computed(() => authStore.getDashboardRoute());
+const userRole = computed(() => authStore.userRole);
+
+const dashboardButtonText = computed(() => {
+  if (!userRole.value) return 'Go to Dashboard';
+  if (userRole.value === 'fighter') return 'Go to Fighter Page';
+  if (userRole.value === 'plo') return 'Go to PLO Page';
+  if (userRole.value === 'admin') return 'Go to Admin Page';
+  if (userRole.value === 'spectator') return 'Go to Spectator Page';
+  return 'Go to Dashboard';
+});
+
+function handleLogout() {
+  authStore.logout();
+  router.push('/');
+}
 </script>
 
 <style scoped>
@@ -123,6 +148,20 @@ const dashboardRoute = computed(() => authStore.getDashboardRoute());
 
 .nav-link:hover {
   background-color: #f5f5f5;
+}
+
+.logout-btn {
+  background-color: transparent;
+  border: 1px solid #dc3545;
+  color: #dc3545;
+  cursor: pointer;
+  font-size: inherit;
+  font-family: inherit;
+}
+
+.logout-btn:hover {
+  background-color: #dc3545;
+  color: white;
 }
 
 .landing-main {

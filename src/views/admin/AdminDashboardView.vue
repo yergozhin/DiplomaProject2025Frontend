@@ -3,6 +3,7 @@
     <aside class="sidebar">
       <h1>Admin</h1>
       <nav>
+        <router-link to="/" class="nav-link-landing">Back to Landing Page</router-link>
         <router-link :to="ROUTES.ADMIN_DASHBOARD" active-class="active">Home</router-link>
         <router-link :to="ROUTES.ADMIN_PENDING_VERIFICATIONS" active-class="active">
           Pending Verifications
@@ -68,6 +69,15 @@ function handleLogout() {
 
 .sidebar a.active {
   background-color: #d1d5db;
+}
+
+.nav-link-landing {
+  color: #007bff;
+  font-weight: 500;
+}
+
+.nav-link-landing:hover {
+  background-color: #e5e7eb;
 }
 
 .sidebar button {

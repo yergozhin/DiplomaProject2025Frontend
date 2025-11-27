@@ -4,6 +4,9 @@
       <h2>Menu</h2>
       <ul>
         <li>
+          <router-link to="/" class="nav-link-landing">Back to Landing Page</router-link>
+        </li>
+        <li>
           <router-link :to="ROUTES.PLO_DASHBOARD" active-class="active">
             Dashboard
           </router-link>
@@ -102,6 +105,19 @@ function handleLogout() {
 
 .sidebar ul li a.active:hover {
   background-color: #0056b3;
+}
+
+.nav-link-landing {
+  display: block;
+  padding: 8px 12px;
+  text-decoration: none;
+  color: #007bff;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+.nav-link-landing:hover {
+  background-color: #e0e0e0;
 }
 
 .logout-btn {
