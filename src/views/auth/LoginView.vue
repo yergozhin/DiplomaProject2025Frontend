@@ -74,6 +74,9 @@
           Don't have an account?
           <router-link to="/register">Register here</router-link>
         </p>
+        <p>
+          <router-link to="/">Back to landing page</router-link>
+        </p>
       </div>
     </div>
   </div>

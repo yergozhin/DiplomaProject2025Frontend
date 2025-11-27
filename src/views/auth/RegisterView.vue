@@ -57,6 +57,9 @@
           Already have an account?
           <router-link to="/login">Login here</router-link>
         </p>
+        <p>
+          <router-link to="/">Back to landing page</router-link>
+        </p>
       </div>
     </div>
   </div>
