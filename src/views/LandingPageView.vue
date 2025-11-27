@@ -4,8 +4,27 @@
       <nav class="landing-nav">
         <div class="nav-brand">GladiatorGrid</div>
         <div class="nav-links">
-          <router-link to="/login" class="nav-link">Login</router-link>
-          <router-link to="/register" class="nav-link">Register</router-link>
+          <router-link
+            v-if="!isAuthenticated"
+            to="/login"
+            class="nav-link"
+          >
+            Login
+          </router-link>
+          <router-link
+            v-if="!isAuthenticated"
+            to="/register"
+            class="nav-link"
+          >
+            Register
+          </router-link>
+          <router-link
+            v-if="isAuthenticated"
+            :to="dashboardRoute"
+            class="nav-link"
+          >
+            Dashboard
+          </router-link>
         </div>
       </nav>
     </header>
@@ -14,7 +33,7 @@
       <section class="hero-section">
         <h1 class="hero-title">title</h1>
         <p class="hero-description">description</p>
-        <div class="hero-actions">
+        <div v-if="!isAuthenticated" class="hero-actions">
           <router-link to="/register" class="btn btn-primary">cta button</router-link>
         </div>
       </section>
@@ -42,7 +61,7 @@
         <p class="about-description">about description</p>
       </section>
 
-      <section class="cta-section">
+      <section v-if="!isAuthenticated" class="cta-section">
         <h2 class="section-title">cta title</h2>
         <p class="cta-description">cta description</p>
         <router-link to="/register" class="btn btn-primary">cta button</router-link>
@@ -56,6 +75,12 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue';
+import { useAuthStore } from '@/stores/auth.store';
+
+const authStore = useAuthStore();
+const isAuthenticated = computed(() => authStore.isAuthenticated);
+const dashboardRoute = computed(() => authStore.getDashboardRoute());
 </script>
 
 <style scoped>
