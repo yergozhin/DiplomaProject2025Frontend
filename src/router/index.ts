@@ -7,13 +7,9 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      redirect: () => {
-        const authStore = useAuthStore();
-        if (authStore.isAuthenticated) {
-          return authStore.getDashboardRoute();
-        }
-        return ROUTES.LOGIN;
-      },
+      name: 'Landing',
+      component: () => import('@/views/LandingPageView.vue'),
+      meta: { requiresAuth: false },
     },
     {
       path: ROUTES.LOGIN,

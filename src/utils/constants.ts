@@ -6,6 +6,7 @@ export const STORAGE_KEYS = {
 } as const;
 
 export const ROUTES = {
+  LANDING: '/',
   LOGIN: '/login',
   REGISTER: '/register',
   VERIFY_EMAIL: '/verify-email',
