@@ -1,5 +1,12 @@
 <template>
   <div class="auth-container">
+    <header class="auth-header">
+      <router-link to="/" class="nav-brand">
+        <img src="@/assets/logo.jpg" alt="GladiatorGrid" class="logo-img" />
+        <span class="brand-text">GladiatorGrid</span>
+      </router-link>
+      <router-link to="/" class="back-link">Back to landing page</router-link>
+    </header>
     <div class="auth-card">
       <h1>Verifying Email</h1>
       <div v-if="loading" class="verifying-message">
@@ -50,55 +57,126 @@ onMounted(async () => {
 
 <style scoped>
 .auth-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
   min-height: 100vh;
-  padding: 20px;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem 2rem;
+  overflow: hidden;
+}
+
+.auth-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0.75rem 0;
+  flex-shrink: 0;
+}
+
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  text-decoration: none;
+}
+
+.logo-img {
+  height: 35px;
+  width: auto;
+  object-fit: contain;
+}
+
+.brand-text {
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.back-link {
+  color: white;
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  background-color: #666;
+  transition: all 0.2s ease;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.back-link:hover {
+  background-color: #555;
 }
 
 .auth-card {
-  background: white;
-  padding: 40px;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  max-width: 400px;
   width: 100%;
+  max-width: 400px;
+  margin: auto;
+  background-image: url('@/assets/landing.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  flex-shrink: 0;
   text-align: center;
 }
 
 .auth-card h1 {
-  margin-top: 0;
-  margin-bottom: 30px;
-  font-size: 24px;
+  color: white;
+  margin-bottom: 1.5rem;
+  font-size: 1.75rem;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
 }
 
-.verifying-message,
-.success-message,
-.error-message {
-  padding: 20px;
+.verifying-message {
+  padding: 1rem;
+  color: white;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+}
+
+.verifying-message p {
+  margin: 0;
 }
 
 .success-message {
-  color: #155724;
+  padding: 1rem;
+  background-color: rgba(40, 167, 69, 0.9);
+  color: white;
+  border-radius: 4px;
+}
+
+.success-message p {
+  margin: 0 0 1rem 0;
 }
 
 .error-message {
-  color: #721c24;
+  padding: 1rem;
+  background-color: rgba(220, 53, 69, 0.9);
+  color: white;
+  border-radius: 4px;
+}
+
+.error-message p {
+  margin: 0 0 1rem 0;
 }
 
 .login-link {
   display: inline-block;
-  margin-top: 15px;
-  padding: 10px 20px;
-  background-color: #007bff;
+  padding: 0.75rem 1.5rem;
+  background-color: #333;
   color: white;
   text-decoration: none;
   border-radius: 4px;
+  font-weight: 500;
+  transition: all 0.2s ease;
 }
 
 .login-link:hover {
-  background-color: #0056b3;
+  background-color: #555;
 }
 </style>
 
