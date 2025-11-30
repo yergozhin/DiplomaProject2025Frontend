@@ -144,7 +144,7 @@ function handleLogout() {
   color: #333;
   padding: 0.5rem 1rem;
   border-radius: 4px;
-  transition: background-color 0.2s;
+  transition: all 0.2s ease;
 }
 
 .nav-link:hover {
@@ -158,6 +158,7 @@ function handleLogout() {
   cursor: pointer;
   font-size: inherit;
   font-family: inherit;
+  transition: all 0.2s ease;
 }
 
 .logout-btn:hover {
@@ -186,11 +187,12 @@ function handleLogout() {
 .hero-title {
   font-size: 2.5rem;
   margin-bottom: 1rem;
+  color: #1a1a1a;
 }
 
 .hero-description {
   font-size: 1.2rem;
-  color: #666;
+  color: #333;
   margin-bottom: 2rem;
   max-width: 600px;
   margin-left: auto;
@@ -206,7 +208,7 @@ function handleLogout() {
   padding: 0.75rem 2rem;
   text-decoration: none;
   border-radius: 4px;
-  transition: background-color 0.2s;
+  transition: all 0.2s ease;
   border: none;
   cursor: pointer;
 }
@@ -228,6 +230,7 @@ function handleLogout() {
   font-size: 2rem;
   text-align: center;
   margin-bottom: 3rem;
+  color: #1a1a1a;
 }
 
 .features-grid {
@@ -241,6 +244,12 @@ function handleLogout() {
   border: 1px solid #e0e0e0;
   border-radius: 8px;
   text-align: center;
+  background-color: rgba(255, 255, 255, 0.9);
+  transition: all 0.2s ease;
+}
+
+.feature-card:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .feature-title {
@@ -259,7 +268,7 @@ function handleLogout() {
 
 .about-description {
   font-size: 1.1rem;
-  color: #666;
+  color: #333;
   max-width: 800px;
   margin: 0 auto;
 }
