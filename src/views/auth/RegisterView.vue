@@ -1,5 +1,12 @@
 <template>
   <div class="auth-container">
+    <header class="auth-header">
+      <router-link to="/" class="nav-brand">
+        <img src="@/assets/logo.jpg" alt="GladiatorGrid" class="logo-img" />
+        <span class="brand-text">GladiatorGrid</span>
+      </router-link>
+      <router-link to="/" class="back-link">Back to landing page</router-link>
+    </header>
     <div class="auth-card">
       <h1>Register</h1>
       <form @submit.prevent="handleRegister" class="auth-form">
@@ -57,9 +64,6 @@
           Already have an account?
           <router-link to="/login">Login here</router-link>
         </p>
-        <p>
-          <router-link to="/">Back to landing page</router-link>
-        </p>
       </div>
     </div>
   </div>
@@ -107,35 +111,82 @@ async function handleRegister() {
   min-height: 100vh;
   background-color: white;
   display: flex;
+  flex-direction: column;
+  padding: 1rem 2rem;
+  overflow: hidden;
+}
+
+.auth-header {
+  display: flex;
+  justify-content: space-between;
   align-items: center;
-  justify-content: center;
-  padding: 2rem;
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0.75rem 0;
+  flex-shrink: 0;
+}
+
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  text-decoration: none;
+}
+
+.logo-img {
+  height: 35px;
+  width: auto;
+  object-fit: contain;
+}
+
+.brand-text {
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.back-link {
+  color: white;
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  background-color: #666;
+  transition: all 0.2s ease;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.back-link:hover {
+  background-color: #555;
 }
 
 .auth-card {
   width: 100%;
   max-width: 400px;
+  margin: auto;
   background-image: url('@/assets/landing.png');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  padding: 2.5rem;
+  padding: 2rem;
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  flex-shrink: 0;
 }
 
 .auth-card h1 {
   text-align: center;
   color: white;
-  margin-bottom: 2rem;
-  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  font-size: 1.75rem;
   text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
 }
 
 .auth-form {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1.25rem;
 }
 
 .form-group {
@@ -205,14 +256,15 @@ async function handleRegister() {
 }
 
 .auth-footer {
-  margin-top: 2rem;
+  margin-top: 1.5rem;
   text-align: center;
 }
 
 .auth-footer p {
-  margin: 0.5rem 0;
+  margin: 0.4rem 0;
   color: white;
   text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+  font-size: 0.9rem;
 }
 
 .auth-footer a {
