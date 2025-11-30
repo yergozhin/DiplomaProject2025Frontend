@@ -40,43 +40,45 @@
     </header>
 
     <main class="landing-main">
-      <section class="hero-section">
-        <h1 class="hero-title">title</h1>
-        <p class="hero-description">description</p>
-        <div class="hero-actions">
-          <router-link v-if="!isAuthenticated" to="/register" class="btn btn-primary">cta button</router-link>
-          <router-link v-if="isAuthenticated" :to="dashboardRoute" class="btn btn-primary">{{ dashboardButtonText }}</router-link>
-        </div>
-      </section>
-
-      <section class="features-section">
-        <h2 class="section-title">features title</h2>
-        <div class="features-grid">
-          <div class="feature-card">
-            <h3 class="feature-title">feature title</h3>
-            <p class="feature-description">feature description</p>
+      <div class="landing-content">
+        <section class="hero-section">
+          <h1 class="hero-title">title</h1>
+          <p class="hero-description">description</p>
+          <div class="hero-actions">
+            <router-link v-if="!isAuthenticated" to="/register" class="btn btn-primary">cta button</router-link>
+            <router-link v-if="isAuthenticated" :to="dashboardRoute" class="btn btn-primary">{{ dashboardButtonText }}</router-link>
           </div>
-          <div class="feature-card">
-            <h3 class="feature-title">feature title</h3>
-            <p class="feature-description">feature description</p>
-          </div>
-          <div class="feature-card">
-            <h3 class="feature-title">feature title</h3>
-            <p class="feature-description">feature description</p>
-          </div>
-        </div>
-      </section>
+        </section>
 
-      <section class="about-section">
-        <h2 class="section-title">about title</h2>
-        <p class="about-description">about description</p>
-      </section>
+        <section class="features-section">
+          <h2 class="section-title">features title</h2>
+          <div class="features-grid">
+            <div class="feature-card">
+              <h3 class="feature-title">feature title</h3>
+              <p class="feature-description">feature description</p>
+            </div>
+            <div class="feature-card">
+              <h3 class="feature-title">feature title</h3>
+              <p class="feature-description">feature description</p>
+            </div>
+            <div class="feature-card">
+              <h3 class="feature-title">feature title</h3>
+              <p class="feature-description">feature description</p>
+            </div>
+          </div>
+        </section>
 
-      <section v-if="!isAuthenticated" class="cta-section">
-        <h2 class="section-title">cta title</h2>
-        <p class="cta-description">cta description</p>
-        <router-link to="/register" class="btn btn-primary">cta button</router-link>
-      </section>
+        <section class="about-section">
+          <h2 class="section-title">about title</h2>
+          <p class="about-description">about description</p>
+        </section>
+
+        <section v-if="!isAuthenticated" class="cta-section">
+          <h2 class="section-title">cta title</h2>
+          <p class="cta-description">cta description</p>
+          <router-link to="/register" class="btn btn-primary">cta button</router-link>
+        </section>
+      </div>
     </main>
 
     <footer class="landing-footer">
@@ -208,14 +210,18 @@ function handleLogout() {
 .landing-main {
   flex: 1;
   width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 2rem;
   background-image: url('@/assets/landing.png');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   background-attachment: fixed;
+}
+
+.landing-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  padding-bottom: 0;
 }
 
 .hero-section {
@@ -330,7 +336,7 @@ function handleLogout() {
   padding: 2rem;
   text-align: center;
   border-top: 1px solid #e0e0e0;
-  margin-top: 4rem;
+  margin-top: 0;
   background-color: white;
 }
 
