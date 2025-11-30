@@ -42,41 +42,41 @@
     <main class="landing-main">
       <div class="landing-content">
         <section class="hero-section">
-          <h1 class="hero-title">title</h1>
-          <p class="hero-description">description</p>
+          <h1 class="hero-title">Fight. Win. Repeat.</h1>
+          <p class="hero-description">The platform that connects fighters, promotion leagues, and fans. Organize fights faster, find opponents easier, and grow your career without the hassle. Join thousands who are already transforming how fights are made.</p>
           <div class="hero-actions">
-            <router-link v-if="!isAuthenticated" to="/register" class="btn btn-primary">cta button</router-link>
+            <router-link v-if="!isAuthenticated" to="/register" class="btn btn-primary">Get Started</router-link>
             <router-link v-if="isAuthenticated" :to="dashboardRoute" class="btn btn-primary">{{ dashboardButtonText }}</router-link>
           </div>
         </section>
 
         <section class="features-section">
-          <h2 class="section-title">features title</h2>
+          <h2 class="section-title">Why Choose GladiatorGrid?</h2>
           <div class="features-grid">
             <div class="feature-card">
-              <h3 class="feature-title">feature title</h3>
-              <p class="feature-description">feature description</p>
+              <h3 class="feature-title">For Fighters</h3>
+              <p class="feature-description">Take control of your fighting career! No more waiting for managers or struggling to find opponents. Search and connect with fighters, send fight requests directly, and choose from multiple promotion league offers. Organize your fights independently and get more matches than ever before. Your career, your way.</p>
             </div>
             <div class="feature-card">
-              <h3 class="feature-title">feature title</h3>
-              <p class="feature-description">feature description</p>
+              <h3 class="feature-title">For Promotion Leagues</h3>
+              <p class="feature-description">Streamline your event organization and maximize efficiency. Create events with time slots, instantly view all available fights, and send offers directly to fighters. Manage more fights with less effort and reduce your coordination overhead. Focus on what matters most - delivering great events.</p>
             </div>
             <div class="feature-card">
-              <h3 class="feature-title">feature title</h3>
-              <p class="feature-description">feature description</p>
+              <h3 class="feature-title">For Spectators</h3>
+              <p class="feature-description">Discover the best fights and events in one place! Browse published events, view scheduled fights, and stay updated with the latest matchups. Get access to comprehensive fight information and never miss an exciting event. Your gateway to the fighting world.</p>
             </div>
           </div>
         </section>
 
         <section class="about-section">
-          <h2 class="section-title">about title</h2>
-          <p class="about-description">about description</p>
+          <h2 class="section-title">About GladiatorGrid</h2>
+          <p class="about-description">GladiatorGrid is a platform designed to solve the challenges fighters and promotion leagues face in organizing fights. We connect fighters directly with promotion leagues, eliminating the need for extensive management teams and reducing coordination overhead. Whether you're a fighter looking for your next match or a promotion league organizing events, GladiatorGrid makes the process simple and efficient.</p>
         </section>
 
         <section v-if="!isAuthenticated" class="cta-section">
-          <h2 class="section-title">cta title</h2>
-          <p class="cta-description">cta description</p>
-          <router-link to="/register" class="btn btn-primary">cta button</router-link>
+          <h2 class="section-title">Ready to Get Started?</h2>
+          <p class="cta-description">Join GladiatorGrid today and start organizing fights more efficiently. Register as a fighter, promotion league owner, or spectator to begin.</p>
+          <router-link to="/register" class="btn btn-primary">Create Account</router-link>
         </section>
       </div>
     </main>
@@ -232,16 +232,18 @@ function handleLogout() {
 .hero-title {
   font-size: 2.5rem;
   margin-bottom: 1rem;
-  color: #1a1a1a;
+  color: white;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
 }
 
 .hero-description {
   font-size: 1.2rem;
-  color: #333;
+  color: rgba(255, 255, 255, 0.95);
   margin-bottom: 2rem;
   max-width: 600px;
   margin-left: auto;
   margin-right: auto;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
 }
 
 .hero-actions {
@@ -275,7 +277,8 @@ function handleLogout() {
   font-size: 2rem;
   text-align: center;
   margin-bottom: 3rem;
-  color: #1a1a1a;
+  color: white;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
 }
 
 .features-grid {
@@ -313,9 +316,10 @@ function handleLogout() {
 
 .about-description {
   font-size: 1.1rem;
-  color: #333;
+  color: rgba(255, 255, 255, 0.95);
   max-width: 800px;
   margin: 0 auto;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
 }
 
 .cta-section {
@@ -326,9 +330,14 @@ function handleLogout() {
   margin: 2rem 0;
 }
 
+.cta-section .section-title {
+  color: #1a1a1a;
+  text-shadow: none;
+}
+
 .cta-description {
   font-size: 1.1rem;
-  color: #666;
+  color: #333;
   margin-bottom: 2rem;
 }
 
