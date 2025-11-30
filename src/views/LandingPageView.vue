@@ -10,14 +10,14 @@
           <router-link
             v-if="!isAuthenticated"
             to="/login"
-            class="nav-link"
+            class="nav-link nav-link-login"
           >
             Login
           </router-link>
           <router-link
             v-if="!isAuthenticated"
             to="/register"
-            class="nav-link"
+            class="nav-link nav-link-register"
           >
             Register
           </router-link>
@@ -160,12 +160,34 @@ function handleLogout() {
   text-decoration: none;
   color: #333;
   padding: 0.5rem 1rem;
-  border-radius: 4px;
+  border-radius: 6px;
   transition: all 0.2s ease;
+  font-weight: 500;
 }
 
 .nav-link:hover {
   background-color: #f5f5f5;
+}
+
+.nav-link-login {
+  border: 1px solid #e0e0e0;
+  color: #333;
+}
+
+.nav-link-login:hover {
+  background-color: #f9f9f9;
+  border-color: #d0d0d0;
+}
+
+.nav-link-register {
+  background-color: #333;
+  color: white;
+  border: 1px solid #333;
+}
+
+.nav-link-register:hover {
+  background-color: #555;
+  border-color: #555;
 }
 
 .logout-btn {
