@@ -24,7 +24,7 @@
           <router-link
             v-if="isAuthenticated"
             :to="dashboardRoute"
-            class="nav-link"
+            class="nav-link nav-link-dashboard"
           >
             {{ dashboardButtonText }}
           </router-link>
@@ -188,6 +188,17 @@ function handleLogout() {
 }
 
 .nav-link-register:hover {
+  background-color: #555;
+  border-color: #555;
+}
+
+.nav-link-dashboard {
+  background-color: #333;
+  color: white;
+  border: 1px solid #333;
+}
+
+.nav-link-dashboard:hover {
   background-color: #555;
   border-color: #555;
 }
