@@ -82,7 +82,7 @@
     </main>
 
     <footer class="landing-footer">
-      <p class="footer-text">footer text</p>
+      <p class="footer-text">© 2025 GladiatorGrid. All rights reserved.</p>
     </footer>
   </div>
 </template>
