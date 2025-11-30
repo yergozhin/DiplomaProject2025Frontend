@@ -2,7 +2,10 @@
   <div class="landing-page">
     <header class="landing-header">
       <nav class="landing-nav">
-        <div class="nav-brand">GladiatorGrid</div>
+        <router-link to="/" class="nav-brand">
+          <img src="@/assets/logo.jpg" alt="GladiatorGrid" class="logo-img" />
+          <span class="brand-text">GladiatorGrid</span>
+        </router-link>
         <div class="nav-links">
           <router-link
             v-if="!isAuthenticated"
@@ -130,8 +133,22 @@ function handleLogout() {
 }
 
 .nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  text-decoration: none;
+}
+
+.logo-img {
+  height: 40px;
+  width: auto;
+  object-fit: contain;
+}
+
+.brand-text {
   font-size: 1.5rem;
   font-weight: bold;
+  color: #333;
 }
 
 .nav-links {
