@@ -118,6 +118,7 @@ function handleLogout() {
 .landing-header {
   padding: 1rem 2rem;
   border-bottom: 1px solid #e0e0e0;
+  background-color: white;
 }
 
 .landing-nav {
@@ -170,6 +171,11 @@ function handleLogout() {
   max-width: 1200px;
   margin: 0 auto;
   padding: 2rem;
+  background-image: url('@/assets/landing.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
 }
 
 .hero-section {
@@ -277,6 +283,7 @@ function handleLogout() {
   text-align: center;
   border-top: 1px solid #e0e0e0;
   margin-top: 4rem;
+  background-color: white;
 }
 
 .footer-text {
