@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <h1>Possible Opponents</h1>
+  <div class="opponents-container">
+    <h1 class="opponents-title">Possible Opponents</h1>
     <div v-if="loading">Loading...</div>
     <div v-else-if="error">{{ error }}</div>
     <div v-else-if="opponents.length === 0">No opponents available</div>
@@ -80,9 +80,25 @@ onMounted(() => {
 </script>
 
 <style scoped>
+.opponents-container {
+  padding: 20px;
+  padding-left: 30px;
+  padding-top: 20px;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.opponents-title {
+  color: white;
+  font-size: 28px;
+  margin-bottom: 20px;
+}
+
 .opponents-list {
   list-style: none;
   padding: 0;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .opponent-item {
@@ -94,15 +110,21 @@ onMounted(() => {
   border: 1px solid #ddd;
   border-radius: 4px;
   background-color: #f9f9f9;
+  max-width: 100%;
+  box-sizing: border-box;
+  gap: 15px;
 }
 
 .opponent-info {
   flex: 1;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .opponent-info strong {
   display: block;
   margin-bottom: 5px;
+  word-break: break-word;
 }
 
 .send-request-btn {
@@ -113,6 +135,7 @@ onMounted(() => {
   border-radius: 4px;
   cursor: pointer;
   white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .send-request-btn:hover:not(:disabled) {
