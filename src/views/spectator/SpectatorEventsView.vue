@@ -1,22 +1,25 @@
 <template>
-  <section>
-    <h1>Published Events</h1>
-
-    <div v-if="loading">Loading events...</div>
-    <div v-else-if="error" class="error">{{ error }}</div>
-    <div v-else-if="events.length === 0">No published events yet.</div>
-    <ul v-else class="event-list">
-      <li v-for="event in events" :key="event.id">
-        <h2>{{ event.eventName ?? event.name }}</h2>
-        <p v-if="event.eventDescription">{{ event.eventDescription }}</p>
-        <p class="meta">
+  <div class="events-container">
+    <h1 class="events-title">Published Events</h1>
+    <div v-if="loading" class="status-message">Loading...</div>
+    <div v-else-if="error" class="status-message">{{ error }}</div>
+    <div v-else-if="events.length === 0" class="status-message">No published events yet.</div>
+    <ul v-else class="events-list">
+      <li v-for="event in events" :key="event.id" class="event-item">
+        <div class="event-header">
+          <strong>{{ event.eventName ?? event.name }}</strong>
+          <span>Status: {{ event.status ?? 'unknown' }}</span>
+        </div>
+        <div v-if="event.eventDescription" class="event-description">
+          {{ event.eventDescription }}
+        </div>
+        <div class="event-meta">
           <span>City: {{ event.city ?? 'N/A' }}</span>
           <span>Country: {{ event.country ?? 'N/A' }}</span>
-          <span>Status: {{ event.status ?? 'unknown' }}</span>
-        </p>
+        </div>
       </li>
     </ul>
-  </section>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -44,37 +47,62 @@ onMounted(loadEvents);
 </script>
 
 <style scoped>
-.event-list {
+.events-container {
+  padding: 20px;
+  padding-left: 30px;
+  padding-top: 20px;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.events-title {
+  color: white;
+  font-size: 28px;
+  margin-bottom: 20px;
+}
+
+.status-message {
+  color: white;
+  font-size: 16px;
+  margin-bottom: 15px;
+}
+
+.events-list {
   list-style: none;
   padding: 0;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
-.event-list li {
-  padding: 16px;
+.event-item {
+  padding: 20px;
+  margin-bottom: 15px;
   border: 1px solid #ddd;
-  border-radius: 8px;
-  margin-bottom: 12px;
+  border-radius: 4px;
+  background-color: #f9f9f9;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
-.event-list h2 {
-  margin: 0 0 8px;
-  font-size: 18px;
-}
-
-.event-list p {
-  margin: 4px 0;
-}
-
-.meta {
+.event-header {
   display: flex;
-  flex-wrap: wrap;
-  gap: 16px;
+  justify-content: space-between;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.event-description {
+  margin-bottom: 15px;
+  color: #333;
+}
+
+.event-meta {
+  display: flex;
+  gap: 20px;
   color: #555;
   font-size: 14px;
-}
-
-.error {
-  color: #dc3545;
+  flex-wrap: wrap;
 }
 </style>
 
