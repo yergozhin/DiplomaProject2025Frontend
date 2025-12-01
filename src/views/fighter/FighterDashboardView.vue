@@ -4,7 +4,7 @@
       {{ isSidebarOpen ? '✕' : '☰' }}
     </button>
     <div class="sidebar" :class="{ 'sidebar-open': isSidebarOpen, 'sidebar-closed': !isSidebarOpen }">
-      <h2>Menu</h2>
+      <img :src="logoImage" alt="Logo" class="sidebar-logo" />
       <ul>
         <li>
           <router-link to="/" class="nav-link-landing">Back to Landing Page</router-link>
@@ -55,6 +55,7 @@ import { useRouter } from 'vue-router';
 import { useAuthStore } from '@/stores/auth.store';
 import { ROUTES } from '@/utils/constants';
 import fightersImage from '@/assets/fighters.png';
+import logoImage from '@/assets/logo.jpg';
 
 const router = useRouter();
 const authStore = useAuthStore();
@@ -125,6 +126,8 @@ function handleLogout() {
   transition: transform 0.3s ease;
   overflow-y: auto;
   box-shadow: 2px 0 20px rgba(0, 0, 0, 0.3);
+  border-top-right-radius: 20px;
+  border-bottom-right-radius: 30px;
 }
 
 .sidebar-closed {
@@ -135,12 +138,14 @@ function handleLogout() {
   transform: translateX(0);
 }
 
-.sidebar h2 {
-  margin-top: 0;
-  margin-bottom: 20px;
-  font-size: 18px;
-  color: #ffffff;
-  font-weight: 600;
+.sidebar-logo {
+  width: 100%;
+  max-width: 160px;
+  height: auto;
+  margin: 0 auto 20px auto;
+  display: block;
+  border-radius: 8px;
+  object-fit: contain;
 }
 
 .sidebar ul {
@@ -178,19 +183,23 @@ function handleLogout() {
 
 .nav-link-landing {
   display: block;
-  padding: 8px 12px;
+  padding: 12px 16px;
   text-decoration: none;
-  color: #60a5fa;
-  border-radius: 4px;
-  font-weight: 500;
-  border: 1px solid rgba(96, 165, 250, 0.3);
+  color: #ffffff;
+  background-color: rgba(234, 88, 12, 0.9);
+  border-radius: 6px;
+  font-weight: 600;
+  border: 2px solid rgba(234, 88, 12, 1);
   transition: all 0.2s ease;
+  text-align: center;
 }
 
 .nav-link-landing:hover {
-  background-color: rgba(96, 165, 250, 0.2);
-  border-color: rgba(96, 165, 250, 0.5);
-  color: #93c5fd;
+  background-color: rgba(234, 88, 12, 1);
+  border-color: rgba(251, 146, 60, 1);
+  color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(234, 88, 12, 0.4);
 }
 
 .logout-btn {
