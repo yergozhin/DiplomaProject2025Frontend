@@ -1,12 +1,11 @@
 <template>
   <div class="profile-container">
-    <h1>Promotion League Profile</h1>
+    <h1 class="profile-title">Promotion League Profile</h1>
 
     <div v-if="loading" class="status">Loading profile...</div>
     <div v-else-if="error" class="error-message">{{ error }}</div>
     <div v-else-if="!profile" class="status">Profile not found.</div>
     <div v-else class="profile-card">
-      <section class="profile-section">
         <div class="profile-row">
           <span class="label">Email:</span>
           <span class="value">{{ profile.email }}</span>
@@ -67,7 +66,6 @@
           <span class="label">Updated:</span>
           <span class="value">{{ formatDateTime(profile.updatedAt) }}</span>
         </div>
-      </section>
 
       <button type="button" class="edit-btn" @click="startEdit" v-if="!editing">
         Edit Profile
@@ -298,10 +296,17 @@ onMounted(() => {
 
 <style scoped>
 .profile-container {
-  max-width: 720px;
+  max-width: 600px;
   margin: 0 auto;
   padding: 20px;
+  padding-left: 30px;
   text-align: left;
+}
+
+.profile-title {
+  color: white;
+  font-size: 28px;
+  margin-bottom: 20px;
 }
 
 .profile-card {
@@ -309,18 +314,14 @@ onMounted(() => {
   border: 1px solid #ddd;
   border-radius: 4px;
   background-color: #f9f9f9;
-}
-
-.profile-section {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+  max-width: 100%;
+  overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 .profile-row {
   display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
+  margin-bottom: 12px;
 }
 
 .label {
@@ -330,12 +331,11 @@ onMounted(() => {
 
 .value {
   flex: 1;
-  min-width: 160px;
 }
 
 .status {
   padding: 10px 0;
-  color: #555;
+  color: white;
 }
 
 .error-message {
@@ -362,38 +362,48 @@ onMounted(() => {
 }
 
 .edit-form {
-  margin-top: 24px;
+  margin-top: 20px;
   padding-top: 20px;
   border-top: 1px solid #ddd;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.form-group {
+  margin-bottom: 15px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .form-row {
   display: flex;
-  flex-wrap: wrap;
-  gap: 16px;
+  gap: 15px;
+  margin-bottom: 15px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
-.form-group {
+.form-row .form-group {
   flex: 1;
-  min-width: 220px;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
+  margin-bottom: 0;
+  min-width: 0;
 }
 
 .form-group label {
+  display: block;
+  margin-bottom: 5px;
   font-weight: bold;
 }
 
 .form-group input,
+.form-group select,
 .form-group textarea {
   width: 100%;
   padding: 8px 12px;
   border: 1px solid #ddd;
   border-radius: 4px;
+  box-sizing: border-box;
+  max-width: 100%;
 }
 
 .form-group textarea {
