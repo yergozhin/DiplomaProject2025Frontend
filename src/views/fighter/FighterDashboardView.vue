@@ -112,9 +112,10 @@ function handleLogout() {
 
 .sidebar {
   width: 200px;
-  background-color: rgba(244, 244, 244, 0.9);
+  background: linear-gradient(180deg, rgba(30, 58, 138, 0.95) 0%, rgba(15, 23, 42, 0.95) 100%);
+  backdrop-filter: blur(10px);
   padding: 20px;
-  border-right: 1px solid #ddd;
+  border-right: 1px solid rgba(59, 130, 246, 0.2);
   text-align: left;
   position: fixed;
   top: 0;
@@ -123,6 +124,7 @@ function handleLogout() {
   z-index: 999;
   transition: transform 0.3s ease;
   overflow-y: auto;
+  box-shadow: 2px 0 20px rgba(0, 0, 0, 0.3);
 }
 
 .sidebar-closed {
@@ -137,6 +139,8 @@ function handleLogout() {
   margin-top: 0;
   margin-bottom: 20px;
   font-size: 18px;
+  color: #ffffff;
+  font-weight: 600;
 }
 
 .sidebar ul {
@@ -153,34 +157,40 @@ function handleLogout() {
   display: block;
   padding: 8px 12px;
   text-decoration: none;
-  color: #333;
+  color: rgba(255, 255, 255, 0.8);
   border-radius: 4px;
+  transition: all 0.2s ease;
 }
 
 .sidebar ul li a:hover {
-  background-color: #e0e0e0;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
 }
 
 .sidebar ul li a.active {
-  background-color: #007bff;
+  background-color: #3b82f6;
   color: white;
 }
 
 .sidebar ul li a.active:hover {
-  background-color: #0056b3;
+  background-color: #2563eb;
 }
 
 .nav-link-landing {
   display: block;
   padding: 8px 12px;
   text-decoration: none;
-  color: #007bff;
+  color: #60a5fa;
   border-radius: 4px;
   font-weight: 500;
+  border: 1px solid rgba(96, 165, 250, 0.3);
+  transition: all 0.2s ease;
 }
 
 .nav-link-landing:hover {
-  background-color: #e0e0e0;
+  background-color: rgba(96, 165, 250, 0.2);
+  border-color: rgba(96, 165, 250, 0.5);
+  color: #93c5fd;
 }
 
 .logout-btn {
