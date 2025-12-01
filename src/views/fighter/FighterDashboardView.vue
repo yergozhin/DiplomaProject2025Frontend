@@ -1,5 +1,5 @@
 <template>
-  <div class="dashboard-container">
+  <div class="dashboard-container" :style="{ backgroundImage: `url(${fightersImage})` }">
     <div class="sidebar">
       <h2>Menu</h2>
       <ul>
@@ -50,6 +50,7 @@
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '@/stores/auth.store';
 import { ROUTES } from '@/utils/constants';
+import fightersImage from '@/assets/fighters.png';
 
 const router = useRouter();
 const authStore = useAuthStore();
@@ -65,14 +66,20 @@ function handleLogout() {
   display: flex;
   min-height: 100vh;
   align-items: flex-start;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
 }
 
 .sidebar {
   width: 200px;
-  background-color: #f4f4f4;
+  background-color: rgba(244, 244, 244, 0.9);
   padding: 20px;
   border-right: 1px solid #ddd;
   text-align: left;
+  position: relative;
+  z-index: 1;
 }
 
 .sidebar h2 {
@@ -143,5 +150,7 @@ function handleLogout() {
   flex: 1;
   padding: 20px;
   text-align: left;
+  position: relative;
+  z-index: 1;
 }
 </style>
