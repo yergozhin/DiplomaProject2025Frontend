@@ -1,12 +1,12 @@
 <template>
-  <div>
+  <div class="offers-container">
     <div class="header">
       <button @click="handleBack" class="back-btn">← Back to Fights</button>
-      <h1>Available Offers for Fight #{{ fightId }}</h1>
+      <h1 class="offers-title">Available Offers for Fight #{{ fightId }}</h1>
     </div>
-    <div v-if="loading">Loading...</div>
-    <div v-else-if="error">{{ error }}</div>
-    <div v-else-if="offers.length === 0">No available offers for this fight</div>
+    <div v-if="loading" class="status-message">Loading...</div>
+    <div v-else-if="error" class="status-message">{{ error }}</div>
+    <div v-else-if="offers.length === 0" class="status-message">No available offers for this fight</div>
     <ul v-else class="offers-list">
       <li v-for="offer in offers" :key="offer.id" class="offer-item">
         <div class="offer-header">
@@ -103,11 +103,32 @@ onMounted(() => {
 </script>
 
 <style scoped>
+.offers-container {
+  padding: 20px;
+  padding-left: 30px;
+  padding-top: 20px;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
 .header {
   display: flex;
   align-items: center;
   gap: 20px;
   margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.offers-title {
+  color: white;
+  font-size: 28px;
+  margin: 0;
+}
+
+.status-message {
+  color: white;
+  font-size: 16px;
+  margin-bottom: 15px;
 }
 
 .back-btn {
@@ -126,6 +147,8 @@ onMounted(() => {
 .offers-list {
   list-style: none;
   padding: 0;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .offer-item {
@@ -134,6 +157,8 @@ onMounted(() => {
   border: 1px solid #ddd;
   border-radius: 4px;
   background-color: #f9f9f9;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .offer-header {
