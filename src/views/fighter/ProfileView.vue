@@ -598,6 +598,9 @@ onMounted(() => {
   border: 1px solid #ddd;
   border-radius: 4px;
   background-color: #f9f9f9;
+  max-width: 100%;
+  overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 .profile-row {
@@ -646,10 +649,28 @@ onMounted(() => {
   margin-top: 20px;
   padding-top: 20px;
   border-top: 1px solid #ddd;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .form-group {
   margin-bottom: 15px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.form-row {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 15px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.form-row .form-group {
+  flex: 1;
+  margin-bottom: 0;
+  min-width: 0;
 }
 
 .form-group label {
@@ -658,11 +679,20 @@ onMounted(() => {
   font-weight: bold;
 }
 
-.form-group input {
+.form-group input,
+.form-group select,
+.form-group textarea {
   width: 100%;
   padding: 8px 12px;
   border: 1px solid #ddd;
   border-radius: 4px;
+  box-sizing: border-box;
+  max-width: 100%;
+}
+
+.form-group textarea {
+  min-height: 80px;
+  resize: vertical;
 }
 
 .form-actions {
@@ -742,6 +772,9 @@ onMounted(() => {
   background-color: rgba(255, 255, 255, 0.95);
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  max-width: 100%;
+  overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 .verification-section h2 {
@@ -818,8 +851,18 @@ onMounted(() => {
   flex-wrap: wrap;
 }
 
+.verification-form-wrapper {
+  width: 100%;
+  box-sizing: border-box;
+}
+
 .verification-form-wrapper h3 {
   margin-bottom: 15px;
+}
+
+.verification-form {
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .verification-form .form-group textarea,
@@ -829,6 +872,22 @@ onMounted(() => {
   padding: 8px 12px;
   border: 1px solid #ddd;
   border-radius: 4px;
+  box-sizing: border-box;
+  max-width: 100%;
+}
+
+.verification-form .form-row {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 15px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.verification-form .form-row .form-group {
+  flex: 1;
+  margin-bottom: 0;
+  min-width: 0;
 }
 
 .success-message {
