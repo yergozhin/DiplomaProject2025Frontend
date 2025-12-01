@@ -1,9 +1,9 @@
 <template>
-  <div>
-    <h1>Available Fights</h1>
-    <div v-if="loading">Loading...</div>
-    <div v-else-if="error">{{ error }}</div>
-    <div v-else-if="fights.length === 0">No available fights</div>
+  <div class="fights-container">
+    <h1 class="fights-title">Available Fights</h1>
+    <div v-if="loading" class="status-message">Loading...</div>
+    <div v-else-if="error" class="status-message">{{ error }}</div>
+    <div v-else-if="fights.length === 0" class="status-message">No available fights</div>
     <ul v-else class="fights-list">
       <li v-for="fight in fights" :key="fight.id" class="fight-item">
         <div class="fight-header">
@@ -66,9 +66,31 @@ onMounted(() => {
 </script>
 
 <style scoped>
+.fights-container {
+  padding: 20px;
+  padding-left: 30px;
+  padding-top: 20px;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.fights-title {
+  color: white;
+  font-size: 28px;
+  margin-bottom: 20px;
+}
+
+.status-message {
+  color: white;
+  font-size: 16px;
+  margin-bottom: 15px;
+}
+
 .fights-list {
   list-style: none;
   padding: 0;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .fight-item {
@@ -77,6 +99,8 @@ onMounted(() => {
   border: 1px solid #ddd;
   border-radius: 4px;
   background-color: #f9f9f9;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .fight-header {
@@ -91,10 +115,13 @@ onMounted(() => {
   display: flex;
   align-items: center;
   gap: 20px;
+  margin-bottom: 15px;
 }
 
 .fighter {
   flex: 1;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .vs {
@@ -106,6 +133,7 @@ onMounted(() => {
 .fighter strong {
   display: block;
   margin-bottom: 5px;
+  word-break: break-word;
 }
 
 .send-offers-btn {
@@ -116,6 +144,8 @@ onMounted(() => {
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .send-offers-btn:hover {

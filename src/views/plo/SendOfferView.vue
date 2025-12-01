@@ -1,8 +1,8 @@
 <template>
-  <div>
-    <h1>Send Offer</h1>
-    <div v-if="loadingFight">Loading fight details...</div>
-    <div v-else-if="fightError">{{ fightError }}</div>
+  <div class="send-offer-container">
+    <h1 class="send-offer-title">Send Offer</h1>
+    <div v-if="loadingFight" class="status-message">Loading fight details...</div>
+    <div v-else-if="fightError" class="status-message">{{ fightError }}</div>
     <div v-else-if="fight" class="send-offer-form">
       <div class="fight-info">
         <h2>Fight Details</h2>
@@ -263,8 +263,29 @@ onMounted(() => {
 </script>
 
 <style scoped>
+.send-offer-container {
+  padding: 20px;
+  padding-left: 30px;
+  padding-top: 20px;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.send-offer-title {
+  color: white;
+  font-size: 28px;
+  margin-bottom: 20px;
+}
+
+.status-message {
+  color: white;
+  font-size: 16px;
+  margin-bottom: 15px;
+}
+
 .send-offer-form {
-  max-width: 800px;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .fight-info,
@@ -302,10 +323,14 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   gap: 25px;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .form-group {
   margin-bottom: 15px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .form-group label {
@@ -321,6 +346,8 @@ onMounted(() => {
   border: 1px solid #ddd;
   border-radius: 4px;
   font-size: 14px;
+  box-sizing: border-box;
+  max-width: 100%;
 }
 
 .form-group input:disabled,
@@ -330,9 +357,16 @@ onMounted(() => {
 }
 
 .form-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
   gap: 15px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.form-row .form-group {
+  flex: 1;
+  margin-bottom: 0;
+  min-width: 0;
 }
 
 .error-message {
