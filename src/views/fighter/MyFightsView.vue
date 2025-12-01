@@ -1,9 +1,9 @@
 <template>
-  <div>
-    <h1>My Fights</h1>
-    <div v-if="loading">Loading...</div>
-    <div v-else-if="error">{{ error }}</div>
-    <div v-else-if="fights.length === 0">No accepted fights</div>
+  <div class="fights-container">
+    <h1 class="fights-title">My Fights</h1>
+    <div v-if="loading" class="status-message">Loading...</div>
+    <div v-else-if="error" class="status-message">{{ error }}</div>
+    <div v-else-if="fights.length === 0" class="status-message">No accepted fights</div>
     <ul v-else class="fights-list">
       <li v-for="fight in fights" :key="fight.id" class="fight-item">
         <div class="fight-header">
@@ -64,9 +64,31 @@ onMounted(() => {
 </script>
 
 <style scoped>
+.fights-container {
+  padding: 20px;
+  padding-left: 30px;
+  padding-top: 20px;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.fights-title {
+  color: white;
+  font-size: 28px;
+  margin-bottom: 20px;
+}
+
+.status-message {
+  color: white;
+  font-size: 16px;
+  margin-bottom: 15px;
+}
+
 .fights-list {
   list-style: none;
   padding: 0;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .fight-item {
@@ -75,6 +97,8 @@ onMounted(() => {
   border: 1px solid #ddd;
   border-radius: 4px;
   background-color: #f9f9f9;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .fight-header {
