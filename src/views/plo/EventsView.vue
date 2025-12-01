@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <h1>My Events</h1>
+  <div class="events-container">
+    <h1 class="events-title">My Events</h1>
     <div class="actions">
       <button type="button" class="add-btn" @click="openForm" v-if="!showForm">
         Add Event
@@ -32,9 +32,9 @@
         </button>
       </div>
     </form>
-    <div v-if="loading">Loading...</div>
-    <div v-else-if="error">{{ error }}</div>
-    <div v-else-if="events.length === 0">No events created</div>
+    <div v-if="loading" class="status-message">Loading...</div>
+    <div v-else-if="error" class="status-message">{{ error }}</div>
+    <div v-else-if="events.length === 0" class="status-message">No events created</div>
     <ul v-else class="events-list">
       <li v-for="event in events" :key="event.id" class="event-item">
         <div class="event-header">
@@ -362,6 +362,26 @@ onMounted(() => {
 </script>
 
 <style scoped>
+.events-container {
+  padding: 20px;
+  padding-left: 50px;
+  padding-top: 20px;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.events-title {
+  color: white;
+  font-size: 28px;
+  margin-bottom: 20px;
+}
+
+.status-message {
+  color: white;
+  font-size: 16px;
+  margin-bottom: 15px;
+}
+
 .actions {
   margin-bottom: 20px;
 }
@@ -385,10 +405,28 @@ onMounted(() => {
   border: 1px solid #ddd;
   border-radius: 4px;
   background-color: #f9f9f9;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .form-group {
   margin-bottom: 15px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.form-row {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 15px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.form-row .form-group {
+  flex: 1;
+  margin-bottom: 0;
+  min-width: 0;
 }
 
 .form-group label {
@@ -398,12 +436,15 @@ onMounted(() => {
 }
 
 .form-group input,
-.form-group textarea {
+.form-group textarea,
+.form-group select {
   width: 100%;
   padding: 8px 12px;
   border: 1px solid #ddd;
   border-radius: 4px;
   font-size: 14px;
+  box-sizing: border-box;
+  max-width: 100%;
 }
 
 .form-group textarea {
@@ -467,6 +508,8 @@ onMounted(() => {
 .events-list {
   list-style: none;
   padding: 0;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .event-item {
@@ -475,6 +518,8 @@ onMounted(() => {
   border: 1px solid #ddd;
   border-radius: 4px;
   background-color: #f9f9f9;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .event-header {
@@ -543,6 +588,16 @@ onMounted(() => {
   display: flex;
   gap: 12px;
   flex-wrap: wrap;
+}
+
+.edit-event-form {
+  margin-top: 15px;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: #fff;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .edit-btn,
