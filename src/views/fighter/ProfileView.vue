@@ -1,6 +1,6 @@
 <template>
   <div class="profile-container">
-    <h1>My Profile</h1>
+    <h1 class="profile-title">My Profile</h1>
 
     <div v-if="loading" class="status">Loading profile...</div>
     <div v-else-if="error" class="error-message">{{ error }}</div>
@@ -197,7 +197,11 @@
       </form>
 
       <div class="verification-section">
-        <h2>Verification Submissions</h2>
+        <button type="button" class="section-toggle" @click="toggleVerificationSection">
+          <span>Verification Submissions</span>
+          <span>{{ isVerificationSectionOpen ? '−' : '+' }}</span>
+        </button>
+        <div v-show="isVerificationSectionOpen" class="section-content">
         <div v-if="verificationsLoading" class="status">Loading verification submissions...</div>
         <div v-else-if="verificationsError" class="error-message">{{ verificationsError }}</div>
         <div v-else-if="verifications.length === 0" class="status">No verification submissions yet.</div>
@@ -316,6 +320,7 @@
       </div>
     </div>
   </div>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -366,6 +371,7 @@ const verificationsError = ref<string | null>(null);
 const verificationSubmitting = ref(false);
 const verificationSubmitError = ref<string | null>(null);
 const verificationSubmitSuccess = ref<string | null>(null);
+const isVerificationSectionOpen = ref(true);
 const verificationForm = ref({
   type: 'link' as VerificationType,
   value: '',
@@ -562,6 +568,10 @@ function formatVerificationStatus(status: string): string {
   return status.charAt(0).toUpperCase() + status.slice(1);
 }
 
+function toggleVerificationSection() {
+  isVerificationSectionOpen.value = !isVerificationSectionOpen.value;
+}
+
 onMounted(() => {
   loadProfile();
   loadVerifications();
@@ -573,7 +583,14 @@ onMounted(() => {
   max-width: 600px;
   margin: 0 auto;
   padding: 20px;
+  padding-left: 30px;
   text-align: left;
+}
+
+.profile-title {
+  color: white;
+  font-size: 28px;
+  margin-bottom: 20px;
 }
 
 .profile-card {
@@ -688,6 +705,43 @@ onMounted(() => {
 
 .verification-section {
   margin-top: 40px;
+  margin-bottom: 30px;
+}
+
+.section-toggle {
+  width: 100%;
+  padding: 15px 20px;
+  background-color: rgba(30, 58, 138, 0.9);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: 600;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.section-toggle:hover {
+  background-color: rgba(30, 58, 138, 1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.section-toggle span:last-child {
+  font-size: 24px;
+  font-weight: bold;
+  line-height: 1;
+}
+
+.section-content {
+  margin-top: 20px;
+  padding: 20px;
+  background-color: rgba(255, 255, 255, 0.95);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .verification-section h2 {
