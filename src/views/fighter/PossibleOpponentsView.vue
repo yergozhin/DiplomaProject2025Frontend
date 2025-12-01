@@ -1,9 +1,9 @@
 <template>
   <div class="opponents-container">
     <h1 class="opponents-title">Possible Opponents</h1>
-    <div v-if="loading">Loading...</div>
-    <div v-else-if="error">{{ error }}</div>
-    <div v-else-if="opponents.length === 0">No opponents available</div>
+    <div v-if="loading" class="status-message">Loading...</div>
+    <div v-else-if="error" class="status-message">{{ error }}</div>
+    <div v-else-if="opponents.length === 0" class="status-message">No opponents available</div>
     <ul v-else class="opponents-list">
       <li v-for="opponent in opponents" :key="opponent.id" class="opponent-item">
         <div class="opponent-info">
@@ -92,6 +92,12 @@ onMounted(() => {
   color: white;
   font-size: 28px;
   margin-bottom: 20px;
+}
+
+.status-message {
+  color: white;
+  font-size: 16px;
+  margin-bottom: 15px;
 }
 
 .opponents-list {
