@@ -1,6 +1,9 @@
 <template>
   <div class="dashboard-container" :style="{ backgroundImage: `url(${fightersImage})` }">
-    <div class="sidebar">
+    <button @click="toggleSidebar" class="sidebar-toggle" :class="{ 'sidebar-toggle-shifted': isSidebarOpen }">
+      {{ isSidebarOpen ? '✕' : '☰' }}
+    </button>
+    <div class="sidebar" :class="{ 'sidebar-open': isSidebarOpen, 'sidebar-closed': !isSidebarOpen }">
       <h2>Menu</h2>
       <ul>
         <li>
@@ -40,13 +43,14 @@
       <button @click="handleLogout" class="logout-btn">Logout</button>
     </div>
 
-    <div class="main-content">
+    <div class="main-content" :class="{ 'main-content-shifted': isSidebarOpen }">
       <router-view />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '@/stores/auth.store';
 import { ROUTES } from '@/utils/constants';
@@ -54,6 +58,11 @@ import fightersImage from '@/assets/fighters.png';
 
 const router = useRouter();
 const authStore = useAuthStore();
+const isSidebarOpen = ref(true);
+
+function toggleSidebar() {
+  isSidebarOpen.value = !isSidebarOpen.value;
+}
 
 function handleLogout() {
   authStore.logout();
@@ -70,6 +79,35 @@ function handleLogout() {
   background-position: center;
   background-repeat: no-repeat;
   background-attachment: fixed;
+  position: relative;
+}
+
+.sidebar-toggle {
+  position: fixed;
+  top: 15px;
+  left: 15px;
+  z-index: 1000;
+  width: 40px;
+  height: 40px;
+  background-color: rgba(255, 255, 255, 0.9);
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar-toggle:hover {
+  background-color: rgba(255, 255, 255, 1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.sidebar-toggle-shifted {
+  left: 215px;
 }
 
 .sidebar {
@@ -78,8 +116,21 @@ function handleLogout() {
   padding: 20px;
   border-right: 1px solid #ddd;
   text-align: left;
-  position: relative;
-  z-index: 1;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  z-index: 999;
+  transition: transform 0.3s ease;
+  overflow-y: auto;
+}
+
+.sidebar-closed {
+  transform: translateX(-100%);
+}
+
+.sidebar-open {
+  transform: translateX(0);
 }
 
 .sidebar h2 {
@@ -149,8 +200,16 @@ function handleLogout() {
 .main-content {
   flex: 1;
   padding: 20px;
+  padding-left: 20px;
   text-align: left;
   position: relative;
   z-index: 1;
+  transition: margin-left 0.3s ease;
+  margin-left: 0;
+  width: 100%;
+}
+
+.main-content-shifted {
+  margin-left: 200px;
 }
 </style>
