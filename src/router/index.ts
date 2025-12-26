@@ -66,6 +66,11 @@ const router = createRouter({
           name: 'AdminPromotionLeagues',
           component: () => import('@/views/admin/PromotionLeaguesView.vue'),
         },
+        {
+          path: 'weight-classes',
+          name: 'AdminWeightClasses',
+          component: () => import('@/views/admin/WeightClassesView.vue'),
+        },
       ],
     },
     {
@@ -112,6 +117,26 @@ const router = createRouter({
           name: 'FighterFightOffers',
           component: () => import('@/views/fighter/FightOffersView.vue'),
         },
+        {
+          path: 'fights/:fightId/details',
+          name: 'FighterFightDetails',
+          component: () => import('@/views/fighter/FightDetailsView.vue'),
+        },
+        {
+          path: 'rankings',
+          name: 'FighterRankings',
+          component: () => import('@/views/fighter/RankingsView.vue'),
+        },
+        {
+          path: 'injuries',
+          name: 'FighterInjuries',
+          component: () => import('@/views/fighter/InjuriesView.vue'),
+        },
+        {
+          path: 'medical-clearances',
+          name: 'FighterMedicalClearances',
+          component: () => import('@/views/fighter/MedicalClearancesView.vue'),
+        },
       ],
     },
     {
@@ -152,6 +177,16 @@ const router = createRouter({
           path: 'profile',
           name: 'PLOProfile',
           component: () => import('@/views/plo/ProfileView.vue'),
+        },
+        {
+          path: 'event-categories',
+          name: 'PLOEventCategories',
+          component: () => import('@/views/plo/EventCategoriesView.vue'),
+        },
+        {
+          path: 'event-sponsors',
+          name: 'PLOEventSponsors',
+          component: () => import('@/views/plo/EventSponsorsView.vue'),
         },
       ],
     },
