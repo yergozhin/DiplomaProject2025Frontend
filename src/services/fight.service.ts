@@ -29,4 +29,8 @@ export const fightService = {
   async acceptFight(fightId: string): Promise<AcceptedFight> {
     return apiClient.put<AcceptedFight>(`/fights/${fightId}/accept`);
   },
+
+  async getFightById(fightId: string): Promise<AcceptedFight | null> {
+    return apiClient.get<AcceptedFight>(`/fights/${fightId}`);
+  },
 };

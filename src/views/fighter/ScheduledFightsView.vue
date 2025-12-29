@@ -25,6 +25,9 @@
             <div>{{ fight.fighterBEmail }}</div>
           </div>
         </div>
+        <div class="fight-actions">
+          <button @click="handleViewDetails(fight.id)" class="view-details-btn">View Details</button>
+        </div>
       </li>
     </ul>
   </div>
@@ -32,8 +35,11 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
 import { fightService } from '@/services/fight.service';
 import type { ScheduledFight } from '@/types';
+
+const router = useRouter();
 
 const fights = ref<ScheduledFight[]>([]);
 const loading = ref(false);
@@ -49,6 +55,10 @@ async function loadFights() {
   } finally {
     loading.value = false;
   }
+}
+
+function handleViewDetails(fightId: string) {
+  router.push(`/fighter/fights/${fightId}/details`);
 }
 
 onMounted(() => {
@@ -121,6 +131,25 @@ onMounted(() => {
 .fighter strong {
   display: block;
   margin-bottom: 5px;
+}
+
+.fight-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.view-details-btn {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.view-details-btn:hover {
+  background-color: #0056b3;
 }
 </style>
 

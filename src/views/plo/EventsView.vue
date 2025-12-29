@@ -171,7 +171,12 @@
           <ul v-if="event.slots.length > 0" class="slots-list">
             <li v-for="slot in event.slots" :key="slot.id" class="slot-item">
               <span>{{ formatDate(slot.startTime) }}</span>
-              <span v-if="slot.fightId" class="slot-assigned">Assigned</span>
+              <span v-if="slot.fightId" class="slot-status">
+                <span class="slot-assigned">Assigned</span>
+                <button @click="handleViewFightDetails(slot.fightId)" class="view-fight-btn">
+                  View Fight Details
+                </button>
+              </span>
               <span v-else class="slot-available">Available</span>
             </li>
           </ul>
@@ -184,8 +189,11 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
 import { eventService } from '@/services/event.service';
 import type { Event, UpdateEventRequest } from '@/types';
+
+const router = useRouter();
 
 const events = ref<Event[]>([]);
 const loading = ref(false);
@@ -209,6 +217,11 @@ const form = ref({
   posterImage: '',
   ticketLink: '',
 });
+
+function handleViewFightDetails(fightId: string | null) {
+  if (!fightId) return;
+  router.push(`/plo/fights/${fightId}/details`);
+}
 
 function formatDate(dateString: string): string {
   return new Date(dateString).toLocaleString();
@@ -656,9 +669,29 @@ onMounted(() => {
   border-radius: 4px;
 }
 
+.slot-status {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
 .slot-assigned {
   color: #28a745;
   font-weight: bold;
+}
+
+.view-fight-btn {
+  padding: 4px 12px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.view-fight-btn:hover {
+  background-color: #0056b3;
 }
 
 .slot-available {

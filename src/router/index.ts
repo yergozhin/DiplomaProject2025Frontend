@@ -174,6 +174,11 @@ const router = createRouter({
           component: () => import('@/views/plo/SendOfferView.vue'),
         },
         {
+          path: 'fights/:fightId/details',
+          name: 'PLOFightDetails',
+          component: () => import('@/views/fighter/FightDetailsView.vue'),
+        },
+        {
           path: 'profile',
           name: 'PLOProfile',
           component: () => import('@/views/plo/ProfileView.vue'),

@@ -25,7 +25,10 @@
             <div>{{ fight.fighterBEmail }}</div>
           </div>
         </div>
-        <button @click="handleViewOffers(fight.id)" class="view-offers-btn">View Offers</button>
+        <div class="fight-actions">
+          <button @click="handleViewOffers(fight.id)" class="view-offers-btn">View Offers</button>
+          <button @click="handleViewDetails(fight.id)" class="view-details-btn">View Details</button>
+        </div>
       </li>
     </ul>
   </div>
@@ -56,6 +59,10 @@ async function loadFights() {
 
 function handleViewOffers(fightId: string) {
   router.push(`/fighter/fights/${fightId}/offers`);
+}
+
+function handleViewDetails(fightId: string) {
+  router.push(`/fighter/fights/${fightId}/details`);
 }
 
 onMounted(() => {
@@ -131,7 +138,14 @@ onMounted(() => {
   margin-bottom: 5px;
 }
 
-.view-offers-btn {
+.fight-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.view-offers-btn,
+.view-details-btn {
   padding: 10px 20px;
   background-color: #007bff;
   color: white;
@@ -140,7 +154,8 @@ onMounted(() => {
   cursor: pointer;
 }
 
-.view-offers-btn:hover {
+.view-offers-btn:hover,
+.view-details-btn:hover {
   background-color: #0056b3;
 }
 </style>

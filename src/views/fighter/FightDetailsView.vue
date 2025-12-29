@@ -3,120 +3,128 @@
     <h1 class="fight-details-title">Fight Details</h1>
     <div v-if="loading" class="status-message">Loading fight details...</div>
     <div v-else-if="error" class="error-message">{{ error }}</div>
-    <div v-else class="fight-content">
+    <div v-else-if="fightDetails" class="fight-content">
       <div class="fight-info">
         <div class="info-row">
           <span class="label">Fight ID:</span>
-          <span class="value">{{ fightId }}</span>
+          <span class="value">{{ fightDetails.id }}</span>
+        </div>
+        <div class="info-row">
+          <span class="label">Status:</span>
+          <span class="value">{{ fightDetails.status }}</span>
         </div>
       </div>
-      <div v-if="result" class="result-section">
-        <h2>Fight Result</h2>
-        <div class="result-info">
-          <div class="info-row">
-            <span class="label">Winner:</span>
-            <span class="value">{{ result.winnerName || 'No winner' }}</span>
-          </div>
-          <div class="info-row">
-            <span class="label">Result Type:</span>
-            <span class="value">{{ formatResultType(result.resultType) }}</span>
-          </div>
-          <div v-if="result.roundEnded" class="info-row">
-            <span class="label">Round Ended:</span>
-            <span class="value">{{ result.roundEnded }}</span>
-          </div>
-          <div v-if="result.timeEnded" class="info-row">
-            <span class="label">Time Ended:</span>
-            <span class="value">{{ result.timeEnded }}</span>
+
+      <div class="fighters-section">
+        <h2>Fighters</h2>
+        <div class="fighters-info">
+          <div class="fighter-card">
+            <h3>Fighter A</h3>
+            <div class="fighter-details">
+              <div class="info-row">
+                <span class="label">Name:</span>
+                <span class="value">{{ fightDetails.fighterAName || fightDetails.fighterAEmail }}</span>
+              </div>
+              <div class="info-row">
+                <span class="label">Email:</span>
+                <span class="value">{{ fightDetails.fighterAEmail }}</span>
+              </div>
+              <div v-if="fightDetails.fighterAWeightClass" class="info-row">
+                <span class="label">Weight Class:</span>
+                <span class="value">{{ fightDetails.fighterAWeightClass }}</span>
+              </div>
+            </div>
+            <button
+              v-if="canCreateContract"
+              @click="showCreateContractForm('fighterA')"
+              class="create-contract-btn"
+            >
+              Create Contract for Fighter A
+            </button>
+            </div>
+          <div class="fighter-card">
+            <h3>Fighter B</h3>
+            <div class="fighter-details">
+              <div class="info-row">
+                <span class="label">Name:</span>
+                <span class="value">{{ fightDetails.fighterBName || fightDetails.fighterBEmail }}</span>
+            </div>
+              <div class="info-row">
+                <span class="label">Email:</span>
+                <span class="value">{{ fightDetails.fighterBEmail }}</span>
+            </div>
+              <div v-if="fightDetails.fighterBWeightClass" class="info-row">
+                <span class="label">Weight Class:</span>
+                <span class="value">{{ fightDetails.fighterBWeightClass }}</span>
+            </div>
+            </div>
+            <button
+              v-if="canCreateContract"
+              @click="showCreateContractForm('fighterB')"
+              class="create-contract-btn"
+            >
+              Create Contract for Fighter B
+            </button>
           </div>
         </div>
       </div>
-      <div v-if="statistics.length > 0" class="statistics-section">
-        <h2>Fight Statistics</h2>
-        <div v-for="stat in statistics" :key="stat.id" class="stat-item">
-          <h3>{{ stat.fighterName || 'Unknown Fighter' }}</h3>
-          <div class="stat-grid">
-            <div class="stat-box">
-              <span class="stat-label">Strikes Landed</span>
-              <span class="stat-value">{{ stat.strikesLanded }}</span>
-            </div>
-            <div class="stat-box">
-              <span class="stat-label">Strikes Attempted</span>
-              <span class="stat-value">{{ stat.strikesAttempted }}</span>
-            </div>
-            <div class="stat-box">
-              <span class="stat-label">Takedowns Landed</span>
-              <span class="stat-value">{{ stat.takedownsLanded }}</span>
-            </div>
-            <div class="stat-box">
-              <span class="stat-label">Takedowns Attempted</span>
-              <span class="stat-value">{{ stat.takedownsAttempted }}</span>
-            </div>
-            <div class="stat-box">
-              <span class="stat-label">Submission Attempts</span>
-              <span class="stat-value">{{ stat.submissionAttempts }}</span>
-            </div>
-            <div class="stat-box">
-              <span class="stat-label">Control Time</span>
-              <span class="stat-value">{{ formatTime(stat.controlTimeSeconds) }}</span>
-            </div>
-          </div>
-        </div>
+
+      <FightContractsList
+        :fight-id="fightId"
+        :fight-details="fightDetails"
+        :show-create-form-for="showCreateFormFor"
+        @contract-created="handleContractCreated"
+      />
       </div>
-      <div v-if="!result && statistics.length === 0" class="no-data">
-        No fight details available yet
-      </div>
+    <div v-else class="no-data">
+      Fight not found
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
-import { fightResultsService } from '@/services/fight-results.service';
-import { fightStatisticsService } from '@/services/fight-statistics.service';
-import type { FightResult, FightStatistic } from '@/types';
+import { fightService } from '@/services/fight.service';
+import { useAuthStore } from '@/stores/auth.store';
+import FightContractsList from '@/components/FightContractsList.vue';
+import type { AcceptedFight } from '@/types';
 
 const route = useRoute();
+const authStore = useAuthStore();
 const fightId = route.params.fightId as string;
-const result = ref<FightResult | null>(null);
-const statistics = ref<FightStatistic[]>([]);
+const fightDetails = ref<AcceptedFight | null>(null);
 const loading = ref(false);
 const error = ref<string | null>(null);
+const showCreateFormFor = ref<'fighterA' | 'fighterB' | null>(null);
 
-function formatResultType(type: string | null) {
-  if (!type) return 'Not set';
-  return type
-    .split('_')
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(' ');
-}
-
-function formatTime(seconds: number) {
-  const mins = Math.floor(seconds / 60);
-  const secs = seconds % 60;
-  return `${mins}:${secs.toString().padStart(2, '0')}`;
-}
+const canCreateContract = computed(() => {
+  const role = authStore.userRole;
+  return role === 'plo' || role === 'admin';
+});
 
 async function loadFightDetails() {
   loading.value = true;
   error.value = null;
   try {
-    try {
-      result.value = await fightResultsService.getByFight(fightId);
-    } catch (err: any) {
-      if (err.status !== 404) throw err;
-    }
-    try {
-      statistics.value = await fightStatisticsService.getByFight(fightId);
-    } catch (err: any) {
-      if (err.status !== 404) throw err;
-    }
+    fightDetails.value = await fightService.getFightById(fightId);
   } catch (err: any) {
+    if (err.status === 404) {
+      error.value = 'Fight not found';
+    } else {
     error.value = err.error || 'Failed to load fight details';
+    }
   } finally {
     loading.value = false;
   }
+}
+
+function showCreateContractForm(fighter: 'fighterA' | 'fighterB') {
+  showCreateFormFor.value = fighter;
+}
+
+function handleContractCreated() {
+  showCreateFormFor.value = null;
 }
 
 onMounted(() => {
@@ -159,7 +167,10 @@ onMounted(() => {
 }
 
 .fight-info {
-  margin-bottom: 20px;
+  margin-bottom: 30px;
+  background-color: white;
+  padding: 15px;
+  border-radius: 4px;
 }
 
 .info-row {
@@ -171,74 +182,69 @@ onMounted(() => {
 .label {
   font-weight: bold;
   color: #333;
+  min-width: 120px;
 }
 
 .value {
   color: #666;
 }
 
-.result-section,
-.statistics-section {
+.fighters-section {
   margin-top: 30px;
   padding-top: 20px;
   border-top: 1px solid #ddd;
 }
 
-.result-section h2,
-.statistics-section h2 {
+.fighters-section h2 {
   color: #333;
-  margin-bottom: 15px;
+  margin-bottom: 20px;
 }
 
-.result-info {
-  background-color: white;
-  padding: 15px;
-  border-radius: 4px;
-}
-
-.stat-item {
-  margin-bottom: 30px;
-  background-color: white;
-  padding: 15px;
-  border-radius: 4px;
-}
-
-.stat-item h3 {
-  color: #333;
-  margin-bottom: 15px;
-}
-
-.stat-grid {
+.fighters-info {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 15px;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+  margin-bottom: 20px;
 }
 
-.stat-box {
-  display: flex;
-  flex-direction: column;
-  padding: 10px;
-  background-color: #f8f9fa;
+.fighter-card {
+  background-color: white;
+  padding: 20px;
   border-radius: 4px;
-  text-align: center;
+  border: 1px solid #ddd;
 }
 
-.stat-label {
-  font-size: 12px;
-  color: #666;
-  margin-bottom: 5px;
-}
-
-.stat-value {
-  font-size: 20px;
-  font-weight: bold;
+.fighter-card h3 {
   color: #333;
+  margin-bottom: 15px;
+  font-size: 18px;
+}
+
+.fighter-details {
+  margin-bottom: 15px;
+}
+
+.create-contract-btn {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.create-contract-btn:hover {
+  background-color: #0056b3;
 }
 
 .no-data {
   color: #666;
   text-align: center;
   padding: 40px;
+  background-color: #f9f9f9;
+  border-radius: 4px;
 }
 </style>
-
