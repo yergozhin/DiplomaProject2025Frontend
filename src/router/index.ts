@@ -128,6 +128,11 @@ const router = createRouter({
           component: () => import('@/views/fighter/FightDetailsView.vue'),
         },
         {
+          path: 'fights/:fightId/history',
+          name: 'FighterFightHistory',
+          component: () => import('@/views/fighter/FightHistoryView.vue'),
+        },
+        {
           path: 'rankings',
           name: 'FighterRankings',
           component: () => import('@/views/fighter/RankingsView.vue'),
@@ -182,6 +187,11 @@ const router = createRouter({
           path: 'fights/:fightId/details',
           name: 'PLOFightDetails',
           component: () => import('@/views/fighter/FightDetailsView.vue'),
+        },
+        {
+          path: 'fights/:fightId/history',
+          name: 'PLOFightHistory',
+          component: () => import('@/views/fighter/FightHistoryView.vue'),
         },
         {
           path: 'profile',

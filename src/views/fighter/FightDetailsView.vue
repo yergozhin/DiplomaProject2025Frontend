@@ -13,6 +13,14 @@
           <span class="label">Status:</span>
           <span class="value">{{ fightDetails.status }}</span>
         </div>
+        <div class="info-row">
+          <router-link
+            :to="historyRoute"
+            class="view-history-btn"
+          >
+            View Fight History
+          </router-link>
+        </div>
       </div>
 
       <div class="fighters-section">
@@ -41,7 +49,7 @@
             >
               Create Contract for Fighter A
             </button>
-            </div>
+          </div>
           <div class="fighter-card">
             <h3>Fighter B</h3>
             <div class="fighter-details">
@@ -75,7 +83,7 @@
         :show-create-form-for="showCreateFormFor"
         @contract-created="handleContractCreated"
       />
-      </div>
+    </div>
     <div v-else class="no-data">
       Fight not found
     </div>
@@ -98,6 +106,14 @@ const loading = ref(false);
 const error = ref<string | null>(null);
 const showCreateFormFor = ref<'fighterA' | 'fighterB' | null>(null);
 
+const historyRoute = computed(() => {
+  const role = authStore.userRole;
+  if (role === 'plo') {
+    return `/plo/fights/${fightId}/history`;
+  }
+  return `/fighter/fights/${fightId}/history`;
+});
+
 const canCreateContract = computed(() => {
   const role = authStore.userRole;
   return role === 'plo' || role === 'admin';
@@ -112,7 +128,7 @@ async function loadFightDetails() {
     if (err.status === 404) {
       error.value = 'Fight not found';
     } else {
-    error.value = err.error || 'Failed to load fight details';
+      error.value = err.error || 'Failed to load fight details';
     }
   } finally {
     loading.value = false;
@@ -187,6 +203,22 @@ onMounted(() => {
 
 .value {
   color: #666;
+}
+
+.view-history-btn {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #28a745;
+  color: white;
+  text-decoration: none;
+  border-radius: 4px;
+  font-size: 14px;
+  transition: background-color 0.2s;
+  margin-top: 10px;
+}
+
+.view-history-btn:hover {
+  background-color: #218838;
 }
 
 .fighters-section {

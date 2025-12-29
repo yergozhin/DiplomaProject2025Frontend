@@ -19,6 +19,7 @@ export const ROUTES = {
   FIGHTER_FIGHTS: '/fighter/fights',
   FIGHTER_SCHEDULED_FIGHTS: '/fighter/scheduled-fights',
   FIGHTER_FIGHT_OFFERS: '/fighter/fights/:fightId/offers',
+  FIGHTER_FIGHT_HISTORY: '/fighter/fights/:fightId/history',
   PLO_DASHBOARD: '/plo/dashboard',
   PLO_EVENTS: '/plo/events',
   PLO_AVAILABLE_FIGHTS: '/plo/available-fights',
