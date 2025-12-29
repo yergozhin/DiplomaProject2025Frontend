@@ -11,6 +11,9 @@
         <router-link :to="ROUTES.ADMIN_PLOS" active-class="active">
           Promotion Leagues
         </router-link>
+        <router-link :to="ROUTES.ADMIN_EMAIL_VERIFICATION" active-class="active">
+          Email Verification
+        </router-link>
       </nav>
       <button type="button" @click="handleLogout">Logout</button>
     </aside>

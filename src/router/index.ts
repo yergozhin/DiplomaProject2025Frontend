@@ -71,6 +71,11 @@ const router = createRouter({
           name: 'AdminWeightClasses',
           component: () => import('@/views/admin/WeightClassesView.vue'),
         },
+        {
+          path: 'email-verification',
+          name: 'AdminEmailVerification',
+          component: () => import('@/views/admin/EmailVerificationView.vue'),
+        },
       ],
     },
     {

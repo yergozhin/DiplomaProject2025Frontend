@@ -30,4 +30,5 @@ export const ROUTES = {
   ADMIN_PENDING_VERIFICATIONS: '/admin/pending-verifications',
   ADMIN_PENDING_VERIFICATION_DETAILS: '/admin/pending-verifications/:fighterId',
   ADMIN_PLOS: '/admin/promotion-leagues',
+  ADMIN_EMAIL_VERIFICATION: '/admin/email-verification',
 } as const;

@@ -39,6 +39,21 @@ export const adminService = {
       },
     );
   },
+  async getUsers(): Promise<User[]> {
+    return apiClient.get<User[]>('/admin/users');
+  },
+  async verifyUserEmail(userId: string): Promise<{ id: string; emailVerified: boolean }> {
+    return apiClient.post<{ id: string; emailVerified: boolean }>(`/admin/users/${userId}/verify-email`);
+  },
 };
+
+export interface User {
+  id: string;
+  email: string;
+  role: 'fighter' | 'plo' | 'spectator';
+  emailVerified: boolean;
+  name: string | null;
+  createdAt: string | null;
+}
 
 
