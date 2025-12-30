@@ -14,6 +14,11 @@
             Published Events
           </router-link>
         </li>
+        <li>
+          <router-link :to="ROUTES.SPECTATOR_RANKINGS" active-class="active">
+            Rankings
+          </router-link>
+        </li>
       </ul>
       <button type="button" class="logout-btn" @click="handleLogout">
         Logout

@@ -229,6 +229,11 @@ const router = createRouter({
           name: 'SpectatorEvents',
           component: () => import('@/views/spectator/SpectatorEventsView.vue'),
         },
+        {
+          path: 'rankings',
+          name: 'SpectatorRankings',
+          component: () => import('@/views/spectator/RankingsView.vue'),
+        },
       ],
     },
   ],

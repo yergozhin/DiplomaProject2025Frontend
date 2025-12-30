@@ -49,6 +49,11 @@
             Medical Clearances
           </router-link>
         </li>
+        <li>
+          <router-link :to="ROUTES.FIGHTER_RANKINGS" active-class="active">
+            Rankings
+          </router-link>
+        </li>
       </ul>
       <button @click="handleLogout" class="logout-btn">Logout</button>
     </div>

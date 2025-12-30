@@ -6,6 +6,10 @@ import type {
 } from '@/types';
 
 export const fighterRankingsService = {
+  async getAll(): Promise<FighterRanking[]> {
+    return apiClient.get<FighterRanking[]>('/fighter-rankings/all');
+  },
+
   async getByFighter(fighterId: string): Promise<FighterRanking[]> {
     return apiClient.get<FighterRanking[]>(`/fighter-rankings/fighter/${fighterId}`);
   },

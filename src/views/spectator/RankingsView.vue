@@ -1,6 +1,6 @@
 <template>
   <div class="rankings-container">
-    <h1 class="rankings-title">My Rankings</h1>
+    <h1 class="rankings-title">Fighter Rankings</h1>
     <div v-if="loading" class="status-message">Loading rankings...</div>
     <div v-else-if="error" class="error-message">{{ error }}</div>
     <div v-else-if="rankings.length === 0" class="status-message">No rankings found</div>
@@ -98,14 +98,6 @@ onMounted(() => {
   margin-bottom: 20px;
 }
 
-.rankings-subtitle {
-  color: white;
-  font-size: 22px;
-  margin-bottom: 20px;
-  padding-bottom: 10px;
-  border-bottom: 2px solid rgba(255, 255, 255, 0.3);
-}
-
 .status-message {
   color: white;
   font-size: 16px;
@@ -116,6 +108,14 @@ onMounted(() => {
   color: #ff6b6b;
   font-size: 16px;
   margin-bottom: 15px;
+}
+
+.rankings-subtitle {
+  color: white;
+  font-size: 22px;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.3);
 }
 
 .rankings-table {

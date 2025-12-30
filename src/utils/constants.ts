@@ -30,6 +30,7 @@ export const ROUTES = {
   PLO_PROFILE: '/plo/profile',
   SPECTATOR_HOME: '/spectator',
   SPECTATOR_EVENTS: '/spectator/events',
+  SPECTATOR_RANKINGS: '/spectator/rankings',
   ADMIN_DASHBOARD: '/admin',
   ADMIN_PENDING_VERIFICATIONS: '/admin/pending-verifications',
   ADMIN_PENDING_VERIFICATION_DETAILS: '/admin/pending-verifications/:fighterId',
