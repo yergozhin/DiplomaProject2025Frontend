@@ -80,6 +80,8 @@
           </div>
         </div>
 
+        <EventStatusHistoryList :event-id="event.id" />
+
         <div class="event-actions">
           <button type="button" class="edit-btn" @click="startEdit(event)" :disabled="processingId === event.id">
             Edit Details
@@ -191,6 +193,7 @@
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { eventService } from '@/services/event.service';
+import EventStatusHistoryList from '@/components/EventStatusHistoryList.vue';
 import type { Event, UpdateEventRequest } from '@/types';
 
 const router = useRouter();
