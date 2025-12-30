@@ -39,6 +39,16 @@
             Scheduled Fights
           </router-link>
         </li>
+        <li>
+          <router-link :to="ROUTES.FIGHTER_INJURIES" active-class="active">
+            Injuries
+          </router-link>
+        </li>
+        <li>
+          <router-link :to="ROUTES.FIGHTER_MEDICAL_CLEARANCES" active-class="active">
+            Medical Clearances
+          </router-link>
+        </li>
       </ul>
       <button @click="handleLogout" class="logout-btn">Logout</button>
     </div>

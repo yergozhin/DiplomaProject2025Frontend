@@ -45,7 +45,23 @@ export const adminService = {
   async verifyUserEmail(userId: string): Promise<{ id: string; emailVerified: boolean }> {
     return apiClient.post<{ id: string; emailVerified: boolean }>(`/admin/users/${userId}/verify-email`);
   },
+  async getMedicalClearances(): Promise<MedicalClearanceAdmin[]> {
+    return apiClient.get<MedicalClearanceAdmin[]>('/admin/medical-clearances');
+  },
 };
+
+export interface MedicalClearanceAdmin {
+  id: string;
+  fighterId: string;
+  fighterEmail: string;
+  fighterName: string | null;
+  clearanceDate: string;
+  expirationDate: string | null;
+  clearedBy: string | null;
+  clearanceType: string | null;
+  notes: string | null;
+  status: 'pending' | 'approved' | 'rejected';
+}
 
 export interface User {
   id: string;

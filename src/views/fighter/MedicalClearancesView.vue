@@ -44,13 +44,21 @@
           <span class="clearance-date">{{ formatDate(clearance.clearanceDate) }}</span>
         </div>
         <div class="clearance-details">
-          <div v-if="clearance.expirationDate" class="clearance-expiry">
+          <div class="clearance-expiry">
             <span class="label">Expires:</span>
             <span class="value">{{ formatDate(clearance.expirationDate) }}</span>
           </div>
-          <div v-if="clearance.clearedBy" class="clearance-doctor">
+          <div class="clearance-doctor">
             <span class="label">Cleared By:</span>
-            <span class="value">{{ clearance.clearedBy }}</span>
+            <span class="value">{{ clearance.clearedBy || 'Not set' }}</span>
+          </div>
+          <div class="clearance-type">
+            <span class="label">Type:</span>
+            <span class="value">{{ formatType(clearance.clearanceType) }}</span>
+          </div>
+          <div class="clearance-status">
+            <span class="label">Status:</span>
+            <span class="value">{{ formatStatus(clearance.status) }}</span>
           </div>
           <div v-if="clearance.notes" class="clearance-notes">
             <span class="label">Notes:</span>
@@ -75,13 +83,13 @@ const error = ref<string | null>(null);
 const showForm = ref(false);
 const submitting = ref(false);
 
-const form = ref<CreateClearanceRequest>({
+const form = ref({
   fighterId: '',
   clearanceDate: '',
-  expirationDate: null,
-  clearedBy: null,
-  clearanceType: null,
-  notes: null,
+  expirationDate: '',
+  clearedBy: '',
+  clearanceType: null as 'pre-fight' | 'post-fight' | 'annual' | 'emergency' | null,
+  notes: '',
 });
 
 function formatDate(date: string | null) {
@@ -90,11 +98,16 @@ function formatDate(date: string | null) {
 }
 
 function formatType(type: string | null) {
-  if (!type) return 'Medical Clearance';
+  if (!type) return 'Not set';
   return type
     .split('-')
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(' ');
+}
+
+function formatStatus(status: string) {
+  if (!status) return 'Not set';
+  return status.charAt(0).toUpperCase() + status.slice(1);
 }
 
 function cancelForm() {
@@ -102,10 +115,10 @@ function cancelForm() {
   form.value = {
     fighterId: '',
     clearanceDate: '',
-    expirationDate: null,
-    clearedBy: null,
+    expirationDate: '',
+    clearedBy: '',
     clearanceType: null,
-    notes: null,
+    notes: '',
   };
 }
 
@@ -115,15 +128,24 @@ async function handleSubmit() {
   error.value = null;
   try {
     form.value.fighterId = authStore.user.id;
-    await medicalClearancesService.create(form.value);
+    // Convert empty strings to null for optional fields
+    const payload: CreateClearanceRequest = {
+      fighterId: form.value.fighterId,
+      clearanceDate: form.value.clearanceDate,
+      expirationDate: (form.value.expirationDate && form.value.expirationDate.trim() !== '') ? form.value.expirationDate : null,
+      clearedBy: (form.value.clearedBy && form.value.clearedBy.trim() !== '') ? form.value.clearedBy : null,
+      clearanceType: form.value.clearanceType || null,
+      notes: (form.value.notes && form.value.notes.trim() !== '') ? form.value.notes : null,
+    };
+    await medicalClearancesService.create(payload);
     showForm.value = false;
     form.value = {
       fighterId: '',
       clearanceDate: '',
-      expirationDate: null,
-      clearedBy: null,
+      expirationDate: '',
+      clearedBy: '',
       clearanceType: null,
-      notes: null,
+      notes: '',
     };
     await loadClearances();
   } catch (err: any) {
@@ -298,6 +320,8 @@ onMounted(() => {
 
 .clearance-expiry,
 .clearance-doctor,
+.clearance-type,
+.clearance-status,
 .clearance-notes {
   display: flex;
   gap: 10px;

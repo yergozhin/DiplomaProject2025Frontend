@@ -358,6 +358,19 @@ export interface UpdateInjuryRequest {
   medicalNotes?: string | null;
 }
 
+export interface MedicalClearanceAdmin {
+  id: string;
+  fighterId: string;
+  fighterEmail: string;
+  fighterName: string | null;
+  clearanceDate: string;
+  expirationDate: string | null;
+  clearedBy: string | null;
+  clearanceType: string | null;
+  notes: string | null;
+  status: 'pending' | 'approved' | 'rejected';
+}
+
 export interface MedicalClearance {
   id: string;
   fighterId: string;
@@ -366,6 +379,7 @@ export interface MedicalClearance {
   clearedBy: string | null;
   clearanceType: 'pre-fight' | 'post-fight' | 'annual' | 'emergency' | null;
   notes: string | null;
+  status: 'pending' | 'approved' | 'rejected';
 }
 
 export interface CreateClearanceRequest {
@@ -383,6 +397,7 @@ export interface UpdateClearanceRequest {
   clearedBy?: string | null;
   clearanceType?: 'pre-fight' | 'post-fight' | 'annual' | 'emergency' | null;
   notes?: string | null;
+  status?: 'pending' | 'approved' | 'rejected';
 }
 
 export interface FightResult {

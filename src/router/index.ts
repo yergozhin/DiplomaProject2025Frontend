@@ -76,6 +76,11 @@ const router = createRouter({
           name: 'AdminEmailVerification',
           component: () => import('@/views/admin/EmailVerificationView.vue'),
         },
+        {
+          path: 'medical-clearances',
+          name: 'AdminMedicalClearances',
+          component: () => import('@/views/admin/MedicalClearancesView.vue'),
+        },
       ],
     },
     {

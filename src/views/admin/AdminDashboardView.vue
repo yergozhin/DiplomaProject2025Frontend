@@ -14,6 +14,9 @@
         <router-link :to="ROUTES.ADMIN_EMAIL_VERIFICATION" active-class="active">
           Email Verification
         </router-link>
+        <router-link :to="ROUTES.ADMIN_MEDICAL_CLEARANCES" active-class="active">
+          Medical Clearances
+        </router-link>
       </nav>
       <button type="button" @click="handleLogout">Logout</button>
     </aside>

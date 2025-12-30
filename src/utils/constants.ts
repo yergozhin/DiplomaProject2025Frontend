@@ -20,6 +20,9 @@ export const ROUTES = {
   FIGHTER_SCHEDULED_FIGHTS: '/fighter/scheduled-fights',
   FIGHTER_FIGHT_OFFERS: '/fighter/fights/:fightId/offers',
   FIGHTER_FIGHT_HISTORY: '/fighter/fights/:fightId/history',
+  FIGHTER_INJURIES: '/fighter/injuries',
+  FIGHTER_MEDICAL_CLEARANCES: '/fighter/medical-clearances',
+  FIGHTER_RANKINGS: '/fighter/rankings',
   PLO_DASHBOARD: '/plo/dashboard',
   PLO_EVENTS: '/plo/events',
   PLO_AVAILABLE_FIGHTS: '/plo/available-fights',
@@ -32,4 +35,5 @@ export const ROUTES = {
   ADMIN_PENDING_VERIFICATION_DETAILS: '/admin/pending-verifications/:fighterId',
   ADMIN_PLOS: '/admin/promotion-leagues',
   ADMIN_EMAIL_VERIFICATION: '/admin/email-verification',
+  ADMIN_MEDICAL_CLEARANCES: '/admin/medical-clearances',
 } as const;

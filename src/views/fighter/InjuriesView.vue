@@ -8,7 +8,27 @@
     <form v-if="showForm" @submit.prevent="handleSubmit" class="injury-form">
       <div class="form-group">
         <label for="injuryType">Injury Type *</label>
-        <input id="injuryType" v-model="form.injuryType" type="text" required :disabled="submitting" />
+        <select id="injuryType" v-model="form.injuryType" required :disabled="submitting">
+          <option value="">Select injury type</option>
+          <option value="Concussion">Concussion</option>
+          <option value="Fracture">Fracture</option>
+          <option value="Dislocation">Dislocation</option>
+          <option value="Sprain">Sprain</option>
+          <option value="Strain">Strain</option>
+          <option value="Laceration">Laceration</option>
+          <option value="Contusion">Contusion</option>
+          <option value="Bruise">Bruise</option>
+          <option value="Torn Ligament">Torn Ligament</option>
+          <option value="Torn Muscle">Torn Muscle</option>
+          <option value="Broken Nose">Broken Nose</option>
+          <option value="Eye Injury">Eye Injury</option>
+          <option value="Rib Injury">Rib Injury</option>
+          <option value="Shoulder Injury">Shoulder Injury</option>
+          <option value="Knee Injury">Knee Injury</option>
+          <option value="Ankle Injury">Ankle Injury</option>
+          <option value="Hand Injury">Hand Injury</option>
+          <option value="Other">Other</option>
+        </select>
       </div>
       <div class="form-group">
         <label for="injuryDescription">Description</label>
@@ -52,6 +72,31 @@
           <span class="value">{{ injury.medicalNotes }}</span>
         </div>
         <div class="injury-updated">Updated: {{ formatDateTime(injury.updatedAt) }}</div>
+        <div class="injury-actions">
+          <button
+            type="button"
+            class="update-btn"
+            :disabled="updatingId === injury.id"
+            @click="startUpdate(injury)"
+          >
+            {{ updatingId === injury.id ? 'Updating...' : 'Update Recovery Status' }}
+          </button>
+        </div>
+        <form v-if="editingId === injury.id" class="update-form" @submit.prevent="handleUpdate(injury.id)">
+          <div class="form-group">
+            <label for="recoveryStatusUpdate">Recovery Status</label>
+            <select id="recoveryStatusUpdate" v-model="updateForm.recoveryStatus" :disabled="updatingId === injury.id">
+              <option :value="null">Not Set</option>
+              <option value="recovering">Recovering</option>
+              <option value="cleared">Cleared</option>
+              <option value="ongoing">Ongoing</option>
+            </select>
+          </div>
+          <div class="form-actions">
+            <button type="submit" :disabled="updatingId === injury.id" class="submit-btn">Save</button>
+            <button type="button" @click="cancelUpdate" :disabled="updatingId === injury.id" class="cancel-btn">Cancel</button>
+          </div>
+        </form>
       </li>
     </ul>
   </div>
@@ -69,6 +114,11 @@ const loading = ref(false);
 const error = ref<string | null>(null);
 const showForm = ref(false);
 const submitting = ref(false);
+const editingId = ref<string | null>(null);
+const updatingId = ref<string | null>(null);
+const updateForm = ref({
+  recoveryStatus: null as 'recovering' | 'cleared' | 'ongoing' | null,
+});
 
 const form = ref<CreateInjuryRequest>({
   fighterId: '',
@@ -139,6 +189,39 @@ async function loadInjuries() {
     error.value = err.error || 'Failed to load injuries';
   } finally {
     loading.value = false;
+  }
+}
+
+function startUpdate(injury: FighterInjury) {
+  editingId.value = injury.id;
+  updateForm.value = {
+    recoveryStatus: injury.recoveryStatus,
+  };
+}
+
+function cancelUpdate() {
+  editingId.value = null;
+  updateForm.value = {
+    recoveryStatus: null,
+  };
+}
+
+async function handleUpdate(injuryId: string) {
+  updatingId.value = injuryId;
+  error.value = null;
+  try {
+    await fighterInjuriesService.update(injuryId, {
+      recoveryStatus: updateForm.value.recoveryStatus,
+    });
+    editingId.value = null;
+    updateForm.value = {
+      recoveryStatus: null,
+    };
+    await loadInjuries();
+  } catch (err: any) {
+    error.value = err.error || 'Failed to update injury';
+  } finally {
+    updatingId.value = null;
   }
 }
 
@@ -311,6 +394,38 @@ onMounted(() => {
   margin-top: 10px;
   font-size: 12px;
   color: #999;
+}
+
+.injury-actions {
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid #ddd;
+}
+
+.update-btn {
+  padding: 8px 16px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.update-btn:hover:not(:disabled) {
+  background-color: #0056b3;
+}
+
+.update-btn:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.update-form {
+  margin-top: 15px;
+  padding: 15px;
+  background-color: #f0f0f0;
+  border-radius: 4px;
 }
 </style>
 
