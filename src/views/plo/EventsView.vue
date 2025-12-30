@@ -160,6 +160,12 @@
             @sponsors-updated="() => {}"
           />
 
+          <EventCategoriesList
+            :event-id="event.id"
+            :disabled="processingId === event.id"
+            @categories-updated="() => {}"
+          />
+
           <div v-if="submitError" class="error-message">{{ submitError }}</div>
 
           <div class="form-actions">
@@ -201,6 +207,7 @@ import { useRouter } from 'vue-router';
 import { eventService } from '@/services/event.service';
 import EventStatusHistoryList from '@/components/EventStatusHistoryList.vue';
 import EventSponsorsList from '@/components/EventSponsorsList.vue';
+import EventCategoriesList from '@/components/EventCategoriesList.vue';
 import type { Event, UpdateEventRequest } from '@/types';
 
 const router = useRouter();

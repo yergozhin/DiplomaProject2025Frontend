@@ -81,6 +81,11 @@ const router = createRouter({
           name: 'AdminMedicalClearances',
           component: () => import('@/views/admin/MedicalClearancesView.vue'),
         },
+        {
+          path: 'event-categories',
+          name: 'AdminEventCategories',
+          component: () => import('@/views/admin/EventCategoriesView.vue'),
+        },
       ],
     },
     {

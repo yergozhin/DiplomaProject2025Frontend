@@ -37,4 +37,5 @@ export const ROUTES = {
   ADMIN_PLOS: '/admin/promotion-leagues',
   ADMIN_EMAIL_VERIFICATION: '/admin/email-verification',
   ADMIN_MEDICAL_CLEARANCES: '/admin/medical-clearances',
+  ADMIN_EVENT_CATEGORIES: '/admin/event-categories',
 } as const;

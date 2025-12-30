@@ -17,6 +17,9 @@
         <router-link :to="ROUTES.ADMIN_MEDICAL_CLEARANCES" active-class="active">
           Medical Clearances
         </router-link>
+        <router-link :to="ROUTES.ADMIN_EVENT_CATEGORIES" active-class="active">
+          Event Categories
+        </router-link>
       </nav>
       <button type="button" @click="handleLogout">Logout</button>
     </aside>
