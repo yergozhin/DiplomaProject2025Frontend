@@ -154,6 +154,12 @@
             ></textarea>
           </div>
 
+          <EventSponsorsList
+            :event-id="event.id"
+            :disabled="processingId === event.id"
+            @sponsors-updated="() => {}"
+          />
+
           <div v-if="submitError" class="error-message">{{ submitError }}</div>
 
           <div class="form-actions">
@@ -194,6 +200,7 @@ import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { eventService } from '@/services/event.service';
 import EventStatusHistoryList from '@/components/EventStatusHistoryList.vue';
+import EventSponsorsList from '@/components/EventSponsorsList.vue';
 import type { Event, UpdateEventRequest } from '@/types';
 
 const router = useRouter();
@@ -706,5 +713,6 @@ onMounted(() => {
   color: #6c757d;
   font-style: italic;
 }
+
 </style>
 
