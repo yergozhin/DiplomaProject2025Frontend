@@ -67,11 +67,13 @@
           <span class="value">{{ formatDateTime(profile.updatedAt) }}</span>
         </div>
 
-      <button type="button" class="edit-btn" @click="startEdit" v-if="!editing">
-        Edit Profile
-      </button>
+        <PloEventStatistics />
 
-      <form v-if="editing" class="edit-form" @submit.prevent="handleSubmit">
+        <button type="button" class="edit-btn" @click="startEdit" v-if="!editing">
+          Edit Profile
+        </button>
+
+        <form v-if="editing" class="edit-form" @submit.prevent="handleSubmit">
         <div class="form-row">
           <div class="form-group">
             <label for="leagueName">League Name</label>
@@ -146,14 +148,15 @@
             {{ submitting ? 'Saving...' : 'Save Changes' }}
           </button>
         </div>
-      </form>
-    </div>
+        </form>
+      </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import { ploService } from '@/services/plo.service';
+import PloEventStatistics from '@/components/PloEventStatistics.vue';
 import type { PloProfile } from '@/types';
 
 const profile = ref<PloProfile | null>(null);
@@ -448,6 +451,7 @@ onMounted(() => {
   opacity: 0.6;
   cursor: not-allowed;
 }
+
 </style>
 
 
