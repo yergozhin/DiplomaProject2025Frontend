@@ -6,7 +6,7 @@
     <div v-else-if="!statistics || statistics.length === 0" class="no-statistics">
       No statistics available
     </div>
-    <div v-else class="statistics-card">
+    <div v-else-if="latestStatistics" class="statistics-card">
       <div class="stat-item">
         <span class="stat-label">Total Events:</span>
         <span class="stat-value">{{ latestStatistics.totalEvents }}</span>

@@ -111,7 +111,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, watch } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import { fightContractsService } from '@/services/fight-contracts.service';
 import { useAuthStore } from '@/stores/auth.store';
 import type { FightContract, CreateFightContractRequest, AcceptedFight } from '@/types';
@@ -135,38 +135,6 @@ const showCreateForm = ref(false);
 const creatingContract = ref(false);
 const createContractError = ref<string | null>(null);
 const signingContractId = ref<string | null>(null);
-
-
-const availableFighterIds = computed(() => {
-  const fighterIds: Array<{ id: string; name: string }> = [];
-  
-  // Add fighters from fight details
-  if (props.fightDetails) {
-    if (props.fightDetails.fighterAUserId && !fighterIds.find(f => f.id === props.fightDetails!.fighterAUserId)) {
-        fighterIds.push({
-        id: props.fightDetails.fighterAUserId,
-        name: props.fightDetails.fighterAName || props.fightDetails.fighterAEmail,
-        });
-      }
-    if (props.fightDetails.fighterBUserId && !fighterIds.find(f => f.id === props.fightDetails!.fighterBUserId)) {
-      fighterIds.push({
-        id: props.fightDetails.fighterBUserId,
-        name: props.fightDetails.fighterBName || props.fightDetails.fighterBEmail,
-      });
-    }
-  }
-  
-  // Add from existing contracts
-  contracts.value.forEach(contract => {
-    if (!fighterIds.find(f => f.id === contract.fighterId)) {
-      fighterIds.push({
-        id: contract.fighterId,
-        name: contract.fighterName || contract.fighterId,
-      });
-    }
-  });
-  return fighterIds;
-});
 
 const contractForm = ref({
   fighterId: '',

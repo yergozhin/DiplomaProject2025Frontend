@@ -5,7 +5,7 @@
       <div class="add-category-controls">
         <select
           v-model="selectedCategoryId"
-          :disabled="disabled || loadingCategories"
+          :disabled="!!disabled || !!loadingCategories"
           class="category-select"
         >
           <option value="">Select a category</option>
@@ -21,7 +21,7 @@
           type="button"
           class="add-category-btn"
           @click="assignCategory"
-          :disabled="disabled || !selectedCategoryId || processingCategoryId"
+          :disabled="!!disabled || !selectedCategoryId || !!processingCategoryId"
         >
           {{ processingCategoryId ? 'Adding...' : 'Add Category' }}
         </button>
