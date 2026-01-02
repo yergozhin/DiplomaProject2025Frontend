@@ -279,6 +279,20 @@ export interface UpdateEventRequest {
   ticketLink?: string | null;
 }
 
+export interface EventFight {
+  fightId: string;
+  slotId: string;
+  slotStartTime: string;
+  fighterAId: string;
+  fighterAName: string;
+  fighterAEmail: string;
+  fighterAProfileId: string;
+  fighterBId: string;
+  fighterBName: string;
+  fighterBEmail: string;
+  fighterBProfileId: string;
+}
+
 export interface ApiError {
   error: string;
 }

@@ -25,5 +25,9 @@ export const eventService = {
   async getPublishedEvents(): Promise<Event[]> {
     return apiClient.get<Event[]>('/events/published');
   },
+
+  async getFightsForEvent(eventId: string) {
+    return apiClient.get<import('@/types').EventFight[]>(`/events/${eventId}/fights`);
+  },
 };
 
