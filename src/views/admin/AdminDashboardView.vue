@@ -20,6 +20,9 @@
         <router-link :to="ROUTES.ADMIN_EVENT_CATEGORIES" active-class="active">
           Event Categories
         </router-link>
+        <router-link :to="ROUTES.ADMIN_WEIGHT_CLASSES" active-class="active">
+          Weight Classes
+        </router-link>
       </nav>
       <button type="button" @click="handleLogout">Logout</button>
     </aside>

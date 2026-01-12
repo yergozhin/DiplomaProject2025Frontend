@@ -38,4 +38,5 @@ export const ROUTES = {
   ADMIN_EMAIL_VERIFICATION: '/admin/email-verification',
   ADMIN_MEDICAL_CLEARANCES: '/admin/medical-clearances',
   ADMIN_EVENT_CATEGORIES: '/admin/event-categories',
+  ADMIN_WEIGHT_CLASSES: '/admin/weight-classes',
 } as const;
