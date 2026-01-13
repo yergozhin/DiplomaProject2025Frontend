@@ -145,7 +145,7 @@ async function deleteWeightClass(id: string) {
   processingId.value = id;
   error.value = null;
   try {
-    await weightClassesService.delete(id);
+    await weightClassesService.remove(id);
     await loadWeightClasses();
   } catch (err: any) {
     error.value = err.error || 'Failed to delete weight class';

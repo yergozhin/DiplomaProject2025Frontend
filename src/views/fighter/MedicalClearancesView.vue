@@ -128,7 +128,6 @@ async function handleSubmit() {
   error.value = null;
   try {
     form.value.fighterId = authStore.user.id;
-    // Convert empty strings to null for optional fields
     const payload: CreateClearanceRequest = {
       fighterId: form.value.fighterId,
       clearanceDate: form.value.clearanceDate,

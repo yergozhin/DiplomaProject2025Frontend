@@ -157,7 +157,6 @@ async function handleResendVerification() {
       resendSuccess.value = false;
     }, 5000);
   } catch (err) {
-    // Error handled by auth store
   } finally {
     resending.value = false;
   }
