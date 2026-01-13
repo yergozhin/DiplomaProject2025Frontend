@@ -20,9 +20,6 @@ export const useAuthStore = defineStore('auth', () => {
     localStorage.removeItem(STORAGE_KEYS.USER);
   }
 
-  function clearAuth() {
-    logout();
-  }
 
   function initAuth() {
     if (isAuthenticated.value) return;
@@ -102,11 +99,12 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   function getDashboardRoute(): string {
-    if (!userRole.value) return ROUTES.LOGIN;
-    if (userRole.value === 'fighter') return ROUTES.FIGHTER_DASHBOARD;
-    if (userRole.value === 'plo') return ROUTES.PLO_DASHBOARD;
-    if (userRole.value === 'spectator') return ROUTES.SPECTATOR_EVENTS;
-    if (userRole.value === 'admin') return ROUTES.ADMIN_DASHBOARD;
+    const role = userRole.value;
+    if (!role) return ROUTES.LOGIN;
+    if (role === 'fighter') return ROUTES.FIGHTER_DASHBOARD;
+    if (role === 'plo') return ROUTES.PLO_DASHBOARD;
+    if (role === 'spectator') return ROUTES.SPECTATOR_EVENTS;
+    if (role === 'admin') return ROUTES.ADMIN_DASHBOARD;
     return ROUTES.LOGIN;
   }
 
@@ -122,7 +120,6 @@ export const useAuthStore = defineStore('auth', () => {
     register,
     login,
     logout,
-    clearAuth,
     initAuth,
     getDashboardRoute,
     resendVerificationEmail,
