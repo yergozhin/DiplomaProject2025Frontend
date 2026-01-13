@@ -137,6 +137,7 @@ async function deleteSponsor(id: string) {
   error.value = null;
   try {
     await eventSponsorsService.delete(id);
+    error.value = null;
     await loadSponsors();
   } catch (err: any) {
     error.value = err.error || 'Failed to delete sponsor';
