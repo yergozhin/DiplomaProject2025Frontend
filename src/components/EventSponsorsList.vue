@@ -315,6 +315,7 @@ async function deleteSponsor(sponsorId: string) {
   error.value = null;
   try {
     await eventSponsorsService.delete(sponsorId);
+    error.value = null;
     await loadSponsors();
     emit('sponsors-updated');
   } catch (err: any) {

@@ -212,7 +212,6 @@ function cancelCreateForm() {
   emit('contractCreated');
 }
 
-// Watch for showCreateFormFor prop to open form with pre-filled fighter
 watch(() => props.showCreateFormFor, (newValue) => {
   if (newValue && props.fightDetails) {
     showCreateForm.value = true;
