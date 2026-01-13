@@ -6,11 +6,11 @@ import type {
 } from '@/types';
 
 export const weightClassesService = {
-  async getAll(): Promise<WeightClass[]> {
+  getAll(): Promise<WeightClass[]> {
     return apiClient.get<WeightClass[]>('/weight-classes');
   },
 
-  async getById(id: string): Promise<WeightClass> {
+  getById: async (id: string): Promise<WeightClass> => {
     return apiClient.get<WeightClass>(`/weight-classes/${id}`);
   },
 
@@ -18,15 +18,15 @@ export const weightClassesService = {
     return apiClient.get<WeightClass>(`/weight-classes/name/${name}`);
   },
 
-  async create(payload: CreateWeightClassRequest): Promise<WeightClass> {
+  create(payload: CreateWeightClassRequest): Promise<WeightClass> {
     return apiClient.post<WeightClass>('/weight-classes', payload);
   },
 
-  async update(id: string, payload: UpdateWeightClassRequest): Promise<WeightClass> {
+  update: async (id: string, payload: UpdateWeightClassRequest): Promise<WeightClass> => {
     return apiClient.put<WeightClass>(`/weight-classes/${id}`, payload);
   },
 
-  async delete(id: string): Promise<void> {
+  remove(id: string): Promise<void> {
     return apiClient.delete(`/weight-classes/${id}`);
   },
 };
