@@ -6,23 +6,23 @@ import type {
 } from '@/types';
 
 export const fightResultsService = {
-  async getByFight(fightId: string): Promise<FightResult> {
+  getByFight(fightId: string) {
     return apiClient.get<FightResult>(`/fight-results/fight/${fightId}`);
   },
 
-  async getById(id: string): Promise<FightResult> {
+  getById(id: string) {
     return apiClient.get<FightResult>(`/fight-results/${id}`);
   },
 
-  async create(payload: CreateFightResultRequest): Promise<FightResult> {
+  create(payload: CreateFightResultRequest) {
     return apiClient.post<FightResult>('/fight-results', payload);
   },
 
-  async update(id: string, payload: UpdateFightResultRequest): Promise<FightResult> {
+  async update(id: string, payload: UpdateFightResultRequest) {
     return apiClient.put<FightResult>(`/fight-results/${id}`, payload);
   },
 
-  async delete(id: string): Promise<void> {
+  remove(id: string) {
     return apiClient.delete(`/fight-results/${id}`);
   },
 };

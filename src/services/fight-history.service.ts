@@ -5,7 +5,7 @@ import type {
 } from '@/types';
 
 export const fightHistoryService = {
-  async getByFight(fightId: string): Promise<FightHistory[]> {
+  getByFight(fightId: string) {
     return apiClient.get<FightHistory[]>(`/fight-history/fight/${fightId}`);
   },
 
@@ -13,7 +13,7 @@ export const fightHistoryService = {
     return apiClient.get<FightHistory>(`/fight-history/${id}`);
   },
 
-  async create(payload: CreateFightHistoryRequest): Promise<FightHistory> {
+  create(payload: CreateFightHistoryRequest) {
     return apiClient.post<FightHistory>('/fight-history', payload);
   },
 };

@@ -2,35 +2,31 @@ import { apiClient } from './api';
 import type { FightRequest, AcceptedFight, ScheduledFight } from '@/types';
 
 export const fightService = {
-  async getRequestedFights(): Promise<FightRequest[]> {
-    return apiClient.get<FightRequest[]>('/fights/requests');
-  },
+  getRequestedFights: () => apiClient.get<FightRequest[]>('/fights/requests'),
 
-  async getAcceptedFights(): Promise<AcceptedFight[]> {
+  getAcceptedFights() {
     return apiClient.get<AcceptedFight[]>('/fights/accepted');
   },
 
-  async getAcceptedFightsForFighter(): Promise<AcceptedFight[]> {
+  getAcceptedFightsForFighter() {
     return apiClient.get<AcceptedFight[]>('/fights/accepted/my');
   },
 
-  async getScheduledFights(): Promise<ScheduledFight[]> {
-    return apiClient.get<ScheduledFight[]>('/fights/scheduled');
-  },
+  getScheduledFights: () => apiClient.get<ScheduledFight[]>('/fights/scheduled'),
 
-  async getAvailableFightsForPlo(): Promise<AcceptedFight[]> {
+  getAvailableFightsForPlo() {
     return apiClient.get<AcceptedFight[]>('/fights/available-for-plo');
   },
 
-  async sendFightRequest(fighterId: string): Promise<FightRequest> {
+  sendFightRequest(fighterId: string) {
     return apiClient.post<FightRequest>('/fights/request', { fighterId });
   },
 
-  async acceptFight(fightId: string): Promise<AcceptedFight> {
+  acceptFight(fightId: string) {
     return apiClient.put<AcceptedFight>(`/fights/${fightId}/accept`);
   },
 
-  async getFightById(fightId: string): Promise<AcceptedFight | null> {
+  getFightById(fightId: string) {
     return apiClient.get<AcceptedFight>(`/fights/${fightId}`);
   },
 };
