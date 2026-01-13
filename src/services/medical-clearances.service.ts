@@ -6,7 +6,7 @@ import type {
 } from '@/types';
 
 export const medicalClearancesService = {
-  async getByFighter(fighterId: string): Promise<MedicalClearance[]> {
+  getByFighter(fighterId: string) {
     return apiClient.get<MedicalClearance[]>(`/medical-clearances/fighter/${fighterId}`);
   },
 
@@ -14,15 +14,15 @@ export const medicalClearancesService = {
     return apiClient.get<MedicalClearance>(`/medical-clearances/${id}`);
   },
 
-  async create(payload: CreateClearanceRequest): Promise<MedicalClearance> {
+  create(payload: CreateClearanceRequest) {
     return apiClient.post<MedicalClearance>('/medical-clearances', payload);
   },
 
-  async update(id: string, payload: UpdateClearanceRequest): Promise<MedicalClearance> {
+  async update(id: string, payload: UpdateClearanceRequest) {
     return apiClient.put<MedicalClearance>(`/medical-clearances/${id}`, payload);
   },
 
-  async delete(id: string): Promise<void> {
+  remove(id: string) {
     return apiClient.delete(`/medical-clearances/${id}`);
   },
 };
