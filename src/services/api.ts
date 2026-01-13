@@ -27,29 +27,52 @@ export class ApiClient {
     const token = this.getToken();
     const headers: Record<string, string> = {
       'Content-Type': 'application/json',
-      ...(options.headers as Record<string, string>),
     };
+    
+    if (options.headers) {
+      Object.assign(headers, options.headers);
+    }
 
     if (token) {
       headers['Authorization'] = `Bearer ${token}`;
     }
 
-    const res = await fetch(`${this.baseUrl}${endpoint}`, {
+    const response = await fetch(`${this.baseUrl}${endpoint}`, {
       ...options,
       headers,
+      cache: 'no-store',
     });
 
-    const data = await res.json();
+    if (response.status === 204 || response.status === 205 || response.status === 304) {
+      if (!response.ok) {
+        throw new ApiError(response.status, 'Request failed');
+      }
+      return undefined as T;
+    }
 
-    if (!res.ok) {
+    const text = await response.text();
+    let data: any = null;
+    
+    if (text) {
+      try {
+        data = JSON.parse(text);
+      } catch (e) {
+        if (!response.ok) {
+          throw new ApiError(response.status, text || 'Request failed');
+        }
+        return text as T;
+      }
+    }
+
+    if (!response.ok) {
       const err = data as { error?: string };
-      throw new ApiError(res.status, err.error || 'Request failed');
+      throw new ApiError(response.status, err?.error || 'Request failed');
     }
 
     return data as T;
   }
 
-  async get<T>(endpoint: string): Promise<T> {
+  get<T>(endpoint: string): Promise<T> {
     return this.request<T>(endpoint, { method: 'GET' });
   }
 
@@ -60,12 +83,12 @@ export class ApiClient {
     });
   }
 
-  async put<T>(endpoint: string, body?: unknown): Promise<T> {
+  put = async <T>(endpoint: string, body?: unknown): Promise<T> => {
     return this.request<T>(endpoint, {
       method: 'PUT',
       body: body ? JSON.stringify(body) : undefined,
     });
-  }
+  };
 
   async patch<T>(endpoint: string, body?: unknown): Promise<T> {
     return this.request<T>(endpoint, {
@@ -74,7 +97,7 @@ export class ApiClient {
     });
   }
 
-  async delete<T>(endpoint: string): Promise<T> {
+  delete<T>(endpoint: string): Promise<T> {
     return this.request<T>(endpoint, { method: 'DELETE' });
   }
 }

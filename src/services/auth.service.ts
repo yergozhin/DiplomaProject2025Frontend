@@ -11,17 +11,9 @@ export interface ResendVerificationEmailRequest {
   role: string;
 }
 
-export interface ResendVerificationEmailResponse {
-  message: string;
-}
-
 export interface RequestPasswordResetRequest {
   email: string;
   role: string;
-}
-
-export interface RequestPasswordResetResponse {
-  message: string;
 }
 
 export interface ResetPasswordRequest {
@@ -29,44 +21,28 @@ export interface ResetPasswordRequest {
   password: string;
 }
 
-export interface ResetPasswordResponse {
-  message: string;
-}
-
 export const authService = {
-  async register(data: RegisterRequest): Promise<RegisterResponse> {
+  register: async (data: RegisterRequest): Promise<RegisterResponse> => {
     return apiClient.post<RegisterResponse>('/auth/register', data);
   },
 
-  async login(data: LoginRequest): Promise<LoginResponse> {
+  login(data: LoginRequest): Promise<LoginResponse> {
     return apiClient.post<LoginResponse>('/auth/login', data);
   },
 
-  async verifyEmail(token: string): Promise<{ message: string }> {
+  verifyEmail(token: string): Promise<{ message: string }> {
     return apiClient.get<{ message: string }>(`/auth/verify-email?token=${token}`);
   },
 
-  async resendVerificationEmail(
-    data: ResendVerificationEmailRequest,
-  ): Promise<ResendVerificationEmailResponse> {
-    return apiClient.post<ResendVerificationEmailResponse>(
-      '/auth/resend-verification-email',
-      data,
-    );
+  resendVerificationEmail: (data: ResendVerificationEmailRequest): Promise<{ message: string }> => {
+    return apiClient.post<{ message: string }>('/auth/resend-verification-email', data);
   },
 
-  async requestPasswordReset(
-    data: RequestPasswordResetRequest,
-  ): Promise<RequestPasswordResetResponse> {
-    return apiClient.post<RequestPasswordResetResponse>(
-      '/auth/request-password-reset',
-      data,
-    );
+  requestPasswordReset(data: RequestPasswordResetRequest): Promise<{ message: string }> {
+    return apiClient.post<{ message: string }>('/auth/request-password-reset', data);
   },
 
-  async resetPassword(
-    data: ResetPasswordRequest,
-  ): Promise<ResetPasswordResponse> {
-    return apiClient.post<ResetPasswordResponse>('/auth/reset-password', data);
+  async resetPassword(data: ResetPasswordRequest): Promise<{ message: string }> {
+    return apiClient.post<{ message: string }>('/auth/reset-password', data);
   },
 };
