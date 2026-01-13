@@ -121,6 +121,7 @@ async function removeCategory(categoryId: string) {
   error.value = null;
   try {
     await eventCategoriesService.removeFromEvent(props.eventId, categoryId);
+    error.value = null;
     await loadEventCategories();
     emit('categories-updated');
   } catch (err: any) {
