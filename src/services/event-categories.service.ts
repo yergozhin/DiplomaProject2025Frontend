@@ -7,36 +7,36 @@ import type {
 } from '@/types';
 
 export const eventCategoriesService = {
-  async getAll(): Promise<EventCategory[]> {
-    return apiClient.get<EventCategory[]>('/event-categories');
-  },
+  getAll: () => apiClient.get<EventCategory[]>('/event-categories'),
 
-  async getById(id: string): Promise<EventCategory> {
+  getById(id: string) {
     return apiClient.get<EventCategory>(`/event-categories/${id}`);
   },
 
-  async create(payload: CreateEventCategoryRequest): Promise<EventCategory> {
+  create: (payload: CreateEventCategoryRequest) => {
     return apiClient.post<EventCategory>('/event-categories', payload);
   },
 
-  async update(id: string, payload: UpdateEventCategoryRequest): Promise<EventCategory> {
+  async update(id: string, payload: UpdateEventCategoryRequest) {
     return apiClient.put<EventCategory>(`/event-categories/${id}`, payload);
   },
 
-  async delete(id: string): Promise<void> {
-    return apiClient.delete(`/event-categories/${id}`);
+  remove(id: string) {
+    return apiClient.delete<void>(`/event-categories/${id}`);
   },
 
-  async getByEvent(eventId: string): Promise<EventCategoryAssignment[]> {
-    return apiClient.get<EventCategoryAssignment[]>(`/event-categories/event/${eventId}`);
+  delete(id: string) {
+    return apiClient.delete<void>(`/event-categories/${id}`);
   },
 
-  async assignToEvent(eventId: string, categoryId: string): Promise<EventCategoryAssignment> {
+  getByEvent: (eventId: string) => apiClient.get<EventCategoryAssignment[]>(`/event-categories/event/${eventId}`),
+
+  assignToEvent(eventId: string, categoryId: string) {
     return apiClient.post<EventCategoryAssignment>(`/event-categories/event/${eventId}/assign`, { categoryId });
   },
 
-  async removeFromEvent(eventId: string, categoryId: string): Promise<void> {
-    return apiClient.delete(`/event-categories/event/${eventId}/category/${categoryId}`);
+  removeFromEvent: async (eventId: string, categoryId: string) => {
+    return apiClient.delete<void>(`/event-categories/event/${eventId}/category/${categoryId}`);
   },
 };
 

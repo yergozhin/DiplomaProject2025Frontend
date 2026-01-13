@@ -2,31 +2,31 @@ import { apiClient } from './api';
 import type { CreateEventRequest, Event, EventSlot, UpdateEventRequest } from '@/types';
 
 export const eventService = {
-  async getOwnedEvents(): Promise<Event[]> {
+  getOwnedEvents() {
     return apiClient.get<Event[]>('/events/owned-events');
   },
 
-  async getAvailableSlots(eventId: string): Promise<EventSlot[]> {
+  getAvailableSlots(eventId: string) {
     return apiClient.get<EventSlot[]>(`/events/${eventId}/available-slots`);
   },
 
-  async createEvent(payload: CreateEventRequest): Promise<Event> {
+  createEvent(payload: CreateEventRequest) {
     return apiClient.post<Event>('/events', payload);
   },
 
-  async updateEvent(eventId: string, payload: UpdateEventRequest): Promise<Event> {
+  updateEvent(eventId: string, payload: UpdateEventRequest) {
     return apiClient.put<Event>(`/events/${eventId}`, payload);
   },
 
-  async publishEvent(eventId: string): Promise<Event> {
+  publishEvent(eventId: string) {
     return apiClient.patch<Event>(`/events/${eventId}/publish`);
   },
 
-  async getPublishedEvents(): Promise<Event[]> {
+  getPublishedEvents() {
     return apiClient.get<Event[]>('/events/published');
   },
 
-  async getFightsForEvent(eventId: string) {
+  getFightsForEvent(eventId: string) {
     return apiClient.get<import('@/types').EventFight[]>(`/events/${eventId}/fights`);
   },
 };

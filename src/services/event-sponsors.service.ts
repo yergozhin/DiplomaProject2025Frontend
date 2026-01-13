@@ -6,24 +6,28 @@ import type {
 } from '@/types';
 
 export const eventSponsorsService = {
-  async getByEvent(eventId: string): Promise<EventSponsor[]> {
+  getByEvent(eventId: string) {
     return apiClient.get<EventSponsor[]>(`/event-sponsors/event/${eventId}`);
   },
 
-  async getById(id: string): Promise<EventSponsor> {
+  getById(id: string) {
     return apiClient.get<EventSponsor>(`/event-sponsors/${id}`);
   },
 
-  async create(payload: CreateEventSponsorRequest): Promise<EventSponsor> {
+  create(payload: CreateEventSponsorRequest) {
     return apiClient.post<EventSponsor>('/event-sponsors', payload);
   },
 
-  async update(id: string, payload: UpdateEventSponsorRequest): Promise<EventSponsor> {
+  async update(id: string, payload: UpdateEventSponsorRequest) {
     return apiClient.put<EventSponsor>(`/event-sponsors/${id}`, payload);
   },
 
-  async delete(id: string): Promise<void> {
-    return apiClient.delete(`/event-sponsors/${id}`);
+  remove(id: string) {
+    return apiClient.delete<void>(`/event-sponsors/${id}`);
+  },
+
+  delete(id: string) {
+    return apiClient.delete<void>(`/event-sponsors/${id}`);
   },
 };
 
