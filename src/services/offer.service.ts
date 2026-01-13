@@ -17,15 +17,19 @@ export interface UpdateOfferStatusRequest {
 }
 
 export const offerService = {
-  async getAvailableOffersForFight(fightId: string): Promise<Offer[]> {
+  getAvailableOffersForFight(fightId: string): Promise<Offer[]> {
     return apiClient.get<Offer[]>(`/offers/available-offers/fight/${fightId}`);
   },
 
-  async sendOffers(data: SendOfferRequest): Promise<Offer[]> {
+  getAvailableOffers(): Promise<Offer[]> {
+    return apiClient.get<Offer[]>('/offers/available-offers');
+  },
+
+  sendOffers(data: SendOfferRequest): Promise<Offer[]> {
     return apiClient.post<Offer[]>('/offers', data);
   },
 
-  async updateOfferStatus(data: UpdateOfferStatusRequest): Promise<Offer> {
+  updateOfferStatus(data: UpdateOfferStatusRequest): Promise<Offer> {
     return apiClient.patch<Offer>('/offers/status', data);
   },
 };
