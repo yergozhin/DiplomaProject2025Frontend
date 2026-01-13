@@ -6,11 +6,11 @@ import type {
 } from '@/types';
 
 export const fighterRankingsService = {
-  async getAll(): Promise<FighterRanking[]> {
+  getAll() {
     return apiClient.get<FighterRanking[]>('/fighter-rankings/all');
   },
 
-  async getByFighter(fighterId: string): Promise<FighterRanking[]> {
+  getByFighter(fighterId: string) {
     return apiClient.get<FighterRanking[]>(`/fighter-rankings/fighter/${fighterId}`);
   },
 
@@ -18,19 +18,19 @@ export const fighterRankingsService = {
     return apiClient.get<FighterRanking[]>(`/fighter-rankings/weight-class/${weightClassId}`);
   },
 
-  async getById(id: string): Promise<FighterRanking> {
+  getById(id: string) {
     return apiClient.get<FighterRanking>(`/fighter-rankings/${id}`);
   },
 
-  async create(payload: CreateRankingRequest): Promise<FighterRanking> {
+  create(payload: CreateRankingRequest) {
     return apiClient.post<FighterRanking>('/fighter-rankings', payload);
   },
 
-  async update(id: string, payload: UpdateRankingRequest): Promise<FighterRanking> {
+  async update(id: string, payload: UpdateRankingRequest) {
     return apiClient.put<FighterRanking>(`/fighter-rankings/${id}`, payload);
   },
 
-  async delete(id: string): Promise<void> {
+  remove(id: string) {
     return apiClient.delete(`/fighter-rankings/${id}`);
   },
 };

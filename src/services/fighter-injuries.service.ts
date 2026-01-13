@@ -6,23 +6,23 @@ import type {
 } from '@/types';
 
 export const fighterInjuriesService = {
-  async getByFighter(fighterId: string): Promise<FighterInjury[]> {
+  getByFighter(fighterId: string) {
     return apiClient.get<FighterInjury[]>(`/fighter-injuries/fighter/${fighterId}`);
   },
 
-  async getById(id: string): Promise<FighterInjury> {
+  getById(id: string) {
     return apiClient.get<FighterInjury>(`/fighter-injuries/${id}`);
   },
 
-  async create(payload: CreateInjuryRequest): Promise<FighterInjury> {
+  create(payload: CreateInjuryRequest) {
     return apiClient.post<FighterInjury>('/fighter-injuries', payload);
   },
 
-  async update(id: string, payload: UpdateInjuryRequest): Promise<FighterInjury> {
+  async update(id: string, payload: UpdateInjuryRequest) {
     return apiClient.put<FighterInjury>(`/fighter-injuries/${id}`, payload);
   },
 
-  async delete(id: string): Promise<void> {
+  remove(id: string) {
     return apiClient.delete(`/fighter-injuries/${id}`);
   },
 };

@@ -12,24 +12,28 @@ export interface OpponentFilters {
 }
 
 export const fighterService = {
-  async getPossibleOpponents(filters?: OpponentFilters): Promise<Fighter[]> {
-    const params = new URLSearchParams();
-    if (filters?.weightClass) params.append('weightClass', filters.weightClass);
-    if (filters?.searchName) params.append('searchName', filters.searchName);
+  getPossibleOpponents: async (filters?: OpponentFilters): Promise<Fighter[]> => {
+    if (!filters || (!filters.weightClass && !filters.searchName)) {
+      return apiClient.get<Fighter[]>('/fighters/possible-opponents');
+    }
     
-    const queryString = params.toString();
-    const endpoint = queryString 
-      ? `/fighters/possible-opponents?${queryString}`
-      : '/fighters/possible-opponents';
+    let url = '/fighters/possible-opponents?';
+    if (filters.weightClass) {
+      url += `weightClass=${filters.weightClass}`;
+    }
+    if (filters.searchName) {
+      if (filters.weightClass) url += '&';
+      url += `searchName=${filters.searchName}`;
+    }
     
-    return apiClient.get<Fighter[]>(endpoint);
+    return apiClient.get<Fighter[]>(url);
   },
 
-  async getProfile(): Promise<Fighter> {
+  getProfile(): Promise<Fighter> {
     return apiClient.get<Fighter>('/fighters/profile');
   },
 
-  async updateProfile(payload: UpdateFighterProfileRequest): Promise<Fighter> {
+  updateProfile: (payload: UpdateFighterProfileRequest): Promise<Fighter> => {
     return apiClient.put<Fighter>('/fighters/profile', payload);
   },
 
@@ -37,7 +41,7 @@ export const fighterService = {
     return apiClient.get<FighterVerification[]>('/fighters/verifications');
   },
 
-  async createVerification(payload: CreateVerificationRequest): Promise<FighterVerification> {
+  createVerification(payload: CreateVerificationRequest): Promise<FighterVerification> {
     return apiClient.post<FighterVerification>('/fighters/verifications', payload);
   },
 };
