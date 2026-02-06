@@ -60,7 +60,22 @@
           {{ error }}
         </div>
 
-        <button type="submit" :disabled="loading" class="submit-button">
+        <div v-if="showVerificationMessage" class="verification-message">
+          <p>Registration successful! Please check your email to verify your account before logging in.</p>
+          <button
+            type="button"
+            @click="handleResendVerification"
+            :disabled="resending || loading"
+            class="resend-button"
+          >
+            {{ resending ? 'Sending...' : 'Resend Verification Email' }}
+          </button>
+          <p v-if="resendSuccess" class="success-message">
+            Verification email sent! Please check your inbox.
+          </p>
+        </div>
+
+        <button v-if="!showVerificationMessage" type="submit" :disabled="loading" class="submit-button">
           {{ loading ? 'Registering...' : 'Register' }}
         </button>
       </form>
@@ -90,6 +105,10 @@ const registerForm = ref({
   role: '' as UserRole | '',
 });
 
+const showVerificationMessage = ref(false);
+const resending = ref(false);
+const resendSuccess = ref(false);
+
 const loading = computed(() => authStore.loading);
 const error = computed(() => authStore.error);
 
@@ -98,6 +117,9 @@ async function handleRegister() {
     return;
   }
 
+  showVerificationMessage.value = false;
+  resendSuccess.value = false;
+
   try {
     await authStore.register({
       email: registerForm.value.email,
@@ -105,9 +127,36 @@ async function handleRegister() {
       role: registerForm.value.role as UserRole,
     });
 
-    router.push(authStore.getDashboardRoute());
+    showVerificationMessage.value = true;
+  } catch (err: any) {
+    if (err.error === 'email_not_verified') {
+      showVerificationMessage.value = true;
+    } else {
+      console.error('Registration failed:', err);
+    }
+  }
+}
+
+async function handleResendVerification() {
+  if (!registerForm.value.email || !registerForm.value.role) {
+    return;
+  }
+
+  resending.value = true;
+  resendSuccess.value = false;
+
+  try {
+    await authStore.resendVerificationEmail(
+      registerForm.value.email,
+      registerForm.value.role as UserRole,
+    );
+    resendSuccess.value = true;
+    setTimeout(() => {
+      resendSuccess.value = false;
+    }, 5000);
   } catch (err) {
-    console.error('Registration failed:', err);
+  } finally {
+    resending.value = false;
   }
 }
 </script>
@@ -309,5 +358,48 @@ async function handleRegister() {
 .info-text strong {
   color: #333;
   font-weight: 600;
+}
+
+.verification-message {
+  padding: 1rem;
+  background-color: rgba(255, 243, 205, 0.95);
+  border: 1px solid rgba(255, 193, 7, 0.3);
+  border-radius: 4px;
+  margin-bottom: 1rem;
+}
+
+.verification-message p {
+  margin: 0 0 0.75rem 0;
+  color: #856404;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.resend-button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-top: 10px;
+  transition: all 0.2s ease;
+}
+
+.resend-button:hover:not(:disabled) {
+  background-color: #0056b3;
+}
+
+.resend-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.success-message {
+  margin-top: 10px;
+  color: #155724;
+  font-weight: 500;
+  font-size: 0.9rem;
 }
 </style>

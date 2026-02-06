@@ -43,11 +43,6 @@ export const useAuthStore = defineStore('auth', () => {
 
     try {
       const res = await authService.register(data);
-      await login({
-        email: data.email,
-        password: data.password,
-        role: data.role,
-      });
       return res;
     } catch (err: any) {
       error.value = err.error || 'Registration failed';
