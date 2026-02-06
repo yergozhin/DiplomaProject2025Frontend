@@ -95,17 +95,19 @@ onMounted(() => {
 <style scoped>
 .offers-container {
   padding: 20px 30px;
-  color: white;
+  color: #213547;
 }
 
 .offers-title {
   font-size: 28px;
   margin-bottom: 20px;
+  color: #213547;
 }
 
 .status-message, .error-message {
   font-size: 16px;
   margin-bottom: 15px;
+  color: #213547;
 }
 
 .error-message {
@@ -123,6 +125,7 @@ onMounted(() => {
   border: 1px solid #ddd;
   border-radius: 4px;
   background-color: #f9f9f9;
+  color: #213547;
 }
 
 .offer-header {
@@ -130,6 +133,10 @@ onMounted(() => {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 10px;
+}
+
+.offer-header strong {
+  color: #213547;
 }
 
 .status-badge {
@@ -156,11 +163,16 @@ onMounted(() => {
 
 .offer-details {
   margin-bottom: 15px;
-  color: #333;
+  color: #213547;
 }
 
 .offer-details div {
   margin-bottom: 5px;
+  color: #213547;
+}
+
+.offer-details strong {
+  color: #213547;
 }
 
 .offer-actions {
