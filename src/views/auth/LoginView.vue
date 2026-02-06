@@ -9,12 +9,6 @@
     </header>
     <div class="auth-card">
       <h1>Login</h1>
-      <div class="auth-info-box">
-        <p class="info-title">Important: Separate Accounts for Each Role</p>
-        <p class="info-text">
-          You can register and login separately as a <strong>Fighter</strong>, <strong>Promotion League Owner</strong>, or <strong>Spectator</strong> using the same email address. Each role is a separate account with its own password. You must login separately for each role you want to access.
-        </p>
-      </div>
       <form @submit.prevent="handleLogin" class="auth-form">
         <div class="form-group">
           <label for="email">Email</label>
@@ -40,27 +34,12 @@
           />
         </div>
 
-        <div class="form-group">
-          <label for="role">Role</label>
-          <select
-            id="role"
-            v-model="loginForm.role"
-            required
-            :disabled="loading"
-          >
-            <option value="">Select a role</option>
-            <option value="fighter">Fighter</option>
-            <option value="plo">Promotion League Owner</option>
-            <option value="spectator">Spectator</option>
-          </select>
-        </div>
-
         <div v-if="error && !showResendVerification" class="error-message">
           {{ error }}
         </div>
 
         <div v-if="showResendVerification" class="verification-message">
-          <p>Your email has not been verified yet. Please check your inbox for the verification link.</p>
+          <p>Your email has not been verified yet for some roles. Please check your inbox for the verification link.</p>
           <button
             type="button"
             @click="handleResendVerification"
@@ -105,42 +84,36 @@ const authStore = useAuthStore();
 const loginForm = ref({
   email: '',
   password: '',
-  role: '' as UserRole | '',
 });
 
 const resending = ref(false);
 const resendSuccess = ref(false);
+const unverifiedRoles = ref<UserRole[]>([]);
 
 const loading = computed(() => authStore.loading);
 const error = computed(() => authStore.error);
 
 const showResendVerification = computed(() => {
-  return error.value === 'email_not_verified';
+  return unverifiedRoles.value.length > 0;
 });
 
 async function handleLogin() {
-  if (!loginForm.value.role) {
-    return;
-  }
-
   resendSuccess.value = false;
+  unverifiedRoles.value = [];
 
   try {
-    await authStore.login({
-      email: loginForm.value.email,
-      password: loginForm.value.password,
-      role: loginForm.value.role as UserRole,
-    });
-
+    await authStore.login(loginForm.value.email, loginForm.value.password);
     const redirectPath = (route.query.redirect as string) || authStore.getDashboardRoute();
     router.push(redirectPath);
   } catch (err: any) {
-    console.error('Login failed:', err);
+    if (error.value === 'email_not_verified') {
+      unverifiedRoles.value = ['fighter', 'plo', 'spectator'];
+    }
   }
 }
 
 async function handleResendVerification() {
-  if (!loginForm.value.email || !loginForm.value.role) {
+  if (!loginForm.value.email) {
     return;
   }
 
@@ -148,10 +121,8 @@ async function handleResendVerification() {
   resendSuccess.value = false;
 
   try {
-    await authStore.resendVerificationEmail(
-      loginForm.value.email,
-      loginForm.value.role as UserRole,
-    );
+    const roles: UserRole[] = unverifiedRoles.value.length > 0 ? unverifiedRoles.value : ['fighter', 'plo', 'spectator'];
+    await Promise.all(roles.map(role => authStore.resendVerificationEmail(loginForm.value.email, role)));
     resendSuccess.value = true;
     setTimeout(() => {
       resendSuccess.value = false;

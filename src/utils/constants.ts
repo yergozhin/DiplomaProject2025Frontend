@@ -3,6 +3,7 @@ export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localho
 export const STORAGE_KEYS = {
   TOKEN: 'auth_token',
   USER: 'auth_user',
+  AVAILABLE_ROLES: 'available_roles',
 } as const;
 
 export const ROUTES = {

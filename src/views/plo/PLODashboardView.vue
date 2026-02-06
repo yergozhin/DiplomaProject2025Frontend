@@ -35,6 +35,14 @@
           </router-link>
         </li>
       </ul>
+      <div v-if="hasMultipleRoles" class="role-switcher">
+        <label class="role-switcher-label">Switch Role:</label>
+        <select v-model="currentRole" @change="handleRoleSwitch" class="role-select">
+          <option v-for="role in availableRolesList" :key="role.value" :value="role.value">
+            {{ role.label }}
+          </option>
+        </select>
+      </div>
       <button @click="handleLogout" class="logout-btn">Logout</button>
     </div>
 
@@ -45,10 +53,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '@/stores/auth.store';
 import { ROUTES } from '@/utils/constants';
+import type { UserRole } from '@/types';
 import ploBackgroundImage from '@/assets/PromotionLeagueOwners.png';
 import logoImage from '@/assets/logo.jpg';
 
@@ -56,8 +65,30 @@ const router = useRouter();
 const authStore = useAuthStore();
 const isSidebarOpen = ref(true);
 
+const hasMultipleRoles = computed(() => authStore.hasMultipleRoles);
+const currentRole = computed(() => authStore.userRole);
+
+const availableRolesList = computed(() => {
+  const roles: { value: UserRole; label: string }[] = [];
+  authStore.availableRoles.forEach((_, role) => {
+    if (role === 'fighter') roles.push({ value: 'fighter', label: 'Fighter' });
+    if (role === 'plo') roles.push({ value: 'plo', label: 'Promotion League Owner' });
+    if (role === 'spectator') roles.push({ value: 'spectator', label: 'Spectator' });
+  });
+  return roles;
+});
+
 function toggleSidebar() {
   isSidebarOpen.value = !isSidebarOpen.value;
+}
+
+function handleRoleSwitch(event: Event) {
+  const target = event.target as HTMLSelectElement;
+  const newRole = target.value as UserRole;
+  if (newRole !== currentRole.value) {
+    authStore.switchRole(newRole);
+    router.push(authStore.getDashboardRoute());
+  }
 }
 
 function handleLogout() {
@@ -195,6 +226,37 @@ function handleLogout() {
   color: #ffffff;
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(234, 88, 12, 0.4);
+}
+
+.role-switcher {
+  margin: 15px 0;
+  padding: 10px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+.role-switcher-label {
+  display: block;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.85rem;
+  margin-bottom: 5px;
+  font-weight: 500;
+}
+
+.role-select {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+  background-color: rgba(255, 255, 255, 0.95);
+  color: #333;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.role-select:focus {
+  outline: none;
+  border-color: #3b82f6;
 }
 
 .logout-btn {
