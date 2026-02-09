@@ -6,7 +6,10 @@
     <div class="sidebar" :class="{ 'sidebar-open': isSidebarOpen, 'sidebar-closed': !isSidebarOpen }">
       <div class="sidebar-header">
         <img :src="logoImage" alt="Logo" class="sidebar-logo" />
-        <router-link to="/" class="nav-link-landing">Back to Landing Page</router-link>
+        <router-link to="/" class="nav-link-landing">
+          <span class="arrow">←</span>
+          <span>Landing</span>
+        </router-link>
       </div>
       <div class="sidebar-content">
         <ul>
@@ -181,7 +184,7 @@ function handleLogout() {
 }
 
 .sidebar-header {
-  padding: 15px;
+  padding: 12px 15px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   background-color: rgba(15, 23, 42, 0.5);
   flex-shrink: 0;
@@ -195,7 +198,7 @@ function handleLogout() {
 }
 
 .sidebar-footer {
-  padding: 15px;
+  padding: 12px 15px;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
   background-color: rgba(15, 23, 42, 0.5);
   flex-shrink: 0;
@@ -211,16 +214,19 @@ function handleLogout() {
 
 .sidebar-header .sidebar-logo {
   width: 100%;
-  max-width: 120px;
+  max-width: 90px;
   height: auto;
-  margin: 0 auto 12px auto;
+  margin: 0 auto 10px auto;
   display: block;
   object-fit: contain;
 }
 
 .sidebar-header .nav-link-landing {
-  display: block;
-  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 6px 10px;
   text-decoration: none;
   color: #ffffff;
   background-color: rgba(234, 88, 12, 0.9);
@@ -228,16 +234,20 @@ function handleLogout() {
   font-weight: 600;
   border: 2px solid rgba(234, 88, 12, 1);
   transition: all 0.2s ease;
-  text-align: center;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
+}
+
+.sidebar-header .nav-link-landing .arrow {
+  font-size: 1rem;
+  line-height: 1;
 }
 
 .sidebar-header .nav-link-landing:hover {
   background-color: rgba(234, 88, 12, 1);
   border-color: rgba(251, 146, 60, 1);
   color: #ffffff;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(234, 88, 12, 0.4);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(234, 88, 12, 0.4);
 }
 
 .sidebar-content ul {
@@ -274,28 +284,26 @@ function handleLogout() {
 }
 
 .role-switcher {
-  margin-bottom: 10px;
-  padding: 10px;
-  background-color: rgba(255, 255, 255, 0.1);
-  border-radius: 4px;
+  margin-bottom: 8px;
+  padding: 0;
 }
 
 .role-switcher-label {
   display: block;
-  color: rgba(255, 255, 255, 0.9);
-  font-size: 0.85rem;
-  margin-bottom: 5px;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.75rem;
+  margin-bottom: 4px;
   font-weight: 500;
 }
 
 .role-select {
   width: 100%;
-  padding: 8px;
+  padding: 6px 8px;
   border: 1px solid rgba(255, 255, 255, 0.3);
   border-radius: 4px;
   background-color: rgba(255, 255, 255, 0.95);
   color: #333;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   cursor: pointer;
 }
 
@@ -306,12 +314,15 @@ function handleLogout() {
 
 .logout-btn {
   width: 100%;
-  padding: 10px;
+  padding: 8px;
   background-color: #dc3545;
   color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
 }
 
 .logout-btn:hover {
