@@ -67,7 +67,8 @@
           <div class="detail-group">
             <span class="detail-label">Poster:</span>
             <span class="detail-value">
-              <a v-if="event.posterImage" :href="event.posterImage" target="_blank" rel="noreferrer">View poster</a>
+              <img v-if="event.posterImage && isBase64Image(event.posterImage)" :src="event.posterImage" alt="Event Poster" class="poster-preview" />
+              <a v-else-if="event.posterImage" :href="event.posterImage" target="_blank" rel="noreferrer">View poster</a>
               <span v-else>Not set</span>
             </span>
           </div>
@@ -146,8 +147,13 @@
           </div>
 
           <div class="form-group">
-            <label for="posterImage">Poster Image URL</label>
-            <input id="posterImage" v-model="form.posterImage" type="url" :disabled="processingId === event.id" />
+            <label for="posterImage">Poster Image</label>
+            <input :id="`posterImage-${event.id}`" type="file" accept="image/*" @change="(e: any) => handlePosterImageSelect(event.id, e)" :disabled="processingId === event.id" />
+            <div v-if="form.posterImage" class="image-preview-container">
+              <img v-if="isBase64Image(form.posterImage)" :src="form.posterImage" alt="Preview" class="image-preview" />
+              <div v-else class="image-url-display">{{ form.posterImage }}</div>
+              <button type="button" class="remove-image-btn" @click="removePosterImage(event.id)" :disabled="processingId === event.id">Remove</button>
+            </div>
           </div>
 
           <div class="form-group">
@@ -390,6 +396,46 @@ async function handleSubmit() {
     submitError.value = getErrorMessage(err.error, 'create the event');
   } finally {
     submitting.value = false;
+  }
+}
+
+function isBase64Image(value: string | null): boolean {
+  if (!value) return false;
+  return value.startsWith('data:image/');
+}
+
+function handlePosterImageSelect(eventId: string, e: any) {
+  if (editingId.value !== eventId) return;
+  const target = e.target as HTMLInputElement;
+  const file = target.files?.[0];
+  if (!file) return;
+
+  if (file.size > 5 * 1024 * 1024) {
+    submitError.value = 'Image size must be less than 5MB';
+    target.value = '';
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const result = e.target?.result;
+    if (typeof result === 'string') {
+      form.value.posterImage = result;
+    }
+  };
+  reader.onerror = () => {
+    submitError.value = 'Failed to read the image file';
+    target.value = '';
+  };
+  reader.readAsDataURL(file);
+}
+
+function removePosterImage(eventId: string) {
+  if (editingId.value !== eventId) return;
+  form.value.posterImage = '';
+  const fileInput = document.getElementById(`posterImage-${eventId}`) as HTMLInputElement;
+  if (fileInput) {
+    fileInput.value = '';
   }
 }
 
@@ -726,6 +772,60 @@ onMounted(() => {
   padding: 10px;
   color: #6c757d;
   font-style: italic;
+}
+
+.poster-preview {
+  max-width: 200px;
+  max-height: 200px;
+  border-radius: 4px;
+  margin-top: 5px;
+  display: block;
+}
+
+.image-preview-container {
+  margin-top: 10px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: #f9f9f9;
+}
+
+.image-preview {
+  max-width: 100%;
+  max-height: 300px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.image-url-display {
+  padding: 8px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  word-break: break-all;
+  font-size: 12px;
+  color: #666;
+}
+
+.remove-image-btn {
+  padding: 6px 12px;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.remove-image-btn:hover:not(:disabled) {
+  background-color: #c82333;
+}
+
+.remove-image-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 </style>
