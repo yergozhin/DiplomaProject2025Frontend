@@ -65,7 +65,8 @@
       <div class="profile-row" v-if="profile.profilePicture">
         <span class="label">Profile Picture:</span>
         <span class="value">
-          <a :href="profile.profilePicture" target="_blank" rel="noopener">Open picture</a>
+          <img v-if="isBase64Image(profile.profilePicture)" :src="profile.profilePicture" alt="Profile Picture" class="profile-picture-preview" />
+          <a v-else :href="profile.profilePicture" target="_blank" rel="noopener">Open picture</a>
         </span>
       </div>
       <div class="profile-row">
@@ -175,8 +176,13 @@
         </div>
 
         <div class="form-group">
-          <label for="profilePicture">Profile Picture URL</label>
-          <input id="profilePicture" v-model="form.profilePicture" type="url" :disabled="submitting" />
+          <label for="profilePicture">Profile Picture</label>
+          <input id="profilePicture" type="file" accept="image/*" @change="handleImageSelect" :disabled="submitting" />
+          <div v-if="form.profilePicture" class="image-preview-container">
+            <img v-if="isBase64Image(form.profilePicture)" :src="form.profilePicture" alt="Preview" class="image-preview" />
+            <div v-else class="image-url-display">{{ form.profilePicture }}</div>
+            <button type="button" class="remove-image-btn" @click="removeImage" :disabled="submitting">Remove</button>
+          </div>
         </div>
 
         <div class="form-group">
@@ -573,6 +579,44 @@ function toggleVerificationSection() {
   isVerificationSectionOpen.value = !isVerificationSectionOpen.value;
 }
 
+function isBase64Image(value: string | null): boolean {
+  if (!value) return false;
+  return value.startsWith('data:image/');
+}
+
+function handleImageSelect(event: Event) {
+  const target = event.target as HTMLInputElement;
+  const file = target.files?.[0];
+  if (!file) return;
+
+  if (file.size > 5 * 1024 * 1024) {
+    submitError.value = 'Image size must be less than 5MB';
+    target.value = '';
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const result = e.target?.result;
+    if (typeof result === 'string') {
+      form.value.profilePicture = result;
+    }
+  };
+  reader.onerror = () => {
+    submitError.value = 'Failed to read the image file';
+    target.value = '';
+  };
+  reader.readAsDataURL(file);
+}
+
+function removeImage() {
+  form.value.profilePicture = '';
+  const fileInput = document.getElementById('profilePicture') as HTMLInputElement;
+  if (fileInput) {
+    fileInput.value = '';
+  }
+}
+
 onMounted(() => {
   loadProfile();
   loadVerifications();
@@ -898,6 +942,60 @@ onMounted(() => {
   background-color: #d4edda;
   color: #155724;
   border: 1px solid #c3e6cb;
+}
+
+.profile-picture-preview {
+  max-width: 200px;
+  max-height: 200px;
+  border-radius: 4px;
+  margin-top: 5px;
+  display: block;
+}
+
+.image-preview-container {
+  margin-top: 10px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: #f9f9f9;
+}
+
+.image-preview {
+  max-width: 100%;
+  max-height: 300px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.image-url-display {
+  padding: 8px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  word-break: break-all;
+  font-size: 12px;
+  color: #666;
+}
+
+.remove-image-btn {
+  padding: 6px 12px;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.remove-image-btn:hover:not(:disabled) {
+  background-color: #c82333;
+}
+
+.remove-image-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 </style>
 
