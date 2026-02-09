@@ -22,21 +22,6 @@
           />
         </div>
 
-        <div class="form-group">
-          <label for="role">Role</label>
-          <select
-            id="role"
-            v-model="forgotForm.role"
-            required
-            :disabled="loading"
-          >
-            <option value="">Select a role</option>
-            <option value="fighter">Fighter</option>
-            <option value="plo">Promotion League Owner</option>
-            <option value="spectator">Spectator</option>
-          </select>
-        </div>
-
         <div v-if="error" class="error-message">
           {{ error }}
         </div>
@@ -63,11 +48,9 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { authService } from '@/services/auth.service';
-import type { UserRole } from '@/types';
 
 const forgotForm = ref({
   email: '',
-  role: '' as UserRole | '',
 });
 
 const loading = ref(false);
@@ -75,10 +58,6 @@ const error = ref<string | null>(null);
 const success = ref(false);
 
 async function handleRequestReset() {
-  if (!forgotForm.value.role) {
-    return;
-  }
-
   loading.value = true;
   error.value = null;
   success.value = false;
@@ -86,7 +65,6 @@ async function handleRequestReset() {
   try {
     await authService.requestPasswordReset({
       email: forgotForm.value.email,
-      role: forgotForm.value.role as UserRole,
     });
     success.value = true;
   } catch (err: any) {
