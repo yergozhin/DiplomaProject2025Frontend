@@ -4,66 +4,70 @@
       {{ isSidebarOpen ? '✕' : '☰' }}
     </button>
     <div class="sidebar" :class="{ 'sidebar-open': isSidebarOpen, 'sidebar-closed': !isSidebarOpen }">
-      <img :src="logoImage" alt="Logo" class="sidebar-logo" />
-      <ul>
-        <li>
-          <router-link to="/" class="nav-link-landing">Back to Landing Page</router-link>
-        </li>
-        <li>
-          <router-link :to="ROUTES.FIGHTER_PROFILE" active-class="active">
-            Profile
-          </router-link>
-        </li>
-        <li>
-          <router-link :to="ROUTES.FIGHTER_DASHBOARD" active-class="active">
-            Dashboard
-          </router-link>
-        </li>
-        <li>
-          <router-link :to="ROUTES.FIGHTER_OPPONENTS" active-class="active">
-            Possible opponents
-          </router-link>
-        </li>
-        <li>
-          <router-link :to="ROUTES.FIGHTER_REQUESTS" active-class="active">
-            Opponent requests
-          </router-link>
-        </li>
-        <li>
-          <router-link :to="ROUTES.FIGHTER_FIGHTS" active-class="active">
-            Accepted fights
-          </router-link>
-        </li>
-        <li>
-          <router-link :to="ROUTES.FIGHTER_SCHEDULED_FIGHTS" active-class="active">
-            Scheduled Fights
-          </router-link>
-        </li>
-        <li>
-          <router-link :to="ROUTES.FIGHTER_INJURIES" active-class="active">
-            Injuries
-          </router-link>
-        </li>
-        <li>
-          <router-link :to="ROUTES.FIGHTER_MEDICAL_CLEARANCES" active-class="active">
-            Medical Clearances
-          </router-link>
-        </li>
-        <li>
-          <router-link :to="ROUTES.FIGHTER_RANKINGS" active-class="active">
-            Rankings
-          </router-link>
-        </li>
-      </ul>
-      <div v-if="hasMultipleRoles" class="role-switcher">
-        <label class="role-switcher-label">Switch Role:</label>
-        <select v-model="currentRole" @change="handleRoleSwitch" class="role-select">
-          <option v-for="role in availableRolesList" :key="role.value" :value="role.value">
-            {{ role.label }}
-          </option>
-        </select>
+      <div class="sidebar-content">
+        <img :src="logoImage" alt="Logo" class="sidebar-logo" />
+        <ul>
+          <li>
+            <router-link to="/" class="nav-link-landing">Back to Landing Page</router-link>
+          </li>
+          <li>
+            <router-link :to="ROUTES.FIGHTER_PROFILE" active-class="active">
+              Profile
+            </router-link>
+          </li>
+          <li>
+            <router-link :to="ROUTES.FIGHTER_DASHBOARD" active-class="active">
+              Dashboard
+            </router-link>
+          </li>
+          <li>
+            <router-link :to="ROUTES.FIGHTER_OPPONENTS" active-class="active">
+              Possible opponents
+            </router-link>
+          </li>
+          <li>
+            <router-link :to="ROUTES.FIGHTER_REQUESTS" active-class="active">
+              Opponent requests
+            </router-link>
+          </li>
+          <li>
+            <router-link :to="ROUTES.FIGHTER_FIGHTS" active-class="active">
+              Accepted fights
+            </router-link>
+          </li>
+          <li>
+            <router-link :to="ROUTES.FIGHTER_SCHEDULED_FIGHTS" active-class="active">
+              Scheduled Fights
+            </router-link>
+          </li>
+          <li>
+            <router-link :to="ROUTES.FIGHTER_INJURIES" active-class="active">
+              Injuries
+            </router-link>
+          </li>
+          <li>
+            <router-link :to="ROUTES.FIGHTER_MEDICAL_CLEARANCES" active-class="active">
+              Medical Clearances
+            </router-link>
+          </li>
+          <li>
+            <router-link :to="ROUTES.FIGHTER_RANKINGS" active-class="active">
+              Rankings
+            </router-link>
+          </li>
+        </ul>
       </div>
-      <button @click="handleLogout" class="logout-btn">Logout</button>
+      <div class="sidebar-footer">
+        <div v-if="hasMultipleRoles" class="role-switcher">
+          <label class="role-switcher-label">Switch Role:</label>
+          <select v-model="currentRole" @change="handleRoleSwitch" class="role-select">
+            <option v-for="role in availableRolesList" :key="role.value" :value="role.value">
+              {{ role.label }}
+            </option>
+          </select>
+        </div>
+        <button @click="handleLogout" class="logout-btn">Logout</button>
+      </div>
     </div>
 
     <div class="main-content" :class="{ 'main-content-shifted': isSidebarOpen }">
@@ -161,7 +165,6 @@ function handleLogout() {
   width: 200px;
   background: linear-gradient(180deg, rgba(30, 58, 138, 0.95) 0%, rgba(15, 23, 42, 0.95) 100%);
   backdrop-filter: blur(10px);
-  padding: 20px;
   border-right: 1px solid rgba(59, 130, 246, 0.2);
   text-align: left;
   position: fixed;
@@ -170,10 +173,25 @@ function handleLogout() {
   height: 100vh;
   z-index: 999;
   transition: transform 0.3s ease;
-  overflow-y: auto;
   box-shadow: 2px 0 20px rgba(0, 0, 0, 0.3);
   border-top-right-radius: 20px;
   border-bottom-right-radius: 30px;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+  padding-bottom: 10px;
+}
+
+.sidebar-footer {
+  padding: 15px 20px 20px 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  background-color: rgba(15, 23, 42, 0.5);
+  flex-shrink: 0;
 }
 
 .sidebar-closed {
@@ -194,17 +212,17 @@ function handleLogout() {
   object-fit: contain;
 }
 
-.sidebar ul {
+.sidebar-content ul {
   list-style: none;
   padding: 0;
-  margin: 0 0 20px 0;
+  margin: 0;
 }
 
-.sidebar ul li {
+.sidebar-content ul li {
   margin-bottom: 10px;
 }
 
-.sidebar ul li a {
+.sidebar-content ul li a {
   display: block;
   padding: 8px 12px;
   text-decoration: none;
@@ -213,17 +231,17 @@ function handleLogout() {
   transition: all 0.2s ease;
 }
 
-.sidebar ul li a:hover {
+.sidebar-content ul li a:hover {
   background-color: rgba(255, 255, 255, 0.1);
   color: #ffffff;
 }
 
-.sidebar ul li a.active {
+.sidebar-content ul li a.active {
   background-color: #3b82f6;
   color: white;
 }
 
-.sidebar ul li a.active:hover {
+.sidebar-content ul li a.active:hover {
   background-color: #2563eb;
 }
 
@@ -249,7 +267,7 @@ function handleLogout() {
 }
 
 .role-switcher {
-  margin: 15px 0;
+  margin-bottom: 10px;
   padding: 10px;
   background-color: rgba(255, 255, 255, 0.1);
   border-radius: 4px;

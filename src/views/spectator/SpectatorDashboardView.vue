@@ -4,33 +4,37 @@
       {{ isSidebarOpen ? '✕' : '☰' }}
     </button>
     <aside class="sidebar" :class="{ 'sidebar-open': isSidebarOpen, 'sidebar-closed': !isSidebarOpen }">
-      <img :src="logoImage" alt="Logo" class="sidebar-logo" />
-      <ul>
-        <li>
-          <router-link to="/" class="nav-link-landing">Back to Landing Page</router-link>
-        </li>
-        <li>
-          <router-link :to="ROUTES.SPECTATOR_EVENTS" active-class="active">
-            Published Events
-          </router-link>
-        </li>
-        <li>
-          <router-link :to="ROUTES.SPECTATOR_RANKINGS" active-class="active">
-            Rankings
-          </router-link>
-        </li>
-      </ul>
-      <div v-if="hasMultipleRoles" class="role-switcher">
-        <label class="role-switcher-label">Switch Role:</label>
-        <select v-model="currentRole" @change="handleRoleSwitch" class="role-select">
-          <option v-for="role in availableRolesList" :key="role.value" :value="role.value">
-            {{ role.label }}
-          </option>
-        </select>
+      <div class="sidebar-content">
+        <img :src="logoImage" alt="Logo" class="sidebar-logo" />
+        <ul>
+          <li>
+            <router-link to="/" class="nav-link-landing">Back to Landing Page</router-link>
+          </li>
+          <li>
+            <router-link :to="ROUTES.SPECTATOR_EVENTS" active-class="active">
+              Published Events
+            </router-link>
+          </li>
+          <li>
+            <router-link :to="ROUTES.SPECTATOR_RANKINGS" active-class="active">
+              Rankings
+            </router-link>
+          </li>
+        </ul>
       </div>
-      <button type="button" class="logout-btn" @click="handleLogout">
-        Logout
-      </button>
+      <div class="sidebar-footer">
+        <div v-if="hasMultipleRoles" class="role-switcher">
+          <label class="role-switcher-label">Switch Role:</label>
+          <select v-model="currentRole" @change="handleRoleSwitch" class="role-select">
+            <option v-for="role in availableRolesList" :key="role.value" :value="role.value">
+              {{ role.label }}
+            </option>
+          </select>
+        </div>
+        <button type="button" class="logout-btn" @click="handleLogout">
+          Logout
+        </button>
+      </div>
     </aside>
 
     <main class="main-content" :class="{ 'main-content-shifted': isSidebarOpen }">
@@ -128,7 +132,6 @@ function handleLogout() {
   width: 200px;
   background: linear-gradient(180deg, rgba(30, 58, 138, 0.95) 0%, rgba(15, 23, 42, 0.95) 100%);
   backdrop-filter: blur(10px);
-  padding: 20px;
   border-right: 1px solid rgba(59, 130, 246, 0.2);
   text-align: left;
   position: fixed;
@@ -137,10 +140,25 @@ function handleLogout() {
   height: 100vh;
   z-index: 999;
   transition: transform 0.3s ease;
-  overflow-y: auto;
   box-shadow: 2px 0 20px rgba(0, 0, 0, 0.3);
   border-top-right-radius: 20px;
   border-bottom-right-radius: 30px;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+  padding-bottom: 10px;
+}
+
+.sidebar-footer {
+  padding: 15px 20px 20px 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  background-color: rgba(15, 23, 42, 0.5);
+  flex-shrink: 0;
 }
 
 .sidebar-closed {
@@ -161,17 +179,17 @@ function handleLogout() {
   object-fit: contain;
 }
 
-.sidebar ul {
+.sidebar-content ul {
   list-style: none;
   padding: 0;
-  margin: 0 0 20px 0;
+  margin: 0;
 }
 
-.sidebar li {
+.sidebar-content li {
   margin-bottom: 10px;
 }
 
-.sidebar a {
+.sidebar-content a {
   display: block;
   padding: 8px 12px;
   text-decoration: none;
@@ -180,17 +198,17 @@ function handleLogout() {
   transition: all 0.2s ease;
 }
 
-.sidebar a:hover {
+.sidebar-content a:hover {
   background-color: rgba(255, 255, 255, 0.1);
   color: #ffffff;
 }
 
-.sidebar a.active {
+.sidebar-content a.active {
   background-color: #3b82f6;
   color: white;
 }
 
-.sidebar a.active:hover {
+.sidebar-content a.active:hover {
   background-color: #2563eb;
 }
 
@@ -216,7 +234,7 @@ function handleLogout() {
 }
 
 .role-switcher {
-  margin: 15px 0;
+  margin-bottom: 10px;
   padding: 10px;
   background-color: rgba(255, 255, 255, 0.1);
   border-radius: 4px;
