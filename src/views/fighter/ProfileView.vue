@@ -6,97 +6,80 @@
     <div v-else-if="error" class="error-message">{{ error }}</div>
     <div v-else-if="!profile" class="status">Profile not found.</div>
     <div v-else class="profile-card">
-      <div class="profile-row">
-        <span class="label">ID:</span>
-        <span class="value">{{ profile.id }}</span>
-      </div>
-      <div class="profile-row">
-        <span class="label">Email:</span>
-        <span class="value">{{ profile.email }}</span>
-      </div>
-      <div class="profile-row">
-        <span class="label">First Name:</span>
-        <span class="value">{{ profile.firstName || 'Not set' }}</span>
-      </div>
-      <div class="profile-row">
-        <span class="label">Last Name:</span>
-        <span class="value">{{ profile.lastName || 'Not set' }}</span>
-      </div>
-      <div class="profile-row" v-if="profile.nickname">
-        <span class="label">Nickname:</span>
-        <span class="value">{{ profile.nickname }}</span>
-      </div>
-      <div class="profile-row">
-        <span class="label">Current Weight Class:</span>
-        <span class="value">{{ profile.currentWeightClass || profile.weightClass || 'Not set' }}</span>
-      </div>
-      <div class="profile-row">
-        <span class="label">Phone Number:</span>
-        <span class="value">{{ profile.phoneNumber || 'Not set' }}</span>
-      </div>
-      <div class="profile-row">
-        <span class="label">Date of Birth:</span>
-        <span class="value">{{ formatDate(profile.dateOfBirth) }}</span>
-      </div>
-      <div class="profile-row">
-        <span class="label">Gender:</span>
-        <span class="value">{{ profile.gender || 'Not set' }}</span>
-      </div>
-      <div class="profile-row">
-        <span class="label">Height:</span>
-        <span class="value">{{ formatNumber(profile.height, 'cm') }}</span>
-      </div>
-      <div class="profile-row">
-        <span class="label">Reach:</span>
-        <span class="value">{{ formatNumber(profile.reach, 'cm') }}</span>
-      </div>
-      <div class="profile-row">
-        <span class="label">Country:</span>
-        <span class="value">{{ profile.country || 'Not set' }}</span>
-      </div>
-      <div class="profile-row">
-        <span class="label">City:</span>
-        <span class="value">{{ profile.city || 'Not set' }}</span>
-      </div>
-      <div class="profile-row">
-        <span class="label">Status:</span>
-        <span class="value">{{ profile.status || 'Not set' }}</span>
-      </div>
-      <div class="profile-row" v-if="profile.profilePicture">
-        <span class="label">Profile Picture:</span>
-        <span class="value">
-          <img v-if="isBase64Image(profile.profilePicture)" :src="profile.profilePicture" alt="Profile Picture" class="profile-picture-preview" />
-          <a v-else :href="profile.profilePicture" target="_blank" rel="noopener">Open picture</a>
-        </span>
-      </div>
-      <div class="profile-row">
-        <span class="label">Bio:</span>
-        <span class="value">{{ profile.bio || 'Not set' }}</span>
-      </div>
-      <div class="profile-row" v-if="profile.profileCreatedAt">
-        <span class="label">Profile Created:</span>
-        <span class="value">{{ formatDateTime(profile.profileCreatedAt) }}</span>
-      </div>
-      <div class="profile-row" v-if="profile.profileUpdatedAt">
-        <span class="label">Last Updated:</span>
-        <span class="value">{{ formatDateTime(profile.profileUpdatedAt) }}</span>
+      <div class="profile-header">
+        <div class="profile-picture-container">
+          <img
+            v-if="profile.profilePicture && isBase64Image(profile.profilePicture)"
+            :src="profile.profilePicture"
+            alt="Profile Picture"
+            class="profile-picture-main"
+          />
+          <div v-else-if="profile.profilePicture" class="profile-picture-link">
+            <a :href="profile.profilePicture" target="_blank" rel="noopener">View Picture</a>
+          </div>
+          <div v-else class="profile-picture-placeholder">
+            <span>No Picture</span>
+          </div>
+        </div>
+        <div class="profile-header-info">
+          <div class="profile-name-large">
+            {{ profile.firstName || 'Not set' }} {{ profile.lastName || '' }}
+          </div>
+          <div class="profile-nickname-large" v-if="profile.nickname">
+            "{{ profile.nickname }}"
+          </div>
+          <div class="profile-email-large">{{ profile.email }}</div>
+          <div class="profile-header-meta">
+            <span class="header-meta-item">{{ profile.phoneNumber || 'Not set' }}</span>
+            <span class="header-meta-sep">•</span>
+            <span class="header-meta-item">{{ formatDate(profile.dateOfBirth) }}</span>
+            <span class="header-meta-sep">•</span>
+            <span class="header-meta-item">{{ profile.gender || 'Not set' }}</span>
+          </div>
+        </div>
       </div>
 
-      <div class="profile-row" v-if="hasRecordData">
-        <span class="label">Record:</span>
-        <span class="value">{{ formatRecord(profile.wins, profile.losses, profile.draws) }}</span>
-      </div>
-      <div class="profile-row" v-if="profile.totalFights !== null">
-        <span class="label">Total Fights:</span>
-        <span class="value">{{ profile.totalFights }}</span>
-      </div>
-      <div class="profile-row" v-if="profile.awards">
-        <span class="label">Awards:</span>
-        <span class="value">{{ profile.awards }}</span>
-      </div>
-      <div class="profile-row" v-if="profile.recordConfirmed">
-        <span class="label">Record Confirmed:</span>
-        <span class="value">Yes</span>
+      <div class="profile-section-full">
+        <div class="profile-row" v-if="profile.country || profile.city">
+          <span class="label">Location:</span>
+          <span class="value">{{ profile.city || '' }}{{ profile.city && profile.country ? ', ' : '' }}{{ profile.country || 'Not set' }}</span>
+        </div>
+        <div class="profile-row">
+          <span class="label">Weight Class:</span>
+          <span class="value">{{ profile.currentWeightClass || profile.weightClass || 'Not set' }}</span>
+        </div>
+        <div class="profile-row">
+          <span class="label">Status:</span>
+          <span class="value">{{ profile.status || 'Not set' }}</span>
+        </div>
+        <div class="profile-row">
+          <span class="label">Height:</span>
+          <span class="value">{{ formatNumber(profile.height, 'cm') }}</span>
+        </div>
+        <div class="profile-row">
+          <span class="label">Reach:</span>
+          <span class="value">{{ formatNumber(profile.reach, 'cm') }}</span>
+        </div>
+        <div class="profile-row" v-if="hasRecordData">
+          <span class="label">Record:</span>
+          <span class="value">{{ formatRecord(profile.wins, profile.losses, profile.draws) }}</span>
+        </div>
+        <div class="profile-row" v-if="profile.totalFights !== null">
+          <span class="label">Total Fights:</span>
+          <span class="value">{{ profile.totalFights }}</span>
+        </div>
+        <div class="profile-row" v-if="profile.bio">
+          <span class="label">Bio:</span>
+          <span class="value">{{ profile.bio }}</span>
+        </div>
+        <div class="profile-row" v-if="profile.awards">
+          <span class="label">Awards:</span>
+          <span class="value">{{ profile.awards }}</span>
+        </div>
+        <div class="profile-row" v-if="profile.recordConfirmed">
+          <span class="label">Record Confirmed:</span>
+          <span class="value">Yes</span>
+        </div>
       </div>
 
       <button type="button" class="edit-btn" @click="startEdit" v-if="!editing">
@@ -625,7 +608,7 @@ onMounted(() => {
 
 <style scoped>
 .profile-container {
-  max-width: 600px;
+  max-width: 900px;
   margin: 0 auto;
   padding: 20px;
   padding-left: 30px;
@@ -639,27 +622,162 @@ onMounted(() => {
 }
 
 .profile-card {
-  padding: 20px;
+  padding: 24px;
   border: 1px solid #ddd;
-  border-radius: 4px;
+  border-radius: 8px;
   background-color: #f9f9f9;
   max-width: 100%;
   overflow-x: hidden;
   box-sizing: border-box;
+  transition: box-shadow 0.2s ease;
+}
+
+.profile-card:hover {
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+}
+
+.profile-header {
+  display: flex;
+  gap: 24px;
+  padding-bottom: 24px;
+  margin-bottom: 24px;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+}
+
+.profile-picture-container {
+  flex-shrink: 0;
+}
+
+.profile-picture-main {
+  width: 140px;
+  height: 140px;
+  border-radius: 12px;
+  object-fit: cover;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border: 3px solid rgba(255, 255, 255, 0.9);
+  transition: transform 0.2s ease;
+}
+
+.profile-picture-main:hover {
+  transform: scale(1.05);
+}
+
+.profile-picture-link {
+  width: 140px;
+  height: 140px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(30, 58, 138, 0.1), rgba(99, 102, 241, 0.1));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px dashed rgba(30, 58, 138, 0.3);
+}
+
+.profile-picture-link a {
+  color: rgba(30, 58, 138, 0.9);
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.2s ease;
+}
+
+.profile-picture-link a:hover {
+  color: rgba(30, 58, 138, 1);
+}
+
+.profile-picture-placeholder {
+  width: 140px;
+  height: 140px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(30, 58, 138, 0.1), rgba(99, 102, 241, 0.1));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px dashed rgba(30, 58, 138, 0.3);
+  color: rgba(30, 58, 138, 0.6);
+  font-weight: 500;
+}
+
+.profile-header-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 8px;
+}
+
+.profile-name-large {
+  font-size: 28px;
+  font-weight: 700;
+  color: #0f172a;
+  line-height: 1.2;
+}
+
+.profile-nickname-large {
+  font-size: 18px;
+  font-weight: 600;
+  color: rgba(30, 58, 138, 0.9);
+  font-style: italic;
+}
+
+.profile-email-large {
+  font-size: 15px;
+  color: #555;
+  margin-top: 4px;
+}
+
+.profile-header-meta {
+  margin-top: 12px;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 14px;
+  color: #666;
+}
+
+.header-meta-item {
+  font-weight: 500;
+}
+
+.header-meta-sep {
+  opacity: 0.5;
+}
+
+.profile-section-full {
+  display: flex;
+  flex-direction: column;
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .profile-row {
   display: flex;
-  margin-bottom: 12px;
+  margin-bottom: 14px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  transition: padding-left 0.15s ease;
+}
+
+.profile-row:last-of-type {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.profile-row:hover {
+  padding-left: 4px;
 }
 
 .label {
   width: 140px;
-  font-weight: bold;
+  font-weight: 600;
+  color: #555;
 }
 
 .value {
   flex: 1;
+  color: #333;
 }
 
 .status {
@@ -682,12 +800,16 @@ onMounted(() => {
   background-color: #007bff;
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 6px;
   cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s ease;
 }
 
 .edit-btn:hover {
   background-color: #0056b3;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
 }
 
 .edit-form {
@@ -750,9 +872,10 @@ onMounted(() => {
 .save-btn {
   padding: 10px 20px;
   border: none;
-  border-radius: 4px;
+  border-radius: 6px;
   color: white;
   cursor: pointer;
+  transition: all 0.2s ease;
 }
 
 .cancel-btn {
@@ -761,6 +884,7 @@ onMounted(() => {
 
 .cancel-btn:hover:not(:disabled) {
   background-color: #5a6268;
+  transform: translateY(-1px);
 }
 
 .save-btn {
@@ -769,6 +893,8 @@ onMounted(() => {
 
 .save-btn:hover:not(:disabled) {
   background-color: #218838;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(40, 167, 69, 0.3);
 }
 
 .cancel-btn:disabled,
@@ -947,9 +1073,15 @@ onMounted(() => {
 .profile-picture-preview {
   max-width: 200px;
   max-height: 200px;
-  border-radius: 4px;
+  border-radius: 8px;
   margin-top: 5px;
   display: block;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease;
+}
+
+.profile-picture-preview:hover {
+  transform: scale(1.02);
 }
 
 .image-preview-container {
