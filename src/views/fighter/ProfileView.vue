@@ -378,7 +378,7 @@ const verificationsError = ref<string | null>(null);
 const verificationSubmitting = ref(false);
 const verificationSubmitError = ref<string | null>(null);
 const verificationSubmitSuccess = ref<string | null>(null);
-const isVerificationSectionOpen = ref(true);
+const isVerificationSectionOpen = ref(false);
 const verificationForm = ref({
   type: 'link' as VerificationType,
   value: '',
