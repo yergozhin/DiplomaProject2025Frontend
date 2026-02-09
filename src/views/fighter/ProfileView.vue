@@ -326,6 +326,7 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue';
 import { fighterService } from '@/services/fighter.service';
+import { getErrorMessage } from '@/utils/errorMessages';
 import type {
   Fighter,
   FighterVerification,
@@ -387,7 +388,7 @@ async function loadProfile() {
   try {
     profile.value = await fighterService.getProfile();
   } catch (err: any) {
-    error.value = err.error || 'Failed to load profile';
+    error.value = getErrorMessage(err.error, 'load profile');
   } finally {
     loading.value = false;
   }
@@ -484,7 +485,7 @@ async function handleSubmit() {
     profile.value = updated;
     editing.value = false;
   } catch (err: any) {
-    submitError.value = err.error || 'Failed to update profile';
+    submitError.value = getErrorMessage(err.error, 'update your profile');
   } finally {
     submitting.value = false;
   }
@@ -507,7 +508,7 @@ async function loadVerifications() {
   try {
     verifications.value = await fighterService.getVerifications();
   } catch (err: any) {
-    verificationsError.value = err.error || 'Failed to load verification submissions';
+    verificationsError.value = getErrorMessage(err.error, 'load verification submissions');
   } finally {
     verificationsLoading.value = false;
   }
@@ -554,7 +555,7 @@ async function handleVerificationSubmit() {
     resetVerificationForm();
     await loadVerifications();
   } catch (err: any) {
-    verificationSubmitError.value = err.error || 'Failed to submit verification';
+    verificationSubmitError.value = getErrorMessage(err.error, 'submit the verification');
   } finally {
     verificationSubmitting.value = false;
   }

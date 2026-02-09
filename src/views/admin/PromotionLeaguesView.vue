@@ -66,6 +66,7 @@
 import { onMounted, ref } from 'vue';
 import type { PromotionLeagueOwner, PloStatus } from '@/types';
 import { adminService } from '@/services/admin.service';
+import { getErrorMessage } from '@/utils/errorMessages';
 
 const plos = ref<PromotionLeagueOwner[]>([]);
 const loading = ref(false);
@@ -94,7 +95,7 @@ async function loadPlos() {
   try {
     plos.value = await adminService.getPromotionLeagues();
   } catch (err: any) {
-    error.value = err.error || 'Failed to load promotion leagues';
+    error.value = getErrorMessage(err.error, 'load promotion leagues');
   } finally {
     loading.value = false;
   }
@@ -124,7 +125,7 @@ async function changeStatus(ploId: string, status: PloStatus) {
       };
     }
   } catch (err: any) {
-    error.value = err.error || 'Failed to update status';
+    error.value = getErrorMessage(err.error, 'update promotion league status');
   } finally {
     processingId.value = null;
   }

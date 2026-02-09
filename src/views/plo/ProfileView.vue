@@ -156,6 +156,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import { ploService } from '@/services/plo.service';
+import { getErrorMessage } from '@/utils/errorMessages';
 import PloEventStatistics from '@/components/PloEventStatistics.vue';
 import type { PloProfile } from '@/types';
 
@@ -209,7 +210,7 @@ async function loadProfile() {
   try {
     profile.value = await ploService.getProfile();
   } catch (err: any) {
-    error.value = err.error || 'Failed to load profile';
+    error.value = getErrorMessage(err.error, 'load profile');
   } finally {
     loading.value = false;
   }
@@ -286,7 +287,7 @@ async function handleSubmit() {
     profile.value = updated;
     editing.value = false;
   } catch (err: any) {
-    submitError.value = err.error || 'Failed to update profile';
+    submitError.value = getErrorMessage(err.error, 'update your profile');
   } finally {
     submitting.value = false;
   }

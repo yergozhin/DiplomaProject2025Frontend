@@ -124,6 +124,7 @@
 import { ref, onMounted, computed } from 'vue';
 import { eventService } from '@/services/event.service';
 import { fightResultsService } from '@/services/fight-results.service';
+import { getErrorMessage } from '@/utils/errorMessages';
 import type { EventFight, FightResult, CreateFightResultRequest, UpdateFightResultRequest } from '@/types';
 
 const props = defineProps<{
@@ -223,7 +224,7 @@ async function loadFights() {
       }
     }
   } catch (err: any) {
-    error.value = err.error || 'Failed to load fights';
+    error.value = getErrorMessage(err.error, 'load fights');
     console.error('Error loading fights:', err);
   } finally {
     loading.value = false;
@@ -318,7 +319,7 @@ async function submitResult(fight: EventFight & { existingResult: FightResult | 
     emit('results-updated');
   } catch (err: any) {
     console.error('Error submitting result:', err);
-    resultError.value = err.error || 'Failed to save result';
+    resultError.value = getErrorMessage(err.error, 'save result');
   } finally {
     submitting.value = false;
   }

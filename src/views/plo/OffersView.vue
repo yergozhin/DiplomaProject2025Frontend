@@ -25,6 +25,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { apiClient } from '@/services/api';
+import { getErrorMessage } from '@/utils/errorMessages';
 import type { Offer } from '@/types';
 
 const offers = ref<Offer[]>([]);
@@ -42,7 +43,7 @@ async function loadOffers() {
   try {
     offers.value = await apiClient.get<Offer[]>('/offers');
   } catch (err: any) {
-    error.value = err.error || 'Failed to load offers';
+    error.value = getErrorMessage(err.error, 'load offers');
   } finally {
     loading.value = false;
   }

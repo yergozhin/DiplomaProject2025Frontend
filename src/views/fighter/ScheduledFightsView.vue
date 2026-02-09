@@ -37,6 +37,7 @@
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { fightService } from '@/services/fight.service';
+import { getErrorMessage } from '@/utils/errorMessages';
 import type { ScheduledFight } from '@/types';
 
 const router = useRouter();
@@ -51,7 +52,7 @@ async function loadFights() {
   try {
     fights.value = await fightService.getScheduledFights();
   } catch (err: any) {
-    error.value = err.error || 'Failed to load scheduled fights';
+    error.value = getErrorMessage(err.error, 'load scheduled fights');
   } finally {
     loading.value = false;
   }

@@ -135,6 +135,7 @@ import { useRoute, useRouter } from 'vue-router';
 import { fightService } from '@/services/fight.service';
 import { eventService } from '@/services/event.service';
 import { offerService } from '@/services/offer.service';
+import { getErrorMessage } from '@/utils/errorMessages';
 import type { AcceptedFight, Event, EventSlot } from '@/types';
 
 const route = useRoute();
@@ -182,7 +183,7 @@ async function loadFight() {
     }
     fight.value = foundFight;
   } catch (err: any) {
-    fightError.value = err.error || 'Failed to load fight details';
+    fightError.value = getErrorMessage(err.error, 'load fight details');
   } finally {
     loadingFight.value = false;
   }
@@ -193,7 +194,7 @@ async function loadEvents() {
   try {
     events.value = await eventService.getOwnedEvents();
   } catch (err: any) {
-    submitError.value = err.error || 'Failed to load events';
+    submitError.value = getErrorMessage(err.error, 'load events');
   } finally {
     loadingEvents.value = false;
   }
@@ -209,7 +210,7 @@ async function handleEventChange() {
   try {
     availableSlots.value = await eventService.getAvailableSlots(form.value.eventId);
   } catch (err: any) {
-    submitError.value = err.error || 'Failed to load available slots';
+    submitError.value = getErrorMessage(err.error, 'load available slots');
   } finally {
     loadingSlots.value = false;
   }
@@ -236,17 +237,7 @@ async function handleSubmit() {
     });
     router.push('/plo/offers');
   } catch (err: any) {
-    const errorMessages: Record<string, string> = {
-      fight_not_found: 'Fight not found',
-      fight_not_accepted: 'Fight is not in accepted status',
-      event_not_found: 'Event not found',
-      event_not_owned: 'You do not own this event',
-      slot_not_found: 'Time slot not found',
-      slot_not_in_event: 'Time slot does not belong to this event',
-      slot_already_assigned: 'This time slot is already assigned to a fight',
-      offer_already_exists: 'An offer already exists for this fight and slot',
-    };
-    submitError.value = errorMessages[err.error] || err.error || 'Failed to send offer';
+    submitError.value = getErrorMessage(err.error, 'send the offer');
   } finally {
     submitting.value = false;
   }

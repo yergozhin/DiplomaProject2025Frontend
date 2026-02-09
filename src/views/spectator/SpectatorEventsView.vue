@@ -26,6 +26,7 @@
 import { onMounted, ref } from 'vue';
 import type { Event } from '@/types';
 import { eventService } from '@/services/event.service';
+import { getErrorMessage } from '@/utils/errorMessages';
 
 const events = ref<Event[]>([]);
 const loading = ref(false);
@@ -37,7 +38,7 @@ async function loadEvents() {
   try {
     events.value = await eventService.getPublishedEvents();
   } catch (err: any) {
-    error.value = err?.error || 'Failed to load events';
+    error.value = getErrorMessage(err?.error, 'load events');
   } finally {
     loading.value = false;
   }

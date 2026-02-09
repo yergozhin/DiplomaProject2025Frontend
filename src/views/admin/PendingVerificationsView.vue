@@ -46,6 +46,7 @@ import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import type { Fighter } from '@/types';
 import { adminService } from '@/services/admin.service';
+import { getErrorMessage } from '@/utils/errorMessages';
 
 const fighters = ref<Fighter[]>([]);
 const loading = ref(false);
@@ -72,7 +73,7 @@ async function loadFighters() {
   try {
     fighters.value = await adminService.getPendingVerificationFighters();
   } catch (err: any) {
-    error.value = err.error || 'Failed to load pending verifications';
+    error.value = getErrorMessage(err.error, 'load pending verifications');
   } finally {
     loading.value = false;
   }

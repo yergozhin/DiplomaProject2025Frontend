@@ -190,6 +190,7 @@
 <script setup lang="ts">
 import { ref, onMounted, watch } from 'vue';
 import { eventSponsorsService } from '@/services/event-sponsors.service';
+import { getErrorMessage } from '@/utils/errorMessages';
 import type { EventSponsor, CreateEventSponsorRequest, UpdateEventSponsorRequest } from '@/types';
 
 const props = defineProps<{
@@ -218,7 +219,7 @@ async function loadSponsors() {
     sponsors.value = await eventSponsorsService.getByEvent(props.eventId);
     error.value = null;
   } catch (err: any) {
-    error.value = err.error || 'Failed to load sponsors';
+    error.value = getErrorMessage(err.error, 'load sponsors');
     sponsors.value = [];
   }
 }
@@ -282,7 +283,7 @@ async function createSponsor() {
     cancelEditSponsor();
     emit('sponsors-updated');
   } catch (err: any) {
-    error.value = err.error || 'Failed to create sponsor';
+    error.value = getErrorMessage(err.error, 'create the sponsor');
   } finally {
     processingSponsorId.value = null;
   }
@@ -303,7 +304,7 @@ async function updateSponsor(sponsorId: string) {
     cancelEditSponsor();
     emit('sponsors-updated');
   } catch (err: any) {
-    error.value = err.error || 'Failed to update sponsor';
+    error.value = getErrorMessage(err.error, 'update the sponsor');
   } finally {
     processingSponsorId.value = null;
   }
@@ -319,7 +320,7 @@ async function deleteSponsor(sponsorId: string) {
     await loadSponsors();
     emit('sponsors-updated');
   } catch (err: any) {
-    error.value = err.error || 'Failed to delete sponsor';
+    error.value = getErrorMessage(err.error, 'delete the sponsor');
   } finally {
     processingSponsorId.value = null;
   }

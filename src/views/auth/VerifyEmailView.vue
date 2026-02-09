@@ -28,6 +28,7 @@
 import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { authService } from '@/services/auth.service';
+import { getErrorMessage } from '@/utils/errorMessages';
 
 const route = useRoute();
 
@@ -39,7 +40,7 @@ onMounted(async () => {
   const token = route.query.token as string;
   
   if (!token) {
-    error.value = 'Invalid verification link';
+    error.value = 'This verification link is missing the required token. Please check your email and use the link we sent you.';
     loading.value = false;
     return;
   }
@@ -48,7 +49,7 @@ onMounted(async () => {
     await authService.verifyEmail(token);
     success.value = true;
   } catch (err: any) {
-    error.value = err.error || 'Verification failed. The link may be invalid or expired.';
+    error.value = getErrorMessage(err.error, 'verify your email');
   } finally {
     loading.value = false;
   }

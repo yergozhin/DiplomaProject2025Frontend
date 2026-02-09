@@ -37,6 +37,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { offerService } from '@/services/offer.service';
+import { getErrorMessage } from '@/utils/errorMessages';
 import type { Offer } from '@/types';
 
 const offers = ref<Offer[]>([]);
@@ -55,7 +56,7 @@ async function loadOffers() {
   try {
     offers.value = await offerService.getAvailableOffers();
   } catch (err: any) {
-    error.value = err.error || 'Failed to load offers';
+    error.value = getErrorMessage(err.error, 'load offers');
   } finally {
     loading.value = false;
   }
@@ -68,7 +69,7 @@ async function handleAccept(offerId: string) {
     await offerService.updateOfferStatus({ offerId, status: 'accepted' });
     await loadOffers();
   } catch (err: any) {
-    error.value = err.error || 'Failed to accept offer';
+    error.value = getErrorMessage(err.error, 'accept the offer');
   } finally {
     updating.value = false;
   }
@@ -81,7 +82,7 @@ async function handleReject(offerId: string) {
     await offerService.updateOfferStatus({ offerId, status: 'rejected' });
     await loadOffers();
   } catch (err: any) {
-    error.value = err.error || 'Failed to reject offer';
+    error.value = getErrorMessage(err.error, 'reject the offer');
   } finally {
     updating.value = false;
   }

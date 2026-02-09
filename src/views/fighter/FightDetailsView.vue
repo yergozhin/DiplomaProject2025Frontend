@@ -95,6 +95,7 @@ import { ref, computed, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { fightService } from '@/services/fight.service';
 import { useAuthStore } from '@/stores/auth.store';
+import { getErrorMessage } from '@/utils/errorMessages';
 import FightContractsList from '@/components/FightContractsList.vue';
 import type { AcceptedFight } from '@/types';
 
@@ -128,7 +129,7 @@ async function loadFightDetails() {
     if (err.status === 404) {
       error.value = 'Fight not found';
     } else {
-      error.value = err.error || 'Failed to load fight details';
+      error.value = getErrorMessage(err.error, 'load fight details');
     }
   } finally {
     loading.value = false;

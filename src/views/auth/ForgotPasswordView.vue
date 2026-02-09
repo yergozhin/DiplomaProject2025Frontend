@@ -48,6 +48,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { authService } from '@/services/auth.service';
+import { getErrorMessage } from '@/utils/errorMessages';
 
 const forgotForm = ref({
   email: '',
@@ -68,7 +69,7 @@ async function handleRequestReset() {
     });
     success.value = true;
   } catch (err: any) {
-    error.value = err.error || 'Failed to send reset email';
+    error.value = getErrorMessage(err.error, 'send the password reset email');
   } finally {
     loading.value = false;
   }

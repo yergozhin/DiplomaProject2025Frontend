@@ -68,6 +68,7 @@
 import { onMounted, ref } from 'vue';
 import type { WeightClass, CreateWeightClassRequest, UpdateWeightClassRequest } from '@/types';
 import { weightClassesService } from '@/services/weight-classes.service';
+import { getErrorMessage } from '@/utils/errorMessages';
 
 const weightClasses = ref<WeightClass[]>([]);
 const loading = ref(false);
@@ -134,7 +135,7 @@ async function handleSubmit() {
     cancelForm();
     await loadWeightClasses();
   } catch (err: any) {
-    error.value = err.error || 'Failed to save weight class';
+    error.value = getErrorMessage(err.error, 'save the weight class');
   } finally {
     submitting.value = false;
   }
@@ -148,7 +149,7 @@ async function deleteWeightClass(id: string) {
     await weightClassesService.remove(id);
     await loadWeightClasses();
   } catch (err: any) {
-    error.value = err.error || 'Failed to delete weight class';
+    error.value = getErrorMessage(err.error, 'delete the weight class');
   } finally {
     processingId.value = null;
   }
@@ -160,7 +161,7 @@ async function loadWeightClasses() {
   try {
     weightClasses.value = await weightClassesService.getAll();
   } catch (err: any) {
-    error.value = err.error || 'Failed to load weight classes';
+    error.value = getErrorMessage(err.error, 'load weight classes');
   } finally {
     loading.value = false;
   }

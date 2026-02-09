@@ -38,6 +38,7 @@
 import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { offerService } from '@/services/offer.service';
+import { getErrorMessage } from '@/utils/errorMessages';
 import { ROUTES } from '@/utils/constants';
 import type { Offer } from '@/types';
 
@@ -65,7 +66,7 @@ async function loadOffers() {
   try {
     offers.value = await offerService.getAvailableOffersForFight(fightId);
   } catch (err: any) {
-    error.value = err.error || 'Failed to load offers';
+    error.value = getErrorMessage(err.error, 'load offers');
   } finally {
     loading.value = false;
   }
@@ -78,7 +79,7 @@ async function handleAcceptOffer(offerId: string) {
     await offerService.updateOfferStatus({ offerId, status: 'accepted' });
     await loadOffers();
   } catch (err: any) {
-    error.value = err.error || 'Failed to accept offer';
+    error.value = getErrorMessage(err.error, 'accept the offer');
   } finally {
     updating.value = false;
   }
@@ -91,7 +92,7 @@ async function handleRejectOffer(offerId: string) {
     await offerService.updateOfferStatus({ offerId, status: 'rejected' });
     await loadOffers();
   } catch (err: any) {
-    error.value = err.error || 'Failed to reject offer';
+    error.value = getErrorMessage(err.error, 'reject the offer');
   } finally {
     updating.value = false;
   }

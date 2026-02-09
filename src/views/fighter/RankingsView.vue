@@ -37,6 +37,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
 import { fighterRankingsService } from '@/services/fighter-rankings.service';
+import { getErrorMessage } from '@/utils/errorMessages';
 import type { FighterRanking } from '@/types';
 
 const rankings = ref<FighterRanking[]>([]);
@@ -72,7 +73,7 @@ async function loadRankings() {
   try {
     rankings.value = await fighterRankingsService.getAll();
   } catch (err: any) {
-    error.value = err.error || 'Failed to load rankings';
+    error.value = getErrorMessage(err.error, 'load rankings');
   } finally {
     loading.value = false;
   }

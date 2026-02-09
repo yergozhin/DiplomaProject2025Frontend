@@ -63,6 +63,7 @@ import { ref, onMounted } from 'vue';
 import { fighterService, type OpponentFilters } from '@/services/fighter.service';
 import { weightClassesService } from '@/services/weight-classes.service';
 import { fightService } from '@/services/fight.service';
+import { getErrorMessage } from '@/utils/errorMessages';
 import type { Fighter, WeightClass } from '@/types';
 
 const opponents = ref<Fighter[]>([]);
@@ -94,7 +95,7 @@ async function loadOpponents() {
   try {
     opponents.value = await fighterService.getPossibleOpponents(filters.value);
   } catch (err: any) {
-    error.value = err.error || 'Failed to load opponents';
+    error.value = getErrorMessage(err.error, 'load opponents');
   } finally {
     loading.value = false;
   }
@@ -125,13 +126,9 @@ async function handleSendRequest(fighterId: string) {
     await fightService.sendFightRequest(fighterId);
     requestSentIds.value.add(fighterId);
   } catch (err: any) {
+    requestError.value = getErrorMessage(err.error, 'send the fight request');
     if (err.error === 'request_exists') {
-      requestError.value = 'A fight request already exists with this opponent';
       requestSentIds.value.add(fighterId);
-    } else if (err.error === 'cannot_request_self') {
-      requestError.value = 'Cannot send a fight request to yourself';
-    } else {
-      requestError.value = err.error || 'Failed to send fight request';
     }
   } finally {
     sendingRequestId.value = null;

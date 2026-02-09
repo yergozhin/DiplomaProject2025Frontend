@@ -75,6 +75,7 @@
 import { ref, computed } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { useAuthStore } from '@/stores/auth.store';
+import { getErrorMessage } from '@/utils/errorMessages';
 import type { UserRole } from '@/types';
 
 const router = useRouter();

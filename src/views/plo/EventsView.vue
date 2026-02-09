@@ -210,6 +210,7 @@
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { eventService } from '@/services/event.service';
+import { getErrorMessage } from '@/utils/errorMessages';
 import EventStatusHistoryList from '@/components/EventStatusHistoryList.vue';
 import EventSponsorsList from '@/components/EventSponsorsList.vue';
 import EventCategoriesList from '@/components/EventCategoriesList.vue';
@@ -327,7 +328,7 @@ async function submitUpdate(eventId: string) {
     await loadEvents();
     cancelEdit();
   } catch (err: any) {
-    submitError.value = err.error || 'Failed to update event';
+    submitError.value = getErrorMessage(err.error, 'update the event');
   } finally {
     processingId.value = null;
   }
@@ -342,7 +343,7 @@ async function publish(eventId: string) {
     await loadEvents();
     cancelEdit();
   } catch (err: any) {
-    submitError.value = err.error || 'Failed to publish event';
+    submitError.value = getErrorMessage(err.error, 'publish the event');
   } finally {
     processingId.value = null;
     publishMode.value = false;
@@ -355,7 +356,7 @@ async function loadEvents() {
   try {
     events.value = await eventService.getOwnedEvents();
   } catch (err: any) {
-    error.value = err.error || 'Failed to load events';
+    error.value = getErrorMessage(err.error, 'load events');
   } finally {
     loading.value = false;
   }
@@ -386,7 +387,7 @@ async function handleSubmit() {
     await loadEvents();
     closeForm();
   } catch (err: any) {
-    submitError.value = err.error || 'Failed to create event';
+    submitError.value = getErrorMessage(err.error, 'create the event');
   } finally {
     submitting.value = false;
   }

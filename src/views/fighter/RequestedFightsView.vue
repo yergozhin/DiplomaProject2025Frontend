@@ -32,6 +32,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { fightService } from '@/services/fight.service';
+import { getErrorMessage } from '@/utils/errorMessages';
 import type { FightRequest } from '@/types';
 
 const fights = ref<FightRequest[]>([]);
@@ -47,7 +48,7 @@ async function loadFights() {
   try {
     fights.value = await fightService.getRequestedFights();
   } catch (err: any) {
-    error.value = err.error || 'Failed to load fight requests';
+    error.value = getErrorMessage(err.error, 'load fight requests');
   } finally {
     loading.value = false;
   }
@@ -62,15 +63,7 @@ async function handleAcceptFight(fightId: string) {
     acceptedFightIds.value.add(fightId);
     fights.value = fights.value.filter(fight => fight.id !== fightId);
   } catch (err: any) {
-    if (err.error === 'fight_not_found') {
-      acceptError.value = 'Fight request not found';
-    } else if (err.error === 'invalid_status') {
-      acceptError.value = 'Fight request is no longer valid';
-    } else if (err.error === 'forbidden' || err.error === 'not_receiver') {
-      acceptError.value = 'You are not authorized to accept this fight request';
-    } else {
-      acceptError.value = err.error || 'Failed to accept fight request';
-    }
+    acceptError.value = getErrorMessage(err.error, 'accept the fight request');
   } finally {
     acceptingFightId.value = null;
   }

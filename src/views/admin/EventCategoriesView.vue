@@ -41,6 +41,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { eventCategoriesService } from '@/services/event-categories.service';
+import { getErrorMessage } from '@/utils/errorMessages';
 import type { EventCategory, CreateEventCategoryRequest } from '@/types';
 
 const categories = ref<EventCategory[]>([]);
@@ -75,7 +76,7 @@ async function handleSubmit() {
     cancelForm();
     await loadCategories();
   } catch (err: any) {
-    error.value = err.error || 'Failed to create category';
+    error.value = getErrorMessage(err.error, 'create the category');
   } finally {
     submitting.value = false;
   }
@@ -89,7 +90,7 @@ async function deleteCategory(id: string) {
     await eventCategoriesService.delete(id);
     await loadCategories();
   } catch (err: any) {
-    error.value = err.error || 'Failed to delete category';
+    error.value = getErrorMessage(err.error, 'delete the category');
   } finally {
     processingId.value = null;
   }
@@ -101,7 +102,7 @@ async function loadCategories() {
   try {
     categories.value = await eventCategoriesService.getAll();
   } catch (err: any) {
-    error.value = err.error || 'Failed to load categories';
+    error.value = getErrorMessage(err.error, 'load categories');
   } finally {
     loading.value = false;
   }

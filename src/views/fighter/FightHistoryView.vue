@@ -40,6 +40,7 @@ import { ref, computed, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { useAuthStore } from '@/stores/auth.store';
 import { fightHistoryService } from '@/services/fight-history.service';
+import { getErrorMessage } from '@/utils/errorMessages';
 import type { FightHistory } from '@/types';
 
 const route = useRoute();
@@ -78,7 +79,7 @@ async function loadHistory() {
     if (err.status === 404) {
       error.value = 'Fight not found';
     } else {
-      error.value = err.error || 'Failed to load fight history';
+      error.value = getErrorMessage(err.error, 'load fight history');
     }
   } finally {
     loading.value = false;

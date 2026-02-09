@@ -106,6 +106,7 @@
 import { ref, onMounted } from 'vue';
 import { useAuthStore } from '@/stores/auth.store';
 import { fighterInjuriesService } from '@/services/fighter-injuries.service';
+import { getErrorMessage } from '@/utils/errorMessages';
 import type { FighterInjury, CreateInjuryRequest } from '@/types';
 
 const authStore = useAuthStore();
@@ -173,7 +174,7 @@ async function handleSubmit() {
     };
     await loadInjuries();
   } catch (err: any) {
-    error.value = err.error || 'Failed to create injury record';
+    error.value = getErrorMessage(err.error, 'create the injury record');
   } finally {
     submitting.value = false;
   }
@@ -186,7 +187,7 @@ async function loadInjuries() {
   try {
     injuries.value = await fighterInjuriesService.getByFighter(authStore.user.id);
   } catch (err: any) {
-    error.value = err.error || 'Failed to load injuries';
+    error.value = getErrorMessage(err.error, 'load injuries');
   } finally {
     loading.value = false;
   }
@@ -219,7 +220,7 @@ async function handleUpdate(injuryId: string) {
     };
     await loadInjuries();
   } catch (err: any) {
-    error.value = err.error || 'Failed to update injury';
+    error.value = getErrorMessage(err.error, 'update the injury');
   } finally {
     updatingId.value = null;
   }

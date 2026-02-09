@@ -73,6 +73,7 @@
 import { ref, onMounted } from 'vue';
 import { eventSponsorsService } from '@/services/event-sponsors.service';
 import { eventService } from '@/services/event.service';
+import { getErrorMessage } from '@/utils/errorMessages';
 import type { EventSponsor, CreateEventSponsorRequest, Event } from '@/types';
 
 const events = ref<Event[]>([]);
@@ -125,7 +126,7 @@ async function handleSubmit() {
     cancelForm();
     await loadSponsors();
   } catch (err: any) {
-    error.value = err.error || 'Failed to create sponsor';
+    error.value = getErrorMessage(err.error, 'create the sponsor');
   } finally {
     submitting.value = false;
   }
@@ -140,7 +141,7 @@ async function deleteSponsor(id: string) {
     error.value = null;
     await loadSponsors();
   } catch (err: any) {
-    error.value = err.error || 'Failed to delete sponsor';
+    error.value = getErrorMessage(err.error, 'delete the sponsor');
   } finally {
     processingId.value = null;
   }
@@ -156,7 +157,7 @@ async function loadSponsors() {
   try {
     sponsors.value = await eventSponsorsService.getByEvent(selectedEventId.value);
   } catch (err: any) {
-    error.value = err.error || 'Failed to load sponsors';
+    error.value = getErrorMessage(err.error, 'load sponsors');
   } finally {
     loading.value = false;
   }
@@ -166,7 +167,7 @@ async function loadEvents() {
   try {
     events.value = await eventService.getOwnedEvents();
   } catch (err: any) {
-    error.value = err.error || 'Failed to load events';
+    error.value = getErrorMessage(err.error, 'load events');
   }
 }
 

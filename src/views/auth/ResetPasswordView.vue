@@ -62,6 +62,7 @@
 import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { authService } from '@/services/auth.service';
+import { getErrorMessage } from '@/utils/errorMessages';
 
 const route = useRoute();
 const router = useRouter();
@@ -78,24 +79,24 @@ const success = ref(false);
 onMounted(() => {
   const token = route.query.token as string;
   if (!token) {
-    error.value = 'Invalid reset link';
+    error.value = 'This password reset link is missing the required token. Please request a new reset link.';
   }
 });
 
 async function handleResetPassword() {
   const token = route.query.token as string;
   if (!token) {
-    error.value = 'Invalid reset link';
+    error.value = 'This password reset link is missing the required token. Please request a new reset link.';
     return;
   }
 
   if (resetForm.value.password !== resetForm.value.confirmPassword) {
-    error.value = 'Passwords do not match';
+    error.value = 'The passwords you entered don\'t match. Please make sure both fields are the same.';
     return;
   }
 
   if (resetForm.value.password.length < 6) {
-    error.value = 'Password must be at least 6 characters';
+    error.value = 'Your password needs to be at least 6 characters long.';
     return;
   }
 
@@ -112,7 +113,7 @@ async function handleResetPassword() {
       router.push('/login');
     }, 2000);
   } catch (err: any) {
-    error.value = err.error || 'Failed to reset password';
+    error.value = getErrorMessage(err.error, 'reset your password');
   } finally {
     loading.value = false;
   }

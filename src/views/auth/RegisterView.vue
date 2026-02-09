@@ -93,6 +93,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import { useAuthStore } from '@/stores/auth.store';
+import { getErrorMessage } from '@/utils/errorMessages';
 import type { UserRole } from '@/types';
 
 const authStore = useAuthStore();
