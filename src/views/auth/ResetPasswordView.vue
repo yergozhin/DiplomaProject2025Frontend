@@ -9,6 +9,12 @@
     </header>
     <div class="auth-card">
       <h1>Reset Password</h1>
+      <div class="auth-info-box">
+        <p class="info-title">Set New Password</p>
+        <p class="info-text">
+          Enter your new password below. This will update the password for all roles associated with your email address.
+        </p>
+      </div>
       <form @submit.prevent="handleResetPassword" class="auth-form">
         <div class="form-group">
           <label for="password">New Password</label>
@@ -299,6 +305,34 @@ async function handleResetPassword() {
 
 .auth-footer a:hover {
   opacity: 0.8;
+}
+
+.auth-info-box {
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background-color: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+  border-left: 4px solid #007bff;
+}
+
+.info-title {
+  margin: 0 0 0.5rem 0;
+  font-weight: 600;
+  color: #333;
+  font-size: 0.95rem;
+}
+
+.info-text {
+  margin: 0;
+  color: #555;
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.info-text strong {
+  color: #333;
+  font-weight: 600;
 }
 </style>
 

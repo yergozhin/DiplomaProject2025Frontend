@@ -10,9 +10,9 @@
     <div class="auth-card">
       <h1>Register</h1>
       <div class="auth-info-box">
-        <p class="info-title">Important: Separate Accounts for Each Role</p>
+        <p class="info-title">Create Your Account</p>
         <p class="info-text">
-          You can register separately as a <strong>Fighter</strong>, <strong>Promotion League Owner</strong>, or <strong>Spectator</strong> using the same email address. Each role is a separate account with its own password. If you want to use multiple roles, you must register and login separately for each one.
+          Register for one of three roles: <strong>Fighter</strong>, <strong>Promotion League Owner</strong>, or <strong>Spectator</strong>. You can use the same email address for multiple roles if needed. After registration, check your email to verify your account before logging in.
         </p>
       </div>
       <form @submit.prevent="handleRegister" class="auth-form">
@@ -93,7 +93,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import { useAuthStore } from '@/stores/auth.store';
-import { getErrorMessage } from '@/utils/errorMessages';
 import type { UserRole } from '@/types';
 
 const authStore = useAuthStore();

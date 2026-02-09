@@ -10,10 +10,10 @@
     <div class="auth-card">
       <h1>Verifying Email</h1>
       <div v-if="loading" class="verifying-message">
-        <p>Please wait, verifying your email...</p>
+        <p>Please wait, verifying your email address...</p>
       </div>
       <div v-else-if="success" class="success-message">
-        <p>Email verified successfully!</p>
+        <p>Your email has been verified successfully! You can now log in to access your account.</p>
         <router-link to="/login" class="login-link">Go to Login</router-link>
       </div>
       <div v-else-if="error" class="error-message">
