@@ -36,6 +36,16 @@
     <div v-else-if="opponents.length === 0" class="status-message">No opponents available</div>
     <ul v-else class="opponents-list">
       <li v-for="opponent in opponents" :key="opponent.id" class="opponent-item">
+        <div class="opponent-avatar">
+          <img
+            v-if="opponent.profilePicture && isBase64Image(opponent.profilePicture)"
+            :src="opponent.profilePicture"
+            alt="Profile picture"
+          />
+          <div v-else class="opponent-avatar-placeholder">
+            {{ (opponent.firstName || opponent.name || opponent.email || '?').charAt(0).toUpperCase() }}
+          </div>
+        </div>
         <div class="opponent-info">
           <div class="opponent-main">
             <div class="opponent-name-line">
@@ -255,6 +265,11 @@ function clearFilters() {
   loadOpponents();
 }
 
+function isBase64Image(value: string | null | undefined): boolean {
+  if (!value) return false;
+  return value.startsWith('data:image/');
+}
+
 async function handleSendRequest(fighterId: string) {
   sendingRequestId.value = fighterId;
   requestError.value = null;
@@ -318,6 +333,32 @@ onMounted(() => {
   max-width: 100%;
   box-sizing: border-box;
   gap: 15px;
+}
+
+.opponent-avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, rgba(30, 64, 175, 0.12), rgba(59, 130, 246, 0.12));
+  border: 1px solid #d1d5db;
+}
+
+.opponent-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.opponent-avatar-placeholder {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1f2937;
 }
 
 .opponent-info {
