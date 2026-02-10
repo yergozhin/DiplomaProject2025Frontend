@@ -29,5 +29,13 @@ export const eventService = {
   getFightsForEvent(eventId: string) {
     return apiClient.get<import('@/types').EventFight[]>(`/events/${eventId}/fights`);
   },
+
+  getAllSlots(eventId: string) {
+    return apiClient.get<EventSlot[]>(`/events/${eventId}/slots`);
+  },
+
+  getPublicFightsForEvent(eventId: string) {
+    return apiClient.get<import('@/types').EventFight[]>(`/events/${eventId}/public-fights`);
+  },
 };
 
