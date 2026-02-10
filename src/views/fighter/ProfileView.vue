@@ -105,13 +105,21 @@
 
         <div class="form-group">
           <label for="currentWeightClass">Current Weight Class *</label>
-          <input
+          <select
             id="currentWeightClass"
             v-model="form.currentWeightClass"
-            type="text"
-            :disabled="submitting"
+            :disabled="submitting || weightClasses.length === 0"
             required
-          />
+          >
+            <option value="" disabled>Select weight class</option>
+            <option
+              v-for="wc in weightClasses"
+              :key="wc.id"
+              :value="wc.name"
+            >
+              {{ wc.name }}
+            </option>
+          </select>
         </div>
 
         <div class="form-row">
@@ -315,12 +323,14 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue';
 import { fighterService } from '@/services/fighter.service';
+import { weightClassesService } from '@/services/weight-classes.service';
 import { getErrorMessage } from '@/utils/errorMessages';
 import type {
   Fighter,
   FighterVerification,
   VerificationType,
   CreateVerificationRequest,
+  WeightClass,
 } from '@/types';
 
 const profile = ref<Fighter | null>(null);
@@ -329,6 +339,7 @@ const submitting = ref(false);
 const editing = ref(false);
 const error = ref<string | null>(null);
 const submitError = ref<string | null>(null);
+const weightClasses = ref<WeightClass[]>([]);
 const hasRecordData = computed(() => {
   if (!profile.value) return false;
   return (
@@ -380,6 +391,13 @@ async function loadProfile() {
     error.value = getErrorMessage(err.error, 'load profile');
   } finally {
     loading.value = false;
+  }
+}
+
+async function loadWeightClasses() {
+  try {
+    weightClasses.value = await weightClassesService.getAll();
+  } catch {
   }
 }
 
@@ -603,6 +621,7 @@ function removeImage() {
 onMounted(() => {
   loadProfile();
   loadVerifications();
+  loadWeightClasses();
 });
 </script>
 
