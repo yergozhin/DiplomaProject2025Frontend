@@ -279,41 +279,6 @@
           <span>{{ isVerificationSectionOpen ? '−' : '+' }}</span>
         </button>
         <div v-show="isVerificationSectionOpen" class="section-content">
-        <div v-if="verificationsLoading" class="status">Loading verification submissions...</div>
-        <div v-else-if="verificationsError" class="error-message">{{ verificationsError }}</div>
-        <div v-else-if="verifications.length === 0" class="status">No verification submissions yet.</div>
-        <ul v-else class="verification-list">
-          <li v-for="verification in verifications" :key="verification.id" class="verification-item">
-            <div class="verification-header">
-              <span class="verification-type">{{ formatVerificationType(verification.type) }}</span>
-              <span class="status-tag" :class="`status-${verification.status}`">
-                {{ formatVerificationStatus(verification.status) }}
-              </span>
-            </div>
-            <div class="verification-value">
-              <strong>Value:</strong>
-              <span v-if="verification.type === 'image' || verification.type === 'link'">
-                <a :href="verification.value" target="_blank" rel="noopener">{{ verification.value }}</a>
-              </span>
-              <span v-else>{{ verification.value }}</span>
-            </div>
-            <div class="verification-record" v-if="verification.wins || verification.losses || verification.draws">
-              <strong>Proposed Record:</strong>
-              {{ formatRecord(verification.wins, verification.losses, verification.draws) }}
-            </div>
-            <div class="verification-awards" v-if="verification.awards">
-              <strong>Awards:</strong> {{ verification.awards }}
-            </div>
-            <div class="verification-dates">
-              <span>Submitted: {{ formatDateTime(verification.createdAt) }}</span>
-              <span v-if="verification.reviewedAt">Reviewed: {{ formatDateTime(verification.reviewedAt) }}</span>
-            </div>
-            <div class="verification-admin" v-if="verification.adminNote">
-              <strong>Admin note:</strong> {{ verification.adminNote }}
-            </div>
-          </li>
-        </ul>
-
         <div class="verification-form-wrapper">
           <h3>Submit New Verification</h3>
           <form class="verification-form" @submit.prevent="handleVerificationSubmit">
@@ -394,6 +359,40 @@
             </div>
           </form>
         </div>
+        <div v-if="verificationsLoading" class="status">Loading verification submissions...</div>
+        <div v-else-if="verificationsError" class="error-message">{{ verificationsError }}</div>
+        <div v-else-if="verifications.length === 0" class="status">No verification submissions yet.</div>
+        <ul v-else class="verification-list">
+          <li v-for="verification in verifications" :key="verification.id" class="verification-item">
+            <div class="verification-header">
+              <span class="verification-type">{{ formatVerificationType(verification.type) }}</span>
+              <span class="status-tag" :class="`status-${verification.status}`">
+                {{ formatVerificationStatus(verification.status) }}
+              </span>
+            </div>
+            <div class="verification-value">
+              <strong>Value:</strong>
+              <span v-if="verification.type === 'image' || verification.type === 'link'">
+                <a :href="verification.value" target="_blank" rel="noopener">{{ verification.value }}</a>
+              </span>
+              <span v-else>{{ verification.value }}</span>
+            </div>
+            <div class="verification-record" v-if="verification.wins || verification.losses || verification.draws">
+              <strong>Proposed Record:</strong>
+              {{ formatRecord(verification.wins, verification.losses, verification.draws) }}
+            </div>
+            <div class="verification-awards" v-if="verification.awards">
+              <strong>Awards:</strong> {{ verification.awards }}
+            </div>
+            <div class="verification-dates">
+              <span>Submitted: {{ formatDateTime(verification.createdAt) }}</span>
+              <span v-if="verification.reviewedAt">Reviewed: {{ formatDateTime(verification.reviewedAt) }}</span>
+            </div>
+            <div class="verification-admin" v-if="verification.adminNote">
+              <strong>Admin note:</strong> {{ verification.adminNote }}
+            </div>
+          </li>
+        </ul>
       </div>
     </div>
   </div>
@@ -1139,6 +1138,7 @@ onMounted(() => {
 .verification-form-wrapper {
   width: 100%;
   box-sizing: border-box;
+  margin-bottom: 24px;
 }
 
 .verification-form-wrapper h3 {
