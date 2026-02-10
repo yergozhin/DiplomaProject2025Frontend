@@ -190,10 +190,12 @@ export interface AcceptedFight {
   fighterAEmail: string;
   fighterAName: string | null;
   fighterAWeightClass: string | null;
+  fighterAProfilePicture: string | null;
   fighterBUserId: string;
   fighterBEmail: string;
   fighterBName: string | null;
   fighterBWeightClass: string | null;
+  fighterBProfilePicture: string | null;
 }
 
 export interface ScheduledFight {
@@ -205,10 +207,12 @@ export interface ScheduledFight {
   fighterAEmail: string;
   fighterAName: string | null;
   fighterAWeightClass: string | null;
+  fighterAProfilePicture: string | null;
   fighterBUserId: string;
   fighterBEmail: string;
   fighterBName: string | null;
   fighterBWeightClass: string | null;
+  fighterBProfilePicture: string | null;
 }
 
 export interface Offer {
