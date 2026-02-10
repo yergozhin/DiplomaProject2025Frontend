@@ -747,8 +747,7 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   margin-top: 24px;
-  padding-top: 24px;
-  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  padding-top: 8px;
 }
 
 .profile-row {
