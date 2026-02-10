@@ -160,6 +160,25 @@ export interface FightRequest {
   senderEmail: string;
   senderName: string | null;
   senderWeightClass: string | null;
+  senderFirstName?: string | null;
+  senderLastName?: string | null;
+  senderNickname?: string | null;
+  senderPhoneNumber?: string | null;
+  senderDateOfBirth?: string | null;
+  senderGender?: string | null;
+  senderCurrentWeightClass?: string | null;
+  senderHeight?: number | null;
+  senderReach?: number | null;
+  senderCountry?: string | null;
+  senderCity?: string | null;
+  senderStatus?: string | null;
+  senderProfilePicture?: string | null;
+  senderBio?: string | null;
+  senderTotalFights?: number | null;
+  senderWins?: number | null;
+  senderLosses?: number | null;
+  senderDraws?: number | null;
+  senderAwards?: string | null;
 }
 
 export interface AcceptedFight {
