@@ -90,17 +90,37 @@
         <div class="form-row">
           <div class="form-group">
             <label for="firstName">First Name *</label>
-            <input id="firstName" v-model="form.firstName" type="text" :disabled="submitting" required />
+            <input
+              id="firstName"
+              v-model="form.firstName"
+              type="text"
+              placeholder="Enter your first name"
+              :disabled="submitting"
+              required
+            />
           </div>
           <div class="form-group">
             <label for="lastName">Last Name *</label>
-            <input id="lastName" v-model="form.lastName" type="text" :disabled="submitting" required />
+            <input
+              id="lastName"
+              v-model="form.lastName"
+              type="text"
+              placeholder="Enter your last name"
+              :disabled="submitting"
+              required
+            />
           </div>
         </div>
 
         <div class="form-group">
           <label for="nickname">Nickname</label>
-          <input id="nickname" v-model="form.nickname" type="text" :disabled="submitting" />
+          <input
+            id="nickname"
+            v-model="form.nickname"
+            type="text"
+            placeholder="Optional fight nickname"
+            :disabled="submitting"
+          />
         </div>
 
         <div class="form-group">
@@ -125,50 +145,105 @@
         <div class="form-row">
           <div class="form-group">
             <label for="phoneNumber">Phone Number</label>
-            <input id="phoneNumber" v-model="form.phoneNumber" type="text" :disabled="submitting" />
+            <input
+              id="phoneNumber"
+              v-model="form.phoneNumber"
+              type="text"
+              placeholder="+48 123 456 789"
+              :disabled="submitting"
+            />
           </div>
           <div class="form-group">
             <label for="gender">Gender</label>
-            <input id="gender" v-model="form.gender" type="text" :disabled="submitting" />
+            <input
+              id="gender"
+              v-model="form.gender"
+              type="text"
+              placeholder="Male, Female, etc."
+              :disabled="submitting"
+            />
           </div>
         </div>
 
         <div class="form-row">
           <div class="form-group">
             <label for="dateOfBirth">Date of Birth</label>
-            <input id="dateOfBirth" v-model="form.dateOfBirth" type="date" :disabled="submitting" />
+            <input
+              id="dateOfBirth"
+              v-model="form.dateOfBirth"
+              type="date"
+              :disabled="submitting"
+            />
           </div>
           <div class="form-group">
             <label for="status">Status</label>
-            <input id="status" v-model="form.status" type="text" :disabled="submitting" />
+            <input
+              id="status"
+              v-model="form.status"
+              type="text"
+              placeholder="Active, Injured, etc."
+              :disabled="submitting"
+            />
           </div>
         </div>
 
         <div class="form-row">
           <div class="form-group">
             <label for="height">Height (cm)</label>
-            <input id="height" v-model.number="form.height" type="number" min="0" :disabled="submitting" />
+            <input
+              id="height"
+              v-model.number="form.height"
+              type="number"
+              min="0"
+              placeholder="e.g. 180"
+              :disabled="submitting"
+            />
           </div>
           <div class="form-group">
             <label for="reach">Reach (cm)</label>
-            <input id="reach" v-model.number="form.reach" type="number" min="0" :disabled="submitting" />
+            <input
+              id="reach"
+              v-model.number="form.reach"
+              type="number"
+              min="0"
+              placeholder="e.g. 190"
+              :disabled="submitting"
+            />
           </div>
         </div>
 
         <div class="form-row">
           <div class="form-group">
             <label for="country">Country</label>
-            <input id="country" v-model="form.country" type="text" :disabled="submitting" />
+            <input
+              id="country"
+              v-model="form.country"
+              type="text"
+              placeholder="Country you represent"
+              :disabled="submitting"
+            />
           </div>
           <div class="form-group">
             <label for="city">City</label>
-            <input id="city" v-model="form.city" type="text" :disabled="submitting" />
+            <input
+              id="city"
+              v-model="form.city"
+              type="text"
+              placeholder="Your current city"
+              :disabled="submitting"
+            />
           </div>
         </div>
 
         <div class="form-group">
           <label for="profilePicture">Profile Picture</label>
-          <input id="profilePicture" type="file" accept="image/*" @change="handleImageSelect" :disabled="submitting" />
+          <input
+            id="profilePicture"
+            type="file"
+            accept="image/*"
+            @change="handleImageSelect"
+            :disabled="submitting"
+          />
           <div v-if="form.profilePicture" class="image-preview-container">
             <img v-if="isBase64Image(form.profilePicture)" :src="form.profilePicture" alt="Preview" class="image-preview" />
             <div v-else class="image-url-display">{{ form.profilePicture }}</div>
@@ -178,7 +253,12 @@
 
         <div class="form-group">
           <label for="bio">Bio</label>
-          <textarea id="bio" v-model="form.bio" :disabled="submitting"></textarea>
+          <textarea
+            id="bio"
+            v-model="form.bio"
+            placeholder="Short summary about you as a fighter"
+            :disabled="submitting"
+          ></textarea>
         </div>
 
         <div v-if="submitError" class="error-message">{{ submitError }}</div>
@@ -831,15 +911,17 @@ onMounted(() => {
 }
 
 .edit-form {
-  margin-top: 20px;
-  padding-top: 20px;
-  border-top: 1px solid #ddd;
+  margin-top: 24px;
+  padding: 20px 20px 24px 20px;
+  border-radius: 8px;
+  background-color: #ffffff;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.08);
   max-width: 100%;
   box-sizing: border-box;
 }
 
 .form-group {
-  margin-bottom: 15px;
+  margin-bottom: 18px;
   width: 100%;
   box-sizing: border-box;
 }
@@ -860,24 +942,38 @@ onMounted(() => {
 
 .form-group label {
   display: block;
-  margin-bottom: 5px;
-  font-weight: bold;
+  margin-bottom: 6px;
+  font-weight: 600;
+  font-size: 14px;
+  color: #374151;
 }
 
 .form-group input,
 .form-group select,
 .form-group textarea {
   width: 100%;
-  padding: 8px 12px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+  padding: 9px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
   box-sizing: border-box;
   max-width: 100%;
+  font-size: 14px;
+  background-color: #f9fafb;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
 }
 
 .form-group textarea {
   min-height: 80px;
   resize: vertical;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #2563eb;
+  background-color: #ffffff;
+  box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.2);
 }
 
 .form-actions {
