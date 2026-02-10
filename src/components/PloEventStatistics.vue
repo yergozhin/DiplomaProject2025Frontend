@@ -31,6 +31,7 @@
 import { ref, computed, onMounted } from 'vue';
 import { ploEventStatisticsService } from '@/services/plo-event-statistics.service';
 import { useAuthStore } from '@/stores/auth.store';
+import { getErrorMessage } from '@/utils/errorMessages';
 import type { PloEventStatistics } from '@/types';
 
 const authStore = useAuthStore();
@@ -55,7 +56,7 @@ async function loadStatistics() {
   try {
     statistics.value = await ploEventStatisticsService.getByPloId(authStore.user.id);
   } catch (err: any) {
-    error.value = err.error || 'Failed to load statistics';
+    error.value = getErrorMessage(err.error, 'load statistics');
   } finally {
     loading.value = false;
   }

@@ -9,6 +9,12 @@
     </header>
     <div class="auth-card">
       <h1>Login</h1>
+      <div class="auth-info-box">
+        <p class="info-title">Multi-Role Access</p>
+        <p class="info-text">
+          Enter your email and password to log in. If you have accounts for multiple roles (Fighter, Promotion League Owner, or Spectator) with the same email and password, you'll be able to switch between them after logging in.
+        </p>
+      </div>
       <form @submit.prevent="handleLogin" class="auth-form">
         <div class="form-group">
           <label for="email">Email</label>

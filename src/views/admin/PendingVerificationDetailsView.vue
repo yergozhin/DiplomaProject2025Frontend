@@ -100,6 +100,7 @@ import { computed, onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import type { Fighter, FighterVerification } from '@/types';
 import { adminService } from '@/services/admin.service';
+import { getErrorMessage } from '@/utils/errorMessages';
 
 const route = useRoute();
 const router = useRouter();
@@ -182,7 +183,7 @@ async function reviewVerification(verificationId: string, status: 'accepted' | '
       fighter.value = response.fighter;
     }
   } catch (err: any) {
-    error.value = err.error || 'Failed to update verification status.';
+    error.value = getErrorMessage(err.error, 'update verification status');
   } finally {
     processingId.value = null;
   }
@@ -203,7 +204,7 @@ async function loadData() {
       error.value = 'Fighter not found.';
     }
   } catch (err: any) {
-    error.value = err.error || 'Failed to load fighter details.';
+    error.value = getErrorMessage(err.error, 'load fighter details');
   } finally {
     loading.value = false;
   }

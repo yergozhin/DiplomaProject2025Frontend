@@ -50,6 +50,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { adminService, type User } from '@/services/admin.service';
+import { getErrorMessage } from '@/utils/errorMessages';
 
 const users = ref<User[]>([]);
 const loading = ref(false);
@@ -80,7 +81,7 @@ async function loadUsers() {
   try {
     users.value = await adminService.getUsers();
   } catch (err: any) {
-    error.value = err.error || 'Failed to load users';
+    error.value = getErrorMessage(err.error, 'load users');
   } finally {
     loading.value = false;
   }
@@ -92,7 +93,7 @@ async function verifyEmail(userId: string) {
     await adminService.verifyUserEmail(userId);
     await loadUsers();
   } catch (err: any) {
-    alert(err.error || 'Failed to verify email');
+    alert(getErrorMessage(err.error, 'verify the email'));
   } finally {
     processingIds.value.delete(userId);
   }

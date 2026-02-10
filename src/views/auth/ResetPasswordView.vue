@@ -9,6 +9,12 @@
     </header>
     <div class="auth-card">
       <h1>Reset Password</h1>
+      <div class="auth-info-box">
+        <p class="info-title">Set New Password</p>
+        <p class="info-text">
+          Enter your new password below. This will update the password for all roles associated with your email address.
+        </p>
+      </div>
       <form @submit.prevent="handleResetPassword" class="auth-form">
         <div class="form-group">
           <label for="password">New Password</label>
@@ -62,6 +68,7 @@
 import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { authService } from '@/services/auth.service';
+import { getErrorMessage } from '@/utils/errorMessages';
 
 const route = useRoute();
 const router = useRouter();
@@ -78,24 +85,24 @@ const success = ref(false);
 onMounted(() => {
   const token = route.query.token as string;
   if (!token) {
-    error.value = 'Invalid reset link';
+    error.value = 'This password reset link is missing the required token. Please request a new reset link.';
   }
 });
 
 async function handleResetPassword() {
   const token = route.query.token as string;
   if (!token) {
-    error.value = 'Invalid reset link';
+    error.value = 'This password reset link is missing the required token. Please request a new reset link.';
     return;
   }
 
   if (resetForm.value.password !== resetForm.value.confirmPassword) {
-    error.value = 'Passwords do not match';
+    error.value = 'The passwords you entered don\'t match. Please make sure both fields are the same.';
     return;
   }
 
   if (resetForm.value.password.length < 6) {
-    error.value = 'Password must be at least 6 characters';
+    error.value = 'Your password needs to be at least 6 characters long.';
     return;
   }
 
@@ -112,7 +119,7 @@ async function handleResetPassword() {
       router.push('/login');
     }, 2000);
   } catch (err: any) {
-    error.value = err.error || 'Failed to reset password';
+    error.value = getErrorMessage(err.error, 'reset your password');
   } finally {
     loading.value = false;
   }
@@ -298,6 +305,34 @@ async function handleResetPassword() {
 
 .auth-footer a:hover {
   opacity: 0.8;
+}
+
+.auth-info-box {
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background-color: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+  border-left: 4px solid #007bff;
+}
+
+.info-title {
+  margin: 0 0 0.5rem 0;
+  font-weight: 600;
+  color: #333;
+  font-size: 0.95rem;
+}
+
+.info-text {
+  margin: 0;
+  color: #555;
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.info-text strong {
+  color: #333;
+  font-weight: 600;
 }
 </style>
 

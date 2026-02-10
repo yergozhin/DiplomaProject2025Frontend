@@ -9,6 +9,10 @@ export const ploService = {
   updateProfile(payload: UpdatePloProfileRequest): Promise<PloProfile> {
     return apiClient.put<PloProfile>('/plos/profile', payload);
   },
+
+  getPublicById(id: string): Promise<PloProfile> {
+    return apiClient.get<PloProfile>(`/plos/public/${id}`);
+  },
 };
 
 

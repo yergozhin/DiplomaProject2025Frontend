@@ -9,6 +9,12 @@
     </header>
     <div class="auth-card">
       <h1>Forgot Password</h1>
+      <div class="auth-info-box">
+        <p class="info-title">Reset Your Password</p>
+        <p class="info-text">
+          Enter your email address and we'll send you a password reset link. This will reset the password for all roles associated with your email address.
+        </p>
+      </div>
       <form @submit.prevent="handleRequestReset" class="auth-form">
         <div class="form-group">
           <label for="email">Email</label>
@@ -20,21 +26,6 @@
             placeholder="Enter your email"
             :disabled="loading"
           />
-        </div>
-
-        <div class="form-group">
-          <label for="role">Role</label>
-          <select
-            id="role"
-            v-model="forgotForm.role"
-            required
-            :disabled="loading"
-          >
-            <option value="">Select a role</option>
-            <option value="fighter">Fighter</option>
-            <option value="plo">Promotion League Owner</option>
-            <option value="spectator">Spectator</option>
-          </select>
         </div>
 
         <div v-if="error" class="error-message">
@@ -63,11 +54,10 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { authService } from '@/services/auth.service';
-import type { UserRole } from '@/types';
+import { getErrorMessage } from '@/utils/errorMessages';
 
 const forgotForm = ref({
   email: '',
-  role: '' as UserRole | '',
 });
 
 const loading = ref(false);
@@ -75,10 +65,6 @@ const error = ref<string | null>(null);
 const success = ref(false);
 
 async function handleRequestReset() {
-  if (!forgotForm.value.role) {
-    return;
-  }
-
   loading.value = true;
   error.value = null;
   success.value = false;
@@ -86,11 +72,10 @@ async function handleRequestReset() {
   try {
     await authService.requestPasswordReset({
       email: forgotForm.value.email,
-      role: forgotForm.value.role as UserRole,
     });
     success.value = true;
   } catch (err: any) {
-    error.value = err.error || 'Failed to send reset email';
+    error.value = getErrorMessage(err.error, 'send the password reset email');
   } finally {
     loading.value = false;
   }
@@ -279,6 +264,34 @@ async function handleRequestReset() {
 
 .auth-footer a:hover {
   opacity: 0.8;
+}
+
+.auth-info-box {
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background-color: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+  border-left: 4px solid #007bff;
+}
+
+.info-title {
+  margin: 0 0 0.5rem 0;
+  font-weight: 600;
+  color: #333;
+  font-size: 0.95rem;
+}
+
+.info-text {
+  margin: 0;
+  color: #555;
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.info-text strong {
+  color: #333;
+  font-weight: 600;
 }
 </style>
 

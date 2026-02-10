@@ -2,7 +2,7 @@
   <div class="fight-results-section">
     <div class="section-header">
       <h3>Fight Results</h3>
-      <p class="section-description">Add results for fights that have already taken place</p>
+      <p v-if="!props.readOnly" class="section-description">Add results for fights that have already taken place</p>
     </div>
     <div v-if="loading" class="status-message">Loading fights...</div>
     <div v-else-if="error" class="error-message">{{ error }}</div>
@@ -23,7 +23,7 @@
           </div>
         </div>
 
-        <form v-if="editingFightId === fight.fightId" class="result-form" @submit.prevent="submitResult(fight)">
+        <form v-if="!props.readOnly && editingFightId === fight.fightId" class="result-form" @submit.prevent="submitResult(fight)">
           <div class="form-group">
             <label>Winner *</label>
             <select 
@@ -107,6 +107,7 @@
             </div>
           </div>
           <button
+            v-if="!props.readOnly"
             type="button"
             class="edit-result-btn"
             @click="startEdit(fight)"
@@ -124,10 +125,12 @@
 import { ref, onMounted, computed } from 'vue';
 import { eventService } from '@/services/event.service';
 import { fightResultsService } from '@/services/fight-results.service';
+import { getErrorMessage } from '@/utils/errorMessages';
 import type { EventFight, FightResult, CreateFightResultRequest, UpdateFightResultRequest } from '@/types';
 
 const props = defineProps<{
   eventId: string;
+  readOnly?: boolean;
 }>();
 
 const emit = defineEmits(['results-updated']);
@@ -208,7 +211,9 @@ async function loadFights() {
   loading.value = true;
   error.value = null;
   try {
-    const loadedFights = await eventService.getFightsForEvent(props.eventId);
+    const loadedFights = props.readOnly 
+      ? await eventService.getPublicFightsForEvent(props.eventId)
+      : await eventService.getFightsForEvent(props.eventId);
     fights.value = loadedFights;
 
     if (loadedFights.length > 0) {
@@ -223,7 +228,7 @@ async function loadFights() {
       }
     }
   } catch (err: any) {
-    error.value = err.error || 'Failed to load fights';
+    error.value = getErrorMessage(err.error, 'load fights');
     console.error('Error loading fights:', err);
   } finally {
     loading.value = false;
@@ -318,7 +323,7 @@ async function submitResult(fight: EventFight & { existingResult: FightResult | 
     emit('results-updated');
   } catch (err: any) {
     console.error('Error submitting result:', err);
-    resultError.value = err.error || 'Failed to save result';
+    resultError.value = getErrorMessage(err.error, 'save result');
   } finally {
     submitting.value = false;
   }

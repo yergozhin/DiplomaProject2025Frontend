@@ -53,6 +53,7 @@
 <script setup lang="ts">
 import { ref, onMounted, watch, computed } from 'vue';
 import { eventCategoriesService } from '@/services/event-categories.service';
+import { getErrorMessage } from '@/utils/errorMessages';
 import type { EventCategory, EventCategoryAssignment } from '@/types';
 
 const props = defineProps<{
@@ -81,7 +82,7 @@ async function loadAllCategories() {
     allCategories.value = await eventCategoriesService.getAll();
     error.value = null;
   } catch (err: any) {
-    error.value = err.error || 'Failed to load categories';
+    error.value = getErrorMessage(err.error, 'load categories');
     allCategories.value = [];
   }
 }
@@ -92,7 +93,7 @@ async function loadEventCategories() {
     categories.value = await eventCategoriesService.getByEvent(props.eventId);
     error.value = null;
   } catch (err: any) {
-    error.value = err.error || 'Failed to load event categories';
+    error.value = getErrorMessage(err.error, 'load event categories');
     categories.value = [];
   } finally {
     loadingCategories.value = false;
@@ -109,7 +110,7 @@ async function assignCategory() {
     selectedCategoryId.value = '';
     emit('categories-updated');
   } catch (err: any) {
-    error.value = err.error || 'Failed to assign category';
+    error.value = getErrorMessage(err.error, 'assign the category');
   } finally {
     processingCategoryId.value = null;
   }
@@ -125,7 +126,7 @@ async function removeCategory(categoryId: string) {
     await loadEventCategories();
     emit('categories-updated');
   } catch (err: any) {
-    error.value = err.error || 'Failed to remove category';
+    error.value = getErrorMessage(err.error, 'remove the category');
   } finally {
     processingCategoryId.value = null;
   }

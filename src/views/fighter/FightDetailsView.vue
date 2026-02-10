@@ -6,14 +6,6 @@
     <div v-else-if="fightDetails" class="fight-content">
       <div class="fight-info">
         <div class="info-row">
-          <span class="label">Fight ID:</span>
-          <span class="value">{{ fightDetails.id }}</span>
-        </div>
-        <div class="info-row">
-          <span class="label">Status:</span>
-          <span class="value">{{ fightDetails.status }}</span>
-        </div>
-        <div class="info-row">
           <router-link
             :to="historyRoute"
             class="view-history-btn"
@@ -29,17 +21,58 @@
           <div class="fighter-card">
             <h3>Fighter A</h3>
             <div class="fighter-details">
+              <div class="fighter-header">
+                <div class="fighter-avatar">
+                  <img
+                    v-if="fighterAProfile?.profilePicture"
+                    :src="fighterAProfile.profilePicture"
+                    alt="Fighter A profile picture"
+                  />
+                  <div v-else class="fighter-avatar-placeholder">
+                    {{ getInitial(fighterAProfile?.firstName, fighterAProfile?.lastName) }}
+                  </div>
+                </div>
+                <div class="fighter-header-info">
+                  <div class="fighter-main-name">
+                    {{ formatName(fighterAProfile?.firstName, fighterAProfile?.lastName, fightDetails.fighterAName) }}
+                  </div>
+                  <div class="fighter-main-email">
+                    {{ formatEmail(fighterAProfile?.email, fightDetails.fighterAEmail) }}
+                  </div>
+                  <div class="fighter-main-meta">
+                    <span class="meta-item">
+                      {{ formatWeightClass(fighterAProfile?.currentWeightClass, fightDetails.fighterAWeightClass) }}
+                    </span>
+                  </div>
+                </div>
+              </div>
               <div class="info-row">
-                <span class="label">Name:</span>
-                <span class="value">{{ fightDetails.fighterAName || fightDetails.fighterAEmail }}</span>
+                <span class="label">Nickname:</span>
+                <span class="value">{{ formatField(fighterAProfile?.nickname) }}</span>
               </div>
               <div class="info-row">
                 <span class="label">Email:</span>
-                <span class="value">{{ fightDetails.fighterAEmail }}</span>
+                <span class="value">
+                  {{ formatEmail(fighterAProfile?.email, fightDetails.fighterAEmail) }}
+                </span>
               </div>
-              <div v-if="fightDetails.fighterAWeightClass" class="info-row">
-                <span class="label">Weight Class:</span>
-                <span class="value">{{ fightDetails.fighterAWeightClass }}</span>
+              <div class="info-row">
+                <span class="label">Phone:</span>
+                <span class="value">{{ formatField(fighterAProfile?.phoneNumber) }}</span>
+              </div>
+              <div class="info-row">
+                <span class="label">Gender:</span>
+                <span class="value">{{ formatField(fighterAProfile?.gender) }}</span>
+              </div>
+              <div class="info-row">
+                <span class="label">Date of birth:</span>
+                <span class="value">{{ formatDateField(fighterAProfile?.dateOfBirth) }}</span>
+              </div>
+              <div class="info-row">
+                <span class="label">Location:</span>
+                <span class="value">
+                  {{ formatLocation(fighterAProfile?.city, fighterAProfile?.country) }}
+                </span>
               </div>
             </div>
             <button
@@ -53,17 +86,58 @@
           <div class="fighter-card">
             <h3>Fighter B</h3>
             <div class="fighter-details">
+              <div class="fighter-header">
+                <div class="fighter-avatar">
+                  <img
+                    v-if="fighterBProfile?.profilePicture"
+                    :src="fighterBProfile.profilePicture"
+                    alt="Fighter B profile picture"
+                  />
+                  <div v-else class="fighter-avatar-placeholder">
+                    {{ getInitial(fighterBProfile?.firstName, fighterBProfile?.lastName) }}
+                  </div>
+                </div>
+                <div class="fighter-header-info">
+                  <div class="fighter-main-name">
+                    {{ formatName(fighterBProfile?.firstName, fighterBProfile?.lastName, fightDetails.fighterBName) }}
+                  </div>
+                  <div class="fighter-main-email">
+                    {{ formatEmail(fighterBProfile?.email, fightDetails.fighterBEmail) }}
+                  </div>
+                  <div class="fighter-main-meta">
+                    <span class="meta-item">
+                      {{ formatWeightClass(fighterBProfile?.currentWeightClass, fightDetails.fighterBWeightClass) }}
+                    </span>
+                  </div>
+                </div>
+              </div>
               <div class="info-row">
-                <span class="label">Name:</span>
-                <span class="value">{{ fightDetails.fighterBName || fightDetails.fighterBEmail }}</span>
+                <span class="label">Nickname:</span>
+                <span class="value">{{ formatField(fighterBProfile?.nickname) }}</span>
             </div>
               <div class="info-row">
                 <span class="label">Email:</span>
-                <span class="value">{{ fightDetails.fighterBEmail }}</span>
+                <span class="value">
+                  {{ formatEmail(fighterBProfile?.email, fightDetails.fighterBEmail) }}
+                </span>
             </div>
-              <div v-if="fightDetails.fighterBWeightClass" class="info-row">
-                <span class="label">Weight Class:</span>
-                <span class="value">{{ fightDetails.fighterBWeightClass }}</span>
+              <div class="info-row">
+                <span class="label">Phone:</span>
+                <span class="value">{{ formatField(fighterBProfile?.phoneNumber) }}</span>
+              </div>
+              <div class="info-row">
+                <span class="label">Gender:</span>
+                <span class="value">{{ formatField(fighterBProfile?.gender) }}</span>
+              </div>
+              <div class="info-row">
+                <span class="label">Date of birth:</span>
+                <span class="value">{{ formatDateField(fighterBProfile?.dateOfBirth) }}</span>
+              </div>
+              <div class="info-row">
+                <span class="label">Location:</span>
+                <span class="value">
+                  {{ formatLocation(fighterBProfile?.city, fighterBProfile?.country) }}
+                </span>
             </div>
             </div>
             <button
@@ -94,9 +168,11 @@
 import { ref, computed, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { fightService } from '@/services/fight.service';
+import { fighterService } from '@/services/fighter.service';
 import { useAuthStore } from '@/stores/auth.store';
+import { getErrorMessage } from '@/utils/errorMessages';
 import FightContractsList from '@/components/FightContractsList.vue';
-import type { AcceptedFight } from '@/types';
+import type { AcceptedFight, Fighter } from '@/types';
 
 const route = useRoute();
 const authStore = useAuthStore();
@@ -105,6 +181,8 @@ const fightDetails = ref<AcceptedFight | null>(null);
 const loading = ref(false);
 const error = ref<string | null>(null);
 const showCreateFormFor = ref<'fighterA' | 'fighterB' | null>(null);
+const fighterAProfile = ref<Fighter | null>(null);
+const fighterBProfile = ref<Fighter | null>(null);
 
 const historyRoute = computed(() => {
   const role = authStore.userRole;
@@ -124,14 +202,48 @@ async function loadFightDetails() {
   error.value = null;
   try {
     fightDetails.value = await fightService.getFightById(fightId);
+    if (fightDetails.value) {
+      await loadFighterProfiles(fightDetails.value);
+    }
   } catch (err: any) {
     if (err.status === 404) {
       error.value = 'Fight not found';
     } else {
-      error.value = err.error || 'Failed to load fight details';
+      error.value = getErrorMessage(err.error, 'load fight details');
     }
   } finally {
     loading.value = false;
+  }
+}
+
+async function loadFighterProfiles(details: AcceptedFight) {
+  const tasks: Promise<void>[] = [];
+  if (details.fighterAUserId) {
+    tasks.push(
+      fighterService
+        .getPublicById(details.fighterAUserId)
+        .then(p => {
+          fighterAProfile.value = p;
+        })
+        .catch(() => {
+          fighterAProfile.value = null;
+        }),
+    );
+  }
+  if (details.fighterBUserId) {
+    tasks.push(
+      fighterService
+        .getPublicById(details.fighterBUserId)
+        .then(p => {
+          fighterBProfile.value = p;
+        })
+        .catch(() => {
+          fighterBProfile.value = null;
+        }),
+    );
+  }
+  if (tasks.length) {
+    await Promise.all(tasks);
   }
 }
 
@@ -141,6 +253,54 @@ function showCreateContractForm(fighter: 'fighterA' | 'fighterB') {
 
 function handleContractCreated() {
   showCreateFormFor.value = null;
+}
+
+function formatName(first: string | null | undefined, last: string | null | undefined, fallback: string | null | undefined): string {
+  const f = first?.trim() || '';
+  const l = last?.trim() || '';
+  if (f || l) return `${f} ${l}`.trim();
+  if (fallback && fallback.trim()) return fallback.trim();
+  return 'Not set';
+}
+
+function formatEmail(email: string | null | undefined, fallback: string | null | undefined): string {
+  if (email && email.trim()) return email.trim();
+  if (fallback && fallback.trim()) return fallback.trim();
+  return 'Not set';
+}
+
+function formatField(value: string | null | undefined): string {
+  if (!value) return 'Not set';
+  const trimmed = value.trim();
+  return trimmed || 'Not set';
+}
+
+function formatWeightClass(current: string | null | undefined, fallback: string | null | undefined): string {
+  if (current && current.trim()) return current.trim();
+  if (fallback && fallback.trim()) return fallback.trim();
+  return 'Not set';
+}
+
+function formatDateField(value: string | null | undefined): string {
+  if (!value) return 'Not set';
+  const d = new Date(value);
+  if (Number.isNaN(d.getTime())) return 'Not set';
+  return d.toLocaleDateString();
+}
+
+function formatLocation(city: string | null | undefined, country: string | null | undefined): string {
+  const c = city?.trim() || '';
+  const co = country?.trim() || '';
+  if (!c && !co) return 'Not set';
+  if (c && co) return `${c}, ${co}`;
+  return c || co;
+}
+
+function getInitial(first: string | null | undefined, last: string | null | undefined): string {
+  const f = first?.trim();
+  const l = last?.trim();
+  const src = f || l || 'N';
+  return src.charAt(0).toUpperCase();
 }
 
 onMounted(() => {
@@ -254,6 +414,63 @@ onMounted(() => {
 
 .fighter-details {
   margin-bottom: 15px;
+}
+
+.fighter-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.fighter-avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, rgba(30, 64, 175, 0.12), rgba(59, 130, 246, 0.12));
+  border: 1px solid #d1d5db;
+}
+
+.fighter-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.fighter-avatar-placeholder {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.fighter-header-info {
+  min-width: 0;
+}
+
+.fighter-main-name {
+  font-weight: 600;
+  color: #111827;
+}
+
+.fighter-main-email {
+  font-size: 13px;
+  color: #4b5563;
+}
+
+.fighter-main-meta {
+  margin-top: 2px;
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.meta-item {
+  margin-right: 8px;
 }
 
 .create-contract-btn {

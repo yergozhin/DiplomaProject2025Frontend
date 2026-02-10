@@ -114,6 +114,7 @@
 import { ref, onMounted, watch } from 'vue';
 import { fightContractsService } from '@/services/fight-contracts.service';
 import { useAuthStore } from '@/stores/auth.store';
+import { getErrorMessage } from '@/utils/errorMessages';
 import type { FightContract, CreateFightContractRequest, AcceptedFight } from '@/types';
 
 interface Props {
@@ -161,7 +162,7 @@ async function loadContracts() {
     contracts.value = await fightContractsService.getByFight(props.fightId);
   } catch (err: any) {
     if (err.status !== 404) {
-      error.value = err.error || 'Failed to load contracts';
+      error.value = getErrorMessage(err.error, 'load contracts');
     }
   } finally {
     loading.value = false;
@@ -194,7 +195,7 @@ async function handleCreateContract() {
     await loadContracts();
     emit('contractCreated');
   } catch (err: any) {
-    createContractError.value = err.error || 'Failed to create contract';
+    createContractError.value = getErrorMessage(err.error, 'create the contract');
   } finally {
     creatingContract.value = false;
   }
@@ -231,7 +232,7 @@ async function handleSignContract(contractId: string) {
     });
     await loadContracts();
   } catch (err: any) {
-    alert(err.error || 'Failed to sign contract');
+    alert(getErrorMessage(err.error, 'sign the contract'));
   } finally {
     signingContractId.value = null;
   }

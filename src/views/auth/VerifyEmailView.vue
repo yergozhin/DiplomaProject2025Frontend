@@ -10,10 +10,10 @@
     <div class="auth-card">
       <h1>Verifying Email</h1>
       <div v-if="loading" class="verifying-message">
-        <p>Please wait, verifying your email...</p>
+        <p>Please wait, verifying your email address...</p>
       </div>
       <div v-else-if="success" class="success-message">
-        <p>Email verified successfully!</p>
+        <p>Your email has been verified successfully! You can now log in to access your account.</p>
         <router-link to="/login" class="login-link">Go to Login</router-link>
       </div>
       <div v-else-if="error" class="error-message">
@@ -28,6 +28,7 @@
 import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { authService } from '@/services/auth.service';
+import { getErrorMessage } from '@/utils/errorMessages';
 
 const route = useRoute();
 
@@ -39,7 +40,7 @@ onMounted(async () => {
   const token = route.query.token as string;
   
   if (!token) {
-    error.value = 'Invalid verification link';
+    error.value = 'This verification link is missing the required token. Please check your email and use the link we sent you.';
     loading.value = false;
     return;
   }
@@ -48,7 +49,7 @@ onMounted(async () => {
     await authService.verifyEmail(token);
     success.value = true;
   } catch (err: any) {
-    error.value = err.error || 'Verification failed. The link may be invalid or expired.';
+    error.value = getErrorMessage(err.error, 'verify your email');
   } finally {
     loading.value = false;
   }

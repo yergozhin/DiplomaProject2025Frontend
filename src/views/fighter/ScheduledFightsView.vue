@@ -6,23 +6,53 @@
     <div v-else-if="fights.length === 0" class="status-message">No scheduled fights</div>
     <ul v-else class="fights-list">
       <li v-for="fight in fights" :key="fight.id" class="fight-item">
-        <div class="fight-header">
-          <strong>Fight #{{ fight.id }}</strong>
-          <span>Status: {{ fight.status }}</span>
-        </div>
         <div class="fighters">
           <div class="fighter">
-            <strong>Fighter A:</strong>
-            <div>{{ fight.fighterAName || fight.fighterAEmail }}</div>
-            <div v-if="fight.fighterAWeightClass">{{ fight.fighterAWeightClass }}</div>
-            <div>{{ fight.fighterAEmail }}</div>
+            <div class="fighter-avatar">
+              <img
+                v-if="fighterProfiles[fight.fighterAUserId]?.profilePicture"
+                :src="fighterProfiles[fight.fighterAUserId]?.profilePicture as string"
+                alt="Fighter A profile picture"
+              />
+              <div v-else class="fighter-avatar-placeholder">
+                {{ getInitialName(fighterProfiles[fight.fighterAUserId]?.firstName, fighterProfiles[fight.fighterAUserId]?.lastName) }}
+              </div>
+            </div>
+            <div class="fighter-info">
+              <div class="fighter-name-line">
+                <strong>{{ formatName(fighterProfiles[fight.fighterAUserId]?.firstName, fighterProfiles[fight.fighterAUserId]?.lastName, fight.fighterAName) }}</strong>
+                <span class="fighter-weight">
+                  {{ formatWeightClass(fighterProfiles[fight.fighterAUserId]?.currentWeightClass, fight.fighterAWeightClass) }}
+                </span>
+              </div>
+              <div class="fighter-email">
+                {{ formatEmail(fighterProfiles[fight.fighterAUserId]?.email, fight.fighterAEmail) }}
+              </div>
+            </div>
           </div>
           <div class="vs">VS</div>
           <div class="fighter">
-            <strong>Fighter B:</strong>
-            <div>{{ fight.fighterBName || fight.fighterBEmail }}</div>
-            <div v-if="fight.fighterBWeightClass">{{ fight.fighterBWeightClass }}</div>
-            <div>{{ fight.fighterBEmail }}</div>
+            <div class="fighter-avatar">
+              <img
+                v-if="fighterProfiles[fight.fighterBUserId]?.profilePicture"
+                :src="fighterProfiles[fight.fighterBUserId]?.profilePicture as string"
+                alt="Fighter B profile picture"
+              />
+              <div v-else class="fighter-avatar-placeholder">
+                {{ getInitialName(fighterProfiles[fight.fighterBUserId]?.firstName, fighterProfiles[fight.fighterBUserId]?.lastName) }}
+              </div>
+            </div>
+            <div class="fighter-info">
+              <div class="fighter-name-line">
+                <strong>{{ formatName(fighterProfiles[fight.fighterBUserId]?.firstName, fighterProfiles[fight.fighterBUserId]?.lastName, fight.fighterBName) }}</strong>
+                <span class="fighter-weight">
+                  {{ formatWeightClass(fighterProfiles[fight.fighterBUserId]?.currentWeightClass, fight.fighterBWeightClass) }}
+                </span>
+              </div>
+              <div class="fighter-email">
+                {{ formatEmail(fighterProfiles[fight.fighterBUserId]?.email, fight.fighterBEmail) }}
+              </div>
+            </div>
           </div>
         </div>
         <div class="fight-actions">
@@ -37,28 +67,76 @@
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { fightService } from '@/services/fight.service';
-import type { ScheduledFight } from '@/types';
+import { fighterService } from '@/services/fighter.service';
+import { getErrorMessage } from '@/utils/errorMessages';
+import type { ScheduledFight, Fighter } from '@/types';
 
 const router = useRouter();
 
 const fights = ref<ScheduledFight[]>([]);
 const loading = ref(false);
 const error = ref<string | null>(null);
+const fighterProfiles = ref<Record<string, Fighter | null>>({});
 
 async function loadFights() {
   loading.value = true;
   error.value = null;
   try {
     fights.value = await fightService.getScheduledFights();
+    await loadFighterProfiles();
   } catch (err: any) {
-    error.value = err.error || 'Failed to load scheduled fights';
+    error.value = getErrorMessage(err.error, 'load scheduled fights');
   } finally {
     loading.value = false;
   }
 }
 
+async function loadFighterProfiles() {
+  const ids = Array.from(
+    new Set(fights.value.flatMap(f => [f.fighterAUserId, f.fighterBUserId])),
+  );
+
+  await Promise.all(
+    ids.map(async (id) => {
+      if (!id || fighterProfiles.value[id]) return;
+      try {
+        fighterProfiles.value[id] = await fighterService.getPublicById(id);
+      } catch {
+        fighterProfiles.value[id] = null;
+      }
+    }),
+  );
+}
+
 function handleViewDetails(fightId: string) {
   router.push(`/fighter/fights/${fightId}/details`);
+}
+
+function formatName(first: string | null | undefined, last: string | null | undefined, fallbackName: string | null | undefined): string {
+  const f = first?.trim() || '';
+  const l = last?.trim() || '';
+  if (f || l) return `${f} ${l}`.trim();
+  if (fallbackName && fallbackName.trim()) return fallbackName.trim();
+  return 'Not set';
+}
+
+function formatWeightClass(current: string | null | undefined, fallback: string | null | undefined): string {
+  if (current && current.trim()) return current.trim();
+  if (fallback && fallback.trim()) return fallback.trim();
+  return 'Not set';
+}
+
+function formatEmail(email: string | null | undefined, fallback: string | null | undefined): string {
+  if (email && email.trim()) return email.trim();
+  if (fallback && fallback.trim()) return fallback.trim();
+  return 'Not set';
+}
+
+function getInitialName(first: string | null | undefined, last: string | null | undefined): string {
+  const f = first?.trim();
+  const l = last?.trim();
+  const source = f || l || 'N';
+  return source.charAt(0).toUpperCase();
 }
 
 onMounted(() => {
@@ -104,14 +182,6 @@ onMounted(() => {
   box-sizing: border-box;
 }
 
-.fight-header {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 15px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid #ddd;
-}
-
 .fighters {
   display: flex;
   align-items: center;
@@ -122,15 +192,48 @@ onMounted(() => {
   flex: 1;
 }
 
+.fighter-avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, rgba(30, 64, 175, 0.12), rgba(59, 130, 246, 0.12));
+  border: 1px solid #d1d5db;
+  margin-bottom: 6px;
+}
+
+.fighter-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.fighter-avatar-placeholder {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.fighter-info {
+  min-width: 0;
+}
+
+.fighter-name-line {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
 .vs {
   font-weight: bold;
   font-size: 18px;
   color: #666;
-}
-
-.fighter strong {
-  display: block;
-  margin-bottom: 5px;
 }
 
 .fight-actions {

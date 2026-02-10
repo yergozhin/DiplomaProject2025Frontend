@@ -27,6 +27,7 @@
 <script setup lang="ts">
 import { ref, onMounted, watch } from 'vue';
 import { eventStatusHistoryService } from '@/services/event-status-history.service';
+import { getErrorMessage } from '@/utils/errorMessages';
 import type { EventStatusHistory } from '@/types';
 
 interface Props {
@@ -54,7 +55,7 @@ async function loadHistory() {
     history.value = await eventStatusHistoryService.getByEvent(props.eventId);
   } catch (err: any) {
     if (err.status !== 404) {
-      error.value = err.error || 'Failed to load history';
+      error.value = getErrorMessage(err.error, 'load history');
     }
   } finally {
     loading.value = false;

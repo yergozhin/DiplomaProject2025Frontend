@@ -62,6 +62,7 @@
 import { ref, onMounted } from 'vue';
 import { adminService, type MedicalClearanceAdmin } from '@/services/admin.service';
 import { medicalClearancesService } from '@/services/medical-clearances.service';
+import { getErrorMessage } from '@/utils/errorMessages';
 
 const clearances = ref<MedicalClearanceAdmin[]>([]);
 const loading = ref(false);
@@ -95,7 +96,7 @@ async function loadClearances() {
   try {
     clearances.value = await adminService.getMedicalClearances();
   } catch (err: any) {
-    error.value = err.error || 'Failed to load medical clearances';
+    error.value = getErrorMessage(err.error, 'load medical clearances');
   } finally {
     loading.value = false;
   }
@@ -107,7 +108,7 @@ async function updateStatus(clearanceId: string, status: 'approved' | 'rejected'
     await medicalClearancesService.update(clearanceId, { status });
     await loadClearances();
   } catch (err: any) {
-    alert(err.error || 'Failed to update clearance status');
+    alert(getErrorMessage(err.error, 'update the clearance status'));
   } finally {
     processingIds.value.delete(clearanceId);
   }

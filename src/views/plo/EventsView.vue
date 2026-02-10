@@ -38,54 +38,95 @@
     <ul v-else class="events-list">
       <li v-for="event in events" :key="event.id" class="event-item">
         <div class="event-header">
-          <div>
-            <strong>{{ event.name }}</strong>
+          <div class="event-title-block">
+            <strong class="event-title-text">{{ event.name }}</strong>
             <span v-if="event.eventName && event.eventName !== event.name" class="event-subtitle">
               ({{ event.eventName }})
             </span>
           </div>
           <div class="event-meta">
-            <span class="status-pill" :class="event.status || 'draft'">{{ (event.status || 'draft').toUpperCase() }}</span>
-            <span>Created: {{ formatDate(event.createdAt) }}</span>
-            <span v-if="event.updatedAt">Updated: {{ formatDate(event.updatedAt) }}</span>
-          </div>
-        </div>
-
-        <div class="event-details">
-          <div class="detail-group">
-            <span class="detail-label">Description:</span>
-            <span class="detail-value">{{ event.eventDescription || 'Not set' }}</span>
-          </div>
-          <div class="detail-group">
-            <span class="detail-label">Venue:</span>
-            <span class="detail-value">{{ formatVenue(event) }}</span>
-          </div>
-          <div class="detail-group">
-            <span class="detail-label">Capacity:</span>
-            <span class="detail-value">{{ formatCapacity(event.venueCapacity) }}</span>
-          </div>
-          <div class="detail-group">
-            <span class="detail-label">Poster:</span>
-            <span class="detail-value">
-              <a v-if="event.posterImage" :href="event.posterImage" target="_blank" rel="noreferrer">View poster</a>
-              <span v-else>Not set</span>
-            </span>
-          </div>
-          <div class="detail-group">
-            <span class="detail-label">Ticket Link:</span>
-            <span class="detail-value">
-              <a v-if="event.ticketLink" :href="event.ticketLink" target="_blank" rel="noreferrer">Buy tickets</a>
-              <span v-else>Not set</span>
+            <span class="status-pill" :class="event.status || 'draft'">
+              {{ (event.status || 'draft').toUpperCase() }}
             </span>
           </div>
         </div>
 
-        <EventStatusHistoryList :event-id="event.id" />
+        <div class="event-main">
+          <div class="event-poster">
+            <img
+              v-if="event.posterImage && isBase64Image(event.posterImage)"
+              :src="event.posterImage"
+              alt="Event Poster"
+              class="poster-preview"
+            />
+            <a
+              v-else-if="event.posterImage"
+              :href="event.posterImage"
+              target="_blank"
+              rel="noreferrer"
+              class="poster-link"
+            >
+              View poster
+            </a>
+            <div v-else class="poster-empty">No poster</div>
+          </div>
 
-        <EventFightResults
-          :event-id="event.id"
-          @results-updated="() => {}"
-        />
+          <div class="event-details">
+            <div class="detail-group">
+              <span class="detail-label">Description</span>
+              <span class="detail-value">{{ event.eventDescription || 'Not set' }}</span>
+            </div>
+            <div class="detail-group">
+              <span class="detail-label">Venue</span>
+              <span class="detail-value">{{ formatVenue(event) }}</span>
+            </div>
+            <div class="detail-group">
+              <span class="detail-label">Capacity</span>
+              <span class="detail-value">{{ formatCapacity(event.venueCapacity) }}</span>
+            </div>
+            <div class="detail-group">
+              <span class="detail-label">Tickets</span>
+              <span class="detail-value">
+                <a
+                  v-if="event.ticketLink"
+                  :href="event.ticketLink"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Buy tickets
+                </a>
+                <span v-else>Not set</span>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="event-extra">
+          <button
+            type="button"
+            class="toggle-btn"
+            @click="toggleStatus(event.id)"
+          >
+            {{ openStatusEventId === event.id ? 'Hide status history' : 'View status history' }}
+          </button>
+          <div v-if="openStatusEventId === event.id" class="extra-block">
+            <EventStatusHistoryList :event-id="event.id" />
+          </div>
+
+          <button
+            type="button"
+            class="toggle-btn"
+            @click="toggleResults(event.id)"
+          >
+            {{ openResultsEventId === event.id ? 'Hide fight results' : 'View fight results' }}
+          </button>
+          <div v-if="openResultsEventId === event.id" class="extra-block">
+            <EventFightResults
+              :event-id="event.id"
+              @results-updated="() => {}"
+            />
+          </div>
+        </div>
 
         <div class="event-actions">
           <button type="button" class="edit-btn" @click="startEdit(event)" :disabled="processingId === event.id">
@@ -146,8 +187,13 @@
           </div>
 
           <div class="form-group">
-            <label for="posterImage">Poster Image URL</label>
-            <input id="posterImage" v-model="form.posterImage" type="url" :disabled="processingId === event.id" />
+            <label for="posterImage">Poster Image</label>
+            <input :id="`posterImage-${event.id}`" type="file" accept="image/*" @change="(e: any) => handlePosterImageSelect(event.id, e)" :disabled="processingId === event.id" />
+            <div v-if="form.posterImage" class="image-preview-container">
+              <img v-if="isBase64Image(form.posterImage)" :src="form.posterImage" alt="Preview" class="image-preview" />
+              <div v-else class="image-url-display">{{ form.posterImage }}</div>
+              <button type="button" class="remove-image-btn" @click="removePosterImage(event.id)" :disabled="processingId === event.id">Remove</button>
+            </div>
           </div>
 
           <div class="form-group">
@@ -184,22 +230,31 @@
         </form>
 
         <div class="event-slots">
-          <div class="slots-header">
-            <strong>Time Slots ({{ event.slots.length }})</strong>
+          <button
+            type="button"
+            class="toggle-btn slots-toggle"
+            @click="toggleSlots(event.id)"
+          >
+            {{ openSlotsEventId === event.id ? 'Hide time slots' : 'View time slots' }}
+          </button>
+          <div v-if="openSlotsEventId === event.id" class="slots-content">
+            <div class="slots-header">
+              <strong>Time Slots ({{ event.slots.length }})</strong>
+            </div>
+            <ul v-if="event.slots.length > 0" class="slots-list">
+              <li v-for="slot in event.slots" :key="slot.id" class="slot-item">
+                <span>{{ formatDate(slot.startTime) }}</span>
+                <span v-if="slot.fightId" class="slot-status">
+                  <span class="slot-assigned">Assigned</span>
+                  <button @click="handleViewFightDetails(slot.fightId)" class="view-fight-btn">
+                    View Fight Details
+                  </button>
+                </span>
+                <span v-else class="slot-available">Available</span>
+              </li>
+            </ul>
+            <div v-else class="no-slots">No time slots</div>
           </div>
-          <ul v-if="event.slots.length > 0" class="slots-list">
-            <li v-for="slot in event.slots" :key="slot.id" class="slot-item">
-              <span>{{ formatDate(slot.startTime) }}</span>
-              <span v-if="slot.fightId" class="slot-status">
-                <span class="slot-assigned">Assigned</span>
-                <button @click="handleViewFightDetails(slot.fightId)" class="view-fight-btn">
-                  View Fight Details
-                </button>
-              </span>
-              <span v-else class="slot-available">Available</span>
-            </li>
-          </ul>
-          <div v-else class="no-slots">No time slots</div>
         </div>
       </li>
     </ul>
@@ -210,6 +265,7 @@
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { eventService } from '@/services/event.service';
+import { getErrorMessage } from '@/utils/errorMessages';
 import EventStatusHistoryList from '@/components/EventStatusHistoryList.vue';
 import EventSponsorsList from '@/components/EventSponsorsList.vue';
 import EventCategoriesList from '@/components/EventCategoriesList.vue';
@@ -229,6 +285,9 @@ const submitError = ref<string | null>(null);
 const editingId = ref<string | null>(null);
 const processingId = ref<string | null>(null);
 const publishMode = ref(false);
+const openStatusEventId = ref<string | null>(null);
+const openResultsEventId = ref<string | null>(null);
+const openSlotsEventId = ref<string | null>(null);
 const form = ref({
   eventName: '',
   eventDescription: '',
@@ -244,6 +303,18 @@ const form = ref({
 function handleViewFightDetails(fightId: string | null) {
   if (!fightId) return;
   router.push(`/plo/fights/${fightId}/details`);
+}
+
+function toggleStatus(eventId: string) {
+  openStatusEventId.value = openStatusEventId.value === eventId ? null : eventId;
+}
+
+function toggleResults(eventId: string) {
+  openResultsEventId.value = openResultsEventId.value === eventId ? null : eventId;
+}
+
+function toggleSlots(eventId: string) {
+  openSlotsEventId.value = openSlotsEventId.value === eventId ? null : eventId;
 }
 
 function formatDate(dateString: string): string {
@@ -327,7 +398,7 @@ async function submitUpdate(eventId: string) {
     await loadEvents();
     cancelEdit();
   } catch (err: any) {
-    submitError.value = err.error || 'Failed to update event';
+    submitError.value = getErrorMessage(err.error, 'update the event');
   } finally {
     processingId.value = null;
   }
@@ -342,7 +413,7 @@ async function publish(eventId: string) {
     await loadEvents();
     cancelEdit();
   } catch (err: any) {
-    submitError.value = err.error || 'Failed to publish event';
+    submitError.value = getErrorMessage(err.error, 'publish the event');
   } finally {
     processingId.value = null;
     publishMode.value = false;
@@ -355,7 +426,7 @@ async function loadEvents() {
   try {
     events.value = await eventService.getOwnedEvents();
   } catch (err: any) {
-    error.value = err.error || 'Failed to load events';
+    error.value = getErrorMessage(err.error, 'load events');
   } finally {
     loading.value = false;
   }
@@ -386,9 +457,49 @@ async function handleSubmit() {
     await loadEvents();
     closeForm();
   } catch (err: any) {
-    submitError.value = err.error || 'Failed to create event';
+    submitError.value = getErrorMessage(err.error, 'create the event');
   } finally {
     submitting.value = false;
+  }
+}
+
+function isBase64Image(value: string | null): boolean {
+  if (!value) return false;
+  return value.startsWith('data:image/');
+}
+
+function handlePosterImageSelect(eventId: string, e: any) {
+  if (editingId.value !== eventId) return;
+  const target = e.target as HTMLInputElement;
+  const file = target.files?.[0];
+  if (!file) return;
+
+  if (file.size > 5 * 1024 * 1024) {
+    submitError.value = 'Image size must be less than 5MB';
+    target.value = '';
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const result = e.target?.result;
+    if (typeof result === 'string') {
+      form.value.posterImage = result;
+    }
+  };
+  reader.onerror = () => {
+    submitError.value = 'Failed to read the image file';
+    target.value = '';
+  };
+  reader.readAsDataURL(file);
+}
+
+function removePosterImage(eventId: string) {
+  if (editingId.value !== eventId) return;
+  form.value.posterImage = '';
+  const fileInput = document.getElementById(`posterImage-${eventId}`) as HTMLInputElement;
+  if (fileInput) {
+    fileInput.value = '';
   }
 }
 
@@ -549,37 +660,43 @@ onMounted(() => {
 }
 
 .event-item {
-  padding: 20px;
+  padding: 18px 20px;
   margin-bottom: 15px;
   border: 1px solid #ddd;
   border-radius: 4px;
   background-color: #f9f9f9;
   max-width: 100%;
   box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .event-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 15px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid #ddd;
+  margin-bottom: 8px;
 }
 
-.event-header strong {
+.event-title-block {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.event-title-text {
   font-size: 18px;
 }
 
 .event-meta {
   display: flex;
-  flex-direction: column;
-  gap: 4px;
-  align-items: flex-end;
+  gap: 8px;
+  align-items: center;
 }
 
 .event-subtitle {
-  margin-left: 8px;
+  margin-left: 4px;
   font-size: 14px;
   color: #4b5563;
 }
@@ -596,27 +713,80 @@ onMounted(() => {
   color: #1e293b;
 }
 
+.event-main {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  margin-top: 4px;
+}
+
+.event-poster {
+  width: 160px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.event-extra {
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+}
+
+.toggle-btn {
+  padding: 8px 14px;
+  font-size: 13px;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  background-color: #1d4ed8;
+  color: #ffffff;
+}
+
+.toggle-btn:hover {
+  background-color: #1e40af;
+}
+
+.slots-toggle {
+  background-color: #059669;
+}
+
+.slots-toggle:hover {
+  background-color: #047857;
+}
+
+.extra-block {
+  width: 100%;
+  margin-top: 6px;
+}
+
 .event-details {
+  flex: 1;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 12px;
-  margin-bottom: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 10px 16px;
+  margin-bottom: 10px;
 }
 
 .detail-group {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 2px;
 }
 
 .detail-label {
-  font-weight: bold;
+  font-weight: 600;
   color: #1f2937;
+  font-size: 13px;
 }
 
 .detail-value {
   color: #374151;
   word-break: break-word;
+  font-size: 13px;
 }
 
 .event-actions {
@@ -668,7 +838,15 @@ onMounted(() => {
 }
 
 .event-slots {
-  margin-top: 15px;
+  margin-top: 12px;
+}
+
+.slots-content {
+  margin-top: 6px;
+  background-color: #fff;
+  padding: 10px 12px;
+  border-radius: 4px;
+  border: 1px solid #ddd;
 }
 
 .slots-header {
@@ -725,6 +903,62 @@ onMounted(() => {
   padding: 10px;
   color: #6c757d;
   font-style: italic;
+}
+
+.poster-preview {
+  width: 150px;
+  height: 200px;
+  border-radius: 8px;
+  margin-top: 4px;
+  display: block;
+  object-fit: cover;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.image-preview-container {
+  margin-top: 10px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: #f9f9f9;
+}
+
+.image-preview {
+  max-width: 100%;
+  max-height: 300px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.image-url-display {
+  padding: 8px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  word-break: break-all;
+  font-size: 12px;
+  color: #666;
+}
+
+.remove-image-btn {
+  padding: 6px 12px;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.remove-image-btn:hover:not(:disabled) {
+  background-color: #c82333;
+}
+
+.remove-image-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 </style>

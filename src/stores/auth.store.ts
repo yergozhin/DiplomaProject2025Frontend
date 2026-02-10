@@ -3,6 +3,7 @@ import { ref, computed } from 'vue';
 import { authService } from '@/services/auth.service';
 import type { User, RegisterRequest, UserRole } from '@/types';
 import { STORAGE_KEYS, ROUTES } from '@/utils/constants';
+import { getErrorMessage } from '@/utils/errorMessages';
 
 interface RoleSession {
   user: User;
@@ -63,7 +64,7 @@ export const useAuthStore = defineStore('auth', () => {
       const res = await authService.register(data);
       return res;
     } catch (err: any) {
-      error.value = err.error || 'Registration failed';
+      error.value = getErrorMessage(err.error, 'create your account');
       throw err;
     } finally {
       loading.value = false;
@@ -95,9 +96,9 @@ export const useAuthStore = defineStore('auth', () => {
       if (successfulLogins.length === 0) {
         const hasUnverified = results.some(r => r !== null && 'error' in r && r.error === 'email_not_verified');
         if (hasUnverified) {
-          error.value = 'email_not_verified';
+          error.value = getErrorMessage('email_not_verified');
         } else {
-          error.value = 'unauthorized';
+          error.value = getErrorMessage('unauthorized');
         }
         throw new Error('Login failed');
       }
@@ -109,14 +110,14 @@ export const useAuthStore = defineStore('auth', () => {
 
       const firstRole = successfulLogins[0];
       if (!firstRole) {
-        error.value = 'unauthorized';
+        error.value = getErrorMessage('unauthorized');
         throw new Error('Login failed');
       }
       setAuth(firstRole.user, firstRole.token);
       return { user: firstRole.user, token: firstRole.token };
     } catch (err: any) {
       if (!error.value) {
-        error.value = err.error || 'Login failed';
+        error.value = getErrorMessage(err.error, 'log you in');
       }
       throw err;
     } finally {
@@ -142,7 +143,7 @@ export const useAuthStore = defineStore('auth', () => {
       });
       return res;
     } catch (err: any) {
-      error.value = err.error || 'Failed to resend verification email';
+      error.value = getErrorMessage(err.error, 'send the verification email');
       throw err;
     } finally {
       loading.value = false;

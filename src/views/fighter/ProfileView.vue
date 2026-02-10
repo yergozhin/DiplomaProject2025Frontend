@@ -6,96 +6,80 @@
     <div v-else-if="error" class="error-message">{{ error }}</div>
     <div v-else-if="!profile" class="status">Profile not found.</div>
     <div v-else class="profile-card">
-      <div class="profile-row">
-        <span class="label">ID:</span>
-        <span class="value">{{ profile.id }}</span>
-      </div>
-      <div class="profile-row">
-        <span class="label">Email:</span>
-        <span class="value">{{ profile.email }}</span>
-      </div>
-      <div class="profile-row">
-        <span class="label">First Name:</span>
-        <span class="value">{{ profile.firstName || 'Not set' }}</span>
-      </div>
-      <div class="profile-row">
-        <span class="label">Last Name:</span>
-        <span class="value">{{ profile.lastName || 'Not set' }}</span>
-      </div>
-      <div class="profile-row" v-if="profile.nickname">
-        <span class="label">Nickname:</span>
-        <span class="value">{{ profile.nickname }}</span>
-      </div>
-      <div class="profile-row">
-        <span class="label">Current Weight Class:</span>
-        <span class="value">{{ profile.currentWeightClass || profile.weightClass || 'Not set' }}</span>
-      </div>
-      <div class="profile-row">
-        <span class="label">Phone Number:</span>
-        <span class="value">{{ profile.phoneNumber || 'Not set' }}</span>
-      </div>
-      <div class="profile-row">
-        <span class="label">Date of Birth:</span>
-        <span class="value">{{ formatDate(profile.dateOfBirth) }}</span>
-      </div>
-      <div class="profile-row">
-        <span class="label">Gender:</span>
-        <span class="value">{{ profile.gender || 'Not set' }}</span>
-      </div>
-      <div class="profile-row">
-        <span class="label">Height:</span>
-        <span class="value">{{ formatNumber(profile.height, 'cm') }}</span>
-      </div>
-      <div class="profile-row">
-        <span class="label">Reach:</span>
-        <span class="value">{{ formatNumber(profile.reach, 'cm') }}</span>
-      </div>
-      <div class="profile-row">
-        <span class="label">Country:</span>
-        <span class="value">{{ profile.country || 'Not set' }}</span>
-      </div>
-      <div class="profile-row">
-        <span class="label">City:</span>
-        <span class="value">{{ profile.city || 'Not set' }}</span>
-      </div>
-      <div class="profile-row">
-        <span class="label">Status:</span>
-        <span class="value">{{ profile.status || 'Not set' }}</span>
-      </div>
-      <div class="profile-row" v-if="profile.profilePicture">
-        <span class="label">Profile Picture:</span>
-        <span class="value">
-          <a :href="profile.profilePicture" target="_blank" rel="noopener">Open picture</a>
-        </span>
-      </div>
-      <div class="profile-row">
-        <span class="label">Bio:</span>
-        <span class="value">{{ profile.bio || 'Not set' }}</span>
-      </div>
-      <div class="profile-row" v-if="profile.profileCreatedAt">
-        <span class="label">Profile Created:</span>
-        <span class="value">{{ formatDateTime(profile.profileCreatedAt) }}</span>
-      </div>
-      <div class="profile-row" v-if="profile.profileUpdatedAt">
-        <span class="label">Last Updated:</span>
-        <span class="value">{{ formatDateTime(profile.profileUpdatedAt) }}</span>
+      <div class="profile-header">
+        <div class="profile-picture-container">
+          <img
+            v-if="profile.profilePicture && isBase64Image(profile.profilePicture)"
+            :src="profile.profilePicture"
+            alt="Profile Picture"
+            class="profile-picture-main"
+          />
+          <div v-else-if="profile.profilePicture" class="profile-picture-link">
+            <a :href="profile.profilePicture" target="_blank" rel="noopener">View Picture</a>
+          </div>
+          <div v-else class="profile-picture-placeholder">
+            <span>No Picture</span>
+          </div>
+        </div>
+        <div class="profile-header-info">
+          <div class="profile-name-large">
+            {{ profile.firstName || 'Not set' }} {{ profile.lastName || '' }}
+          </div>
+          <div class="profile-nickname-large" v-if="profile.nickname">
+            "{{ profile.nickname }}"
+          </div>
+          <div class="profile-email-large">{{ profile.email }}</div>
+          <div class="profile-header-meta">
+            <span class="header-meta-item">{{ profile.phoneNumber || 'Not set' }}</span>
+            <span class="header-meta-sep">•</span>
+            <span class="header-meta-item">{{ formatDate(profile.dateOfBirth) }}</span>
+            <span class="header-meta-sep">•</span>
+            <span class="header-meta-item">{{ profile.gender || 'Not set' }}</span>
+          </div>
+        </div>
       </div>
 
-      <div class="profile-row" v-if="hasRecordData">
-        <span class="label">Record:</span>
-        <span class="value">{{ formatRecord(profile.wins, profile.losses, profile.draws) }}</span>
-      </div>
-      <div class="profile-row" v-if="profile.totalFights !== null">
-        <span class="label">Total Fights:</span>
-        <span class="value">{{ profile.totalFights }}</span>
-      </div>
-      <div class="profile-row" v-if="profile.awards">
-        <span class="label">Awards:</span>
-        <span class="value">{{ profile.awards }}</span>
-      </div>
-      <div class="profile-row" v-if="profile.recordConfirmed">
-        <span class="label">Record Confirmed:</span>
-        <span class="value">Yes</span>
+      <div class="profile-section-full">
+        <div class="profile-row" v-if="profile.country || profile.city">
+          <span class="label">Location:</span>
+          <span class="value">{{ profile.city || '' }}{{ profile.city && profile.country ? ', ' : '' }}{{ profile.country || 'Not set' }}</span>
+        </div>
+        <div class="profile-row">
+          <span class="label">Weight Class:</span>
+          <span class="value">{{ profile.currentWeightClass || profile.weightClass || 'Not set' }}</span>
+        </div>
+        <div class="profile-row">
+          <span class="label">Status:</span>
+          <span class="value">{{ profile.status || 'Not set' }}</span>
+        </div>
+        <div class="profile-row">
+          <span class="label">Height:</span>
+          <span class="value">{{ formatNumber(profile.height, 'cm') }}</span>
+        </div>
+        <div class="profile-row">
+          <span class="label">Reach:</span>
+          <span class="value">{{ formatNumber(profile.reach, 'cm') }}</span>
+        </div>
+        <div class="profile-row" v-if="hasRecordData">
+          <span class="label">Record:</span>
+          <span class="value">{{ formatRecord(profile.wins, profile.losses, profile.draws) }}</span>
+        </div>
+        <div class="profile-row" v-if="profile.totalFights !== null">
+          <span class="label">Total Fights:</span>
+          <span class="value">{{ profile.totalFights }}</span>
+        </div>
+        <div class="profile-row" v-if="profile.bio">
+          <span class="label">Bio:</span>
+          <span class="value">{{ profile.bio }}</span>
+        </div>
+        <div class="profile-row" v-if="profile.awards">
+          <span class="label">Awards:</span>
+          <span class="value">{{ profile.awards }}</span>
+        </div>
+        <div class="profile-row" v-if="profile.recordConfirmed">
+          <span class="label">Record Confirmed:</span>
+          <span class="value">Yes</span>
+        </div>
       </div>
 
       <button type="button" class="edit-btn" @click="startEdit" v-if="!editing">
@@ -106,82 +90,175 @@
         <div class="form-row">
           <div class="form-group">
             <label for="firstName">First Name *</label>
-            <input id="firstName" v-model="form.firstName" type="text" :disabled="submitting" required />
+            <input
+              id="firstName"
+              v-model="form.firstName"
+              type="text"
+              placeholder="Enter your first name"
+              :disabled="submitting"
+              required
+            />
           </div>
           <div class="form-group">
             <label for="lastName">Last Name *</label>
-            <input id="lastName" v-model="form.lastName" type="text" :disabled="submitting" required />
+            <input
+              id="lastName"
+              v-model="form.lastName"
+              type="text"
+              placeholder="Enter your last name"
+              :disabled="submitting"
+              required
+            />
           </div>
         </div>
 
         <div class="form-group">
           <label for="nickname">Nickname</label>
-          <input id="nickname" v-model="form.nickname" type="text" :disabled="submitting" />
+          <input
+            id="nickname"
+            v-model="form.nickname"
+            type="text"
+            placeholder="Optional fight nickname"
+            :disabled="submitting"
+          />
         </div>
 
         <div class="form-group">
           <label for="currentWeightClass">Current Weight Class *</label>
-          <input
+          <select
             id="currentWeightClass"
             v-model="form.currentWeightClass"
-            type="text"
-            :disabled="submitting"
+            :disabled="submitting || weightClasses.length === 0"
             required
-          />
+          >
+            <option value="" disabled>Select weight class</option>
+            <option
+              v-for="wc in weightClasses"
+              :key="wc.id"
+              :value="wc.name"
+            >
+              {{ wc.name }}
+            </option>
+          </select>
         </div>
 
         <div class="form-row">
           <div class="form-group">
             <label for="phoneNumber">Phone Number</label>
-            <input id="phoneNumber" v-model="form.phoneNumber" type="text" :disabled="submitting" />
+            <input
+              id="phoneNumber"
+              v-model="form.phoneNumber"
+              type="text"
+              placeholder="+48 123 456 789"
+              :disabled="submitting"
+            />
           </div>
           <div class="form-group">
             <label for="gender">Gender</label>
-            <input id="gender" v-model="form.gender" type="text" :disabled="submitting" />
+            <input
+              id="gender"
+              v-model="form.gender"
+              type="text"
+              placeholder="Male, Female, etc."
+              :disabled="submitting"
+            />
           </div>
         </div>
 
         <div class="form-row">
           <div class="form-group">
             <label for="dateOfBirth">Date of Birth</label>
-            <input id="dateOfBirth" v-model="form.dateOfBirth" type="date" :disabled="submitting" />
+            <input
+              id="dateOfBirth"
+              v-model="form.dateOfBirth"
+              type="date"
+              :disabled="submitting"
+            />
           </div>
           <div class="form-group">
             <label for="status">Status</label>
-            <input id="status" v-model="form.status" type="text" :disabled="submitting" />
+            <input
+              id="status"
+              v-model="form.status"
+              type="text"
+              placeholder="Active, Injured, etc."
+              :disabled="submitting"
+            />
           </div>
         </div>
 
         <div class="form-row">
           <div class="form-group">
             <label for="height">Height (cm)</label>
-            <input id="height" v-model.number="form.height" type="number" min="0" :disabled="submitting" />
+            <input
+              id="height"
+              v-model.number="form.height"
+              type="number"
+              min="0"
+              placeholder="e.g. 180"
+              :disabled="submitting"
+            />
           </div>
           <div class="form-group">
             <label for="reach">Reach (cm)</label>
-            <input id="reach" v-model.number="form.reach" type="number" min="0" :disabled="submitting" />
+            <input
+              id="reach"
+              v-model.number="form.reach"
+              type="number"
+              min="0"
+              placeholder="e.g. 190"
+              :disabled="submitting"
+            />
           </div>
         </div>
 
         <div class="form-row">
           <div class="form-group">
             <label for="country">Country</label>
-            <input id="country" v-model="form.country" type="text" :disabled="submitting" />
+            <input
+              id="country"
+              v-model="form.country"
+              type="text"
+              placeholder="Country you represent"
+              :disabled="submitting"
+            />
           </div>
           <div class="form-group">
             <label for="city">City</label>
-            <input id="city" v-model="form.city" type="text" :disabled="submitting" />
+            <input
+              id="city"
+              v-model="form.city"
+              type="text"
+              placeholder="Your current city"
+              :disabled="submitting"
+            />
           </div>
         </div>
 
         <div class="form-group">
-          <label for="profilePicture">Profile Picture URL</label>
-          <input id="profilePicture" v-model="form.profilePicture" type="url" :disabled="submitting" />
+          <label for="profilePicture">Profile Picture</label>
+          <input
+            id="profilePicture"
+            type="file"
+            accept="image/*"
+            @change="handleImageSelect"
+            :disabled="submitting"
+          />
+          <div v-if="form.profilePicture" class="image-preview-container">
+            <img v-if="isBase64Image(form.profilePicture)" :src="form.profilePicture" alt="Preview" class="image-preview" />
+            <div v-else class="image-url-display">{{ form.profilePicture }}</div>
+            <button type="button" class="remove-image-btn" @click="removeImage" :disabled="submitting">Remove</button>
+          </div>
         </div>
 
         <div class="form-group">
           <label for="bio">Bio</label>
-          <textarea id="bio" v-model="form.bio" :disabled="submitting"></textarea>
+          <textarea
+            id="bio"
+            v-model="form.bio"
+            placeholder="Short summary about you as a fighter"
+            :disabled="submitting"
+          ></textarea>
         </div>
 
         <div v-if="submitError" class="error-message">{{ submitError }}</div>
@@ -202,41 +279,6 @@
           <span>{{ isVerificationSectionOpen ? '−' : '+' }}</span>
         </button>
         <div v-show="isVerificationSectionOpen" class="section-content">
-        <div v-if="verificationsLoading" class="status">Loading verification submissions...</div>
-        <div v-else-if="verificationsError" class="error-message">{{ verificationsError }}</div>
-        <div v-else-if="verifications.length === 0" class="status">No verification submissions yet.</div>
-        <ul v-else class="verification-list">
-          <li v-for="verification in verifications" :key="verification.id" class="verification-item">
-            <div class="verification-header">
-              <span class="verification-type">{{ formatVerificationType(verification.type) }}</span>
-              <span class="status-tag" :class="`status-${verification.status}`">
-                {{ formatVerificationStatus(verification.status) }}
-              </span>
-            </div>
-            <div class="verification-value">
-              <strong>Value:</strong>
-              <span v-if="verification.type === 'image' || verification.type === 'link'">
-                <a :href="verification.value" target="_blank" rel="noopener">{{ verification.value }}</a>
-              </span>
-              <span v-else>{{ verification.value }}</span>
-            </div>
-            <div class="verification-record" v-if="verification.wins || verification.losses || verification.draws">
-              <strong>Proposed Record:</strong>
-              {{ formatRecord(verification.wins, verification.losses, verification.draws) }}
-            </div>
-            <div class="verification-awards" v-if="verification.awards">
-              <strong>Awards:</strong> {{ verification.awards }}
-            </div>
-            <div class="verification-dates">
-              <span>Submitted: {{ formatDateTime(verification.createdAt) }}</span>
-              <span v-if="verification.reviewedAt">Reviewed: {{ formatDateTime(verification.reviewedAt) }}</span>
-            </div>
-            <div class="verification-admin" v-if="verification.adminNote">
-              <strong>Admin note:</strong> {{ verification.adminNote }}
-            </div>
-          </li>
-        </ul>
-
         <div class="verification-form-wrapper">
           <h3>Submit New Verification</h3>
           <form class="verification-form" @submit.prevent="handleVerificationSubmit">
@@ -317,6 +359,40 @@
             </div>
           </form>
         </div>
+        <div v-if="verificationsLoading" class="status">Loading verification submissions...</div>
+        <div v-else-if="verificationsError" class="error-message">{{ verificationsError }}</div>
+        <div v-else-if="verifications.length === 0" class="status">No verification submissions yet.</div>
+        <ul v-else class="verification-list">
+          <li v-for="verification in verifications" :key="verification.id" class="verification-item">
+            <div class="verification-header">
+              <span class="verification-type">{{ formatVerificationType(verification.type) }}</span>
+              <span class="status-tag" :class="`status-${verification.status}`">
+                {{ formatVerificationStatus(verification.status) }}
+              </span>
+            </div>
+            <div class="verification-value">
+              <strong>Value:</strong>
+              <span v-if="verification.type === 'image' || verification.type === 'link'">
+                <a :href="verification.value" target="_blank" rel="noopener">{{ verification.value }}</a>
+              </span>
+              <span v-else>{{ verification.value }}</span>
+            </div>
+            <div class="verification-record" v-if="verification.wins || verification.losses || verification.draws">
+              <strong>Proposed Record:</strong>
+              {{ formatRecord(verification.wins, verification.losses, verification.draws) }}
+            </div>
+            <div class="verification-awards" v-if="verification.awards">
+              <strong>Awards:</strong> {{ verification.awards }}
+            </div>
+            <div class="verification-dates">
+              <span>Submitted: {{ formatDateTime(verification.createdAt) }}</span>
+              <span v-if="verification.reviewedAt">Reviewed: {{ formatDateTime(verification.reviewedAt) }}</span>
+            </div>
+            <div class="verification-admin" v-if="verification.adminNote">
+              <strong>Admin note:</strong> {{ verification.adminNote }}
+            </div>
+          </li>
+        </ul>
       </div>
     </div>
   </div>
@@ -326,11 +402,14 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue';
 import { fighterService } from '@/services/fighter.service';
+import { weightClassesService } from '@/services/weight-classes.service';
+import { getErrorMessage } from '@/utils/errorMessages';
 import type {
   Fighter,
   FighterVerification,
   VerificationType,
   CreateVerificationRequest,
+  WeightClass,
 } from '@/types';
 
 const profile = ref<Fighter | null>(null);
@@ -339,6 +418,7 @@ const submitting = ref(false);
 const editing = ref(false);
 const error = ref<string | null>(null);
 const submitError = ref<string | null>(null);
+const weightClasses = ref<WeightClass[]>([]);
 const hasRecordData = computed(() => {
   if (!profile.value) return false;
   return (
@@ -371,7 +451,7 @@ const verificationsError = ref<string | null>(null);
 const verificationSubmitting = ref(false);
 const verificationSubmitError = ref<string | null>(null);
 const verificationSubmitSuccess = ref<string | null>(null);
-const isVerificationSectionOpen = ref(true);
+const isVerificationSectionOpen = ref(false);
 const verificationForm = ref({
   type: 'link' as VerificationType,
   value: '',
@@ -387,9 +467,16 @@ async function loadProfile() {
   try {
     profile.value = await fighterService.getProfile();
   } catch (err: any) {
-    error.value = err.error || 'Failed to load profile';
+    error.value = getErrorMessage(err.error, 'load profile');
   } finally {
     loading.value = false;
+  }
+}
+
+async function loadWeightClasses() {
+  try {
+    weightClasses.value = await weightClassesService.getAll();
+  } catch {
   }
 }
 
@@ -484,7 +571,7 @@ async function handleSubmit() {
     profile.value = updated;
     editing.value = false;
   } catch (err: any) {
-    submitError.value = err.error || 'Failed to update profile';
+    submitError.value = getErrorMessage(err.error, 'update your profile');
   } finally {
     submitting.value = false;
   }
@@ -507,7 +594,7 @@ async function loadVerifications() {
   try {
     verifications.value = await fighterService.getVerifications();
   } catch (err: any) {
-    verificationsError.value = err.error || 'Failed to load verification submissions';
+    verificationsError.value = getErrorMessage(err.error, 'load verification submissions');
   } finally {
     verificationsLoading.value = false;
   }
@@ -554,7 +641,7 @@ async function handleVerificationSubmit() {
     resetVerificationForm();
     await loadVerifications();
   } catch (err: any) {
-    verificationSubmitError.value = err.error || 'Failed to submit verification';
+    verificationSubmitError.value = getErrorMessage(err.error, 'submit the verification');
   } finally {
     verificationSubmitting.value = false;
   }
@@ -572,15 +659,54 @@ function toggleVerificationSection() {
   isVerificationSectionOpen.value = !isVerificationSectionOpen.value;
 }
 
+function isBase64Image(value: string | null): boolean {
+  if (!value) return false;
+  return value.startsWith('data:image/');
+}
+
+function handleImageSelect(event: Event) {
+  const target = event.target as HTMLInputElement;
+  const file = target.files?.[0];
+  if (!file) return;
+
+  if (file.size > 5 * 1024 * 1024) {
+    submitError.value = 'Image size must be less than 5MB';
+    target.value = '';
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const result = e.target?.result;
+    if (typeof result === 'string') {
+      form.value.profilePicture = result;
+    }
+  };
+  reader.onerror = () => {
+    submitError.value = 'Failed to read the image file';
+    target.value = '';
+  };
+  reader.readAsDataURL(file);
+}
+
+function removeImage() {
+  form.value.profilePicture = '';
+  const fileInput = document.getElementById('profilePicture') as HTMLInputElement;
+  if (fileInput) {
+    fileInput.value = '';
+  }
+}
+
 onMounted(() => {
   loadProfile();
   loadVerifications();
+  loadWeightClasses();
 });
 </script>
 
 <style scoped>
 .profile-container {
-  max-width: 600px;
+  max-width: 900px;
   margin: 0 auto;
   padding: 20px;
   padding-left: 30px;
@@ -594,27 +720,161 @@ onMounted(() => {
 }
 
 .profile-card {
-  padding: 20px;
+  padding: 24px;
   border: 1px solid #ddd;
-  border-radius: 4px;
+  border-radius: 8px;
   background-color: #f9f9f9;
   max-width: 100%;
   overflow-x: hidden;
   box-sizing: border-box;
+  transition: box-shadow 0.2s ease;
+}
+
+.profile-card:hover {
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+}
+
+.profile-header {
+  display: flex;
+  gap: 24px;
+  padding-bottom: 24px;
+  margin-bottom: 24px;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+}
+
+.profile-picture-container {
+  flex-shrink: 0;
+}
+
+.profile-picture-main {
+  width: 140px;
+  height: 140px;
+  border-radius: 12px;
+  object-fit: cover;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border: 3px solid rgba(255, 255, 255, 0.9);
+  transition: transform 0.2s ease;
+}
+
+.profile-picture-main:hover {
+  transform: scale(1.05);
+}
+
+.profile-picture-link {
+  width: 140px;
+  height: 140px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(30, 58, 138, 0.1), rgba(99, 102, 241, 0.1));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px dashed rgba(30, 58, 138, 0.3);
+}
+
+.profile-picture-link a {
+  color: rgba(30, 58, 138, 0.9);
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.2s ease;
+}
+
+.profile-picture-link a:hover {
+  color: rgba(30, 58, 138, 1);
+}
+
+.profile-picture-placeholder {
+  width: 140px;
+  height: 140px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(30, 58, 138, 0.1), rgba(99, 102, 241, 0.1));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px dashed rgba(30, 58, 138, 0.3);
+  color: rgba(30, 58, 138, 0.6);
+  font-weight: 500;
+}
+
+.profile-header-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 8px;
+}
+
+.profile-name-large {
+  font-size: 28px;
+  font-weight: 700;
+  color: #0f172a;
+  line-height: 1.2;
+}
+
+.profile-nickname-large {
+  font-size: 18px;
+  font-weight: 600;
+  color: rgba(30, 58, 138, 0.9);
+  font-style: italic;
+}
+
+.profile-email-large {
+  font-size: 15px;
+  color: #555;
+  margin-top: 4px;
+}
+
+.profile-header-meta {
+  margin-top: 12px;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 14px;
+  color: #666;
+}
+
+.header-meta-item {
+  font-weight: 500;
+}
+
+.header-meta-sep {
+  opacity: 0.5;
+}
+
+.profile-section-full {
+  display: flex;
+  flex-direction: column;
+  margin-top: 24px;
+  padding-top: 8px;
 }
 
 .profile-row {
   display: flex;
-  margin-bottom: 12px;
+  margin-bottom: 14px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  transition: padding-left 0.15s ease;
+}
+
+.profile-row:last-of-type {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.profile-row:hover {
+  padding-left: 4px;
 }
 
 .label {
   width: 140px;
-  font-weight: bold;
+  font-weight: 600;
+  color: #555;
 }
 
 .value {
   flex: 1;
+  color: #333;
 }
 
 .status {
@@ -637,24 +897,30 @@ onMounted(() => {
   background-color: #007bff;
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 6px;
   cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s ease;
 }
 
 .edit-btn:hover {
   background-color: #0056b3;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
 }
 
 .edit-form {
-  margin-top: 20px;
-  padding-top: 20px;
-  border-top: 1px solid #ddd;
+  margin-top: 24px;
+  padding: 20px 20px 24px 20px;
+  border-radius: 8px;
+  background-color: #ffffff;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.08);
   max-width: 100%;
   box-sizing: border-box;
 }
 
 .form-group {
-  margin-bottom: 15px;
+  margin-bottom: 18px;
   width: 100%;
   box-sizing: border-box;
 }
@@ -675,24 +941,38 @@ onMounted(() => {
 
 .form-group label {
   display: block;
-  margin-bottom: 5px;
-  font-weight: bold;
+  margin-bottom: 6px;
+  font-weight: 600;
+  font-size: 14px;
+  color: #374151;
 }
 
 .form-group input,
 .form-group select,
 .form-group textarea {
   width: 100%;
-  padding: 8px 12px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+  padding: 9px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
   box-sizing: border-box;
   max-width: 100%;
+  font-size: 14px;
+  background-color: #f9fafb;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
 }
 
 .form-group textarea {
   min-height: 80px;
   resize: vertical;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #2563eb;
+  background-color: #ffffff;
+  box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.2);
 }
 
 .form-actions {
@@ -705,9 +985,10 @@ onMounted(() => {
 .save-btn {
   padding: 10px 20px;
   border: none;
-  border-radius: 4px;
+  border-radius: 6px;
   color: white;
   cursor: pointer;
+  transition: all 0.2s ease;
 }
 
 .cancel-btn {
@@ -716,6 +997,7 @@ onMounted(() => {
 
 .cancel-btn:hover:not(:disabled) {
   background-color: #5a6268;
+  transform: translateY(-1px);
 }
 
 .save-btn {
@@ -724,6 +1006,8 @@ onMounted(() => {
 
 .save-btn:hover:not(:disabled) {
   background-color: #218838;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(40, 167, 69, 0.3);
 }
 
 .cancel-btn:disabled,
@@ -854,6 +1138,7 @@ onMounted(() => {
 .verification-form-wrapper {
   width: 100%;
   box-sizing: border-box;
+  margin-bottom: 24px;
 }
 
 .verification-form-wrapper h3 {
@@ -897,6 +1182,66 @@ onMounted(() => {
   background-color: #d4edda;
   color: #155724;
   border: 1px solid #c3e6cb;
+}
+
+.profile-picture-preview {
+  max-width: 200px;
+  max-height: 200px;
+  border-radius: 8px;
+  margin-top: 5px;
+  display: block;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease;
+}
+
+.profile-picture-preview:hover {
+  transform: scale(1.02);
+}
+
+.image-preview-container {
+  margin-top: 10px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: #f9f9f9;
+}
+
+.image-preview {
+  max-width: 100%;
+  max-height: 300px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.image-url-display {
+  padding: 8px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  word-break: break-all;
+  font-size: 12px;
+  color: #666;
+}
+
+.remove-image-btn {
+  padding: 6px 12px;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.remove-image-btn:hover:not(:disabled) {
+  background-color: #c82333;
+}
+
+.remove-image-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 </style>
 

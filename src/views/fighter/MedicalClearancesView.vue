@@ -74,6 +74,7 @@
 import { ref, onMounted } from 'vue';
 import { useAuthStore } from '@/stores/auth.store';
 import { medicalClearancesService } from '@/services/medical-clearances.service';
+import { getErrorMessage } from '@/utils/errorMessages';
 import type { MedicalClearance, CreateClearanceRequest } from '@/types';
 
 const authStore = useAuthStore();
@@ -148,7 +149,7 @@ async function handleSubmit() {
     };
     await loadClearances();
   } catch (err: any) {
-    error.value = err.error || 'Failed to create medical clearance';
+    error.value = getErrorMessage(err.error, 'create medical clearance');
   } finally {
     submitting.value = false;
   }
@@ -161,7 +162,7 @@ async function loadClearances() {
   try {
     clearances.value = await medicalClearancesService.getByFighter(authStore.user.id);
   } catch (err: any) {
-    error.value = err.error || 'Failed to load medical clearances';
+    error.value = getErrorMessage(err.error, 'load medical clearances');
   } finally {
     loading.value = false;
   }

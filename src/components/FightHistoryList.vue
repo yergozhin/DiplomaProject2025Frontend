@@ -27,6 +27,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { fightHistoryService } from '@/services/fight-history.service';
+import { getErrorMessage } from '@/utils/errorMessages';
 import type { FightHistory } from '@/types';
 
 interface Props {
@@ -57,7 +58,7 @@ async function loadHistory() {
     history.value = await fightHistoryService.getByFight(props.fightId);
   } catch (err: any) {
     if (err.status !== 404) {
-      error.value = err.error || 'Failed to load fight history';
+      error.value = getErrorMessage(err.error, 'load fight history');
     }
   } finally {
     loading.value = false;

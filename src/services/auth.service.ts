@@ -13,7 +13,6 @@ export interface ResendVerificationEmailRequest {
 
 export interface RequestPasswordResetRequest {
   email: string;
-  role: string;
 }
 
 export interface ResetPasswordRequest {

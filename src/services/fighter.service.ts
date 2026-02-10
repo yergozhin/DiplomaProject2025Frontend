@@ -44,5 +44,13 @@ export const fighterService = {
   createVerification(payload: CreateVerificationRequest): Promise<FighterVerification> {
     return apiClient.post<FighterVerification>('/fighters/verifications', payload);
   },
+
+  getPublicById(id: string): Promise<Fighter> {
+    return apiClient.get<Fighter>(`/fighters/public/${id}`);
+  },
+
+  getPublicByEmail(email: string): Promise<Fighter> {
+    return apiClient.get<Fighter>(`/fighters/public/by-email/${encodeURIComponent(email)}`);
+  },
 };
 
